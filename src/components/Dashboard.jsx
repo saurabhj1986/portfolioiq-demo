@@ -56,10 +56,43 @@ const PRFAQ_FAQS = [
     a: 'To enable open exploration without compromising any organization\'s portfolio. The schema maps to real connectors (Anaplan, ServiceNow, GUS, Quip) — real data is one connector per source system away.' }
 ];
 
+// Hybrid chips for hero — always-visible captions + click-to-expand detail
+const HERO_CHIPS = [
+  {
+    id: 'role',
+    icon: '💼',
+    label: 'The role',
+    caption: 'Many initiatives, multiple teams, $30M+ budget, 4+ direct reports',
+    detail: 'Sr Mgrs running tech portfolios coordinate dozens of initiatives, multiple teams, tens of millions in budget, and direct reports who run their own portfolios.'
+  },
+  {
+    id: 'tax',
+    icon: '🔧',
+    label: 'The hidden tax',
+    caption: 'Time lost chasing the same numbers across 4+ tools',
+    detail: 'Most of the week goes to triangulating data across Anaplan, ServiceNow, Slack, spreadsheets — not making decisions, coaching the team, or governing the work.'
+  },
+  {
+    id: 'workspace',
+    icon: '📦',
+    label: 'One workspace',
+    caption: 'KPIs, decision drafts, coaching insights, exec comms',
+    detail: 'Every portfolio KPI, decision draft, AI coaching insight, and weekly exec comm in one place — so context-switching across tools collapses to context-switching across tabs.'
+  },
+  {
+    id: 'boundary',
+    icon: '⚖️',
+    label: 'The boundary',
+    caption: 'Sr Managers run operations; Directors run strategy',
+    detail: 'Every engine output is a draft for sponsor review — never a final call. Sr Managers prepare the conversation; the Director makes the decision.'
+  }
+];
+
 export default function Dashboard({ navigateTo, activeTour, onStartTour, tourStep, onGoToStep, onCloseTour }) {
   const [pillarFilter, setPillarFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [prfaqOpen, setPrfaqOpen] = useState(false);
+  const [openChip, setOpenChip] = useState(null);
 
   const filtered = useMemo(() => {
     return INITIATIVES.filter(i =>
@@ -125,19 +158,33 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
               <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-serif font-bold leading-tight tracking-tight">Operate the portfolio. Equip the leaders.</h1>
-            <div className="mt-3 space-y-2 text-sm text-white/85 leading-relaxed">
-              <p>
-                <span className="font-semibold text-white">The role.</span>{' '}
-                Senior Managers in strategic portfolio roles coordinate technology investments at scale — dozens of initiatives, multiple teams, tens of millions in budget, direct reports running their own portfolios.
-              </p>
-              <p>
-                <span className="font-semibold text-white">The hidden tax.</span>{' '}
-                Most of the week goes to chasing the same numbers across different tools — Anaplan for budgets, ServiceNow for tickets, Slack for status, spreadsheets for capacity. Not making decisions. Not coaching. Not governing.
-              </p>
-              <p>
-                <span className="font-semibold text-white">Why PortfolioIQ.</span>{' '}
-                One workspace for every KPI, decision draft, coaching insight, and exec comm. Sr Managers run operations; Directors run strategy.
-              </p>
+
+            {/* Hybrid chips: always-visible captions + click to expand detail */}
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {HERO_CHIPS.map(c => {
+                const isOpen = openChip === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => setOpenChip(isOpen ? null : c.id)}
+                    className={`text-left rounded-lg border transition-all ${isOpen ? 'bg-white/15 border-white/35 ring-1 ring-white/20' : 'bg-white/5 border-white/15 hover:bg-white/10'}`}
+                  >
+                    <div className="px-3 py-2.5 flex items-start gap-2">
+                      <span className="text-base flex-shrink-0 leading-none mt-0.5">{c.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-white text-sm leading-tight">{c.label}</div>
+                        <div className="text-[11px] text-white/75 mt-0.5 leading-snug">{c.caption}</div>
+                      </div>
+                      <ChevronDown className={`w-3.5 h-3.5 text-white/50 flex-shrink-0 mt-1 transition-transform ${isOpen ? 'rotate-180 text-white/80' : ''}`} />
+                    </div>
+                    {isOpen && (
+                      <div className="px-3 pb-3 pt-2 border-t border-white/15 text-xs text-white/90 leading-relaxed">
+                        {c.detail}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
