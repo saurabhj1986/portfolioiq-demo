@@ -5,10 +5,13 @@ import { AGENTS, AGENT_CATEGORIES, MCP_SERVERS, AGENT_ACTIVITY, aggregateStats }
 function McpBadge({ id }) {
   const m = MCP_SERVERS.find(s => s.id === id);
   if (!m) return null;
+  const tone = m.salesforce
+    ? 'bg-sflight/10 border-sflight/30'
+    : 'bg-white/5 border-white/15';
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] bg-white/5 border border-white/15 rounded px-1.5 py-0.5">
+    <span className={`inline-flex items-center gap-1 text-[10px] border rounded px-1.5 py-0.5 ${tone}`}>
       <span>{m.icon}</span>
-      <span className="text-white/70">{m.label}</span>
+      <span className={m.salesforce ? 'text-sflight' : 'text-white/70'}>{m.label}</span>
     </span>
   );
 }
@@ -127,9 +130,9 @@ export default function Agents() {
           <Bot className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <div className="text-[10px] uppercase tracking-[0.2em] text-sflight font-bold mb-1">Agentic operating layer</div>
-            <h2 className="text-xl font-serif font-bold leading-tight">12 specialized agents that run portfolio workflows</h2>
+            <h2 className="text-xl font-serif font-bold leading-tight">12 specialized agents — running on Agentforce, connected primarily to the Salesforce stack</h2>
             <p className="text-sm text-white/80 mt-2 leading-relaxed max-w-3xl">
-              The Sr Manager doesn't have to remember to nudge stale artifacts, draft sponsor briefs, or detect capacity conflicts. Specialized agents do those — connected to <strong className="text-sflight">Slack, Jira, ServiceNow, Email, Calendar, Anaplan, Workday, Snowflake, Quip, and Okta via MCP</strong>. The Sr Manager reviews agent output and approves the few decisions agents can't make on their own.
+              Agents execute on <strong className="text-sflight">Agentforce</strong>, read and write across the <strong className="text-sflight">Salesforce-native fabric</strong> — GUS, Salesforce Platform, Data Cloud, Einstein, Tableau, Slack, Quip, MuleSoft — and reach out to <strong className="text-white">supporting external systems</strong> (Jira, Email, Okta, Snowflake, Workday, Anaplan) through MCP. Routine governance and comms work happens automatically; the Sr Manager reviews and approves what humans must.
             </p>
           </div>
         </div>
@@ -141,19 +144,37 @@ export default function Agents() {
         </div>
       </div>
 
-      {/* MCP fabric — show what's connected */}
+      {/* MCP fabric — Salesforce-native first, external supporting second */}
       <div className="card">
         <div className="flex items-center gap-2 mb-3">
           <Zap className="w-4 h-4 text-sflight" />
-          <h3 className="text-sm font-semibold text-sfnavy">MCP fabric · what agents connect to</h3>
+          <h3 className="text-sm font-semibold text-sfnavy">MCP fabric · Salesforce-native + supporting external</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {MCP_SERVERS.map(m => (
-            <div key={m.id} className="bg-white/5 border border-white/15 rounded p-2.5 text-xs">
-              <div className="flex items-center gap-2"><span className="text-base">{m.icon}</span><span className="font-semibold text-sfnavy">{m.label}</span></div>
-              <p className="text-[11px] text-sfmuted mt-1 leading-snug">{m.purpose}</p>
-            </div>
-          ))}
+
+        {/* Salesforce ecosystem */}
+        <div className="mb-4">
+          <div className="text-[10px] uppercase tracking-widest text-sflight font-bold mb-2">Salesforce ecosystem · primary</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+            {MCP_SERVERS.filter(m => m.salesforce).map(m => (
+              <div key={m.id} className="bg-sflight/10 border border-sflight/30 rounded p-2.5 text-xs">
+                <div className="flex items-center gap-2"><span className="text-base">{m.icon}</span><span className="font-semibold text-sflight">{m.label}</span></div>
+                <p className="text-[11px] text-sfmuted mt-1 leading-snug">{m.purpose}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* External supporting */}
+        <div>
+          <div className="text-[10px] uppercase tracking-widest text-sfmuted font-bold mb-2">External · supporting</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+            {MCP_SERVERS.filter(m => !m.salesforce).map(m => (
+              <div key={m.id} className="bg-white/5 border border-white/15 rounded p-2.5 text-xs">
+                <div className="flex items-center gap-2"><span className="text-base">{m.icon}</span><span className="font-semibold text-sfnavy">{m.label}</span></div>
+                <p className="text-[11px] text-sfmuted mt-1 leading-snug">{m.purpose}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -211,7 +232,10 @@ export default function Agents() {
       <div className="card bg-sfbg border-2 border-sflight/20">
         <h4 className="text-sm font-semibold text-sfnavy mb-2">How agents fit the operating model</h4>
         <p className="text-xs text-sfnavy leading-relaxed max-w-4xl">
-          Agents do <strong>routine, observable, reversible work</strong> — the things humans drop because they're boring and recurring. They never make capital allocation decisions, never sign off on stage-gates, never override a sponsor. Every agent action lands in <strong>portfolio_audit_trail</strong> with the same discipline as a human change. The Sr Manager reviews agent output, approves what needs approval, and spends saved time on the work only humans can do: judgment calls, relationships, coaching.
+          Agents do <strong>routine, observable, reversible work</strong> — the things humans drop because they're boring and recurring. They never make capital allocation decisions, never sign off on stage-gates, never override a sponsor. Every agent action lands in <strong>portfolio_audit_trail</strong> on Salesforce Platform with the same discipline as a human change. The Sr Manager reviews agent output, approves what needs approval, and spends saved time on the work only humans can do: judgment calls, relationships, coaching.
+        </p>
+        <p className="text-xs text-sfnavy leading-relaxed max-w-4xl mt-2">
+          <strong className="text-sflight">Why Salesforce-first:</strong> Agentforce is the agent runtime, Data Cloud is the unified read/write layer, Einstein supplies ML scoring, Tableau renders the views, Slack and Quip are the human touchpoints. MuleSoft bridges the few external systems (Anaplan, Workday, Snowflake) into the same data layer — so every agent operates on a single Source of Truth.
         </p>
       </div>
     </div>
