@@ -7,7 +7,9 @@ import Operate from './components/Operate.jsx';
 import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
 import TourBar from './components/TourBar.jsx';
+import PersonaSwitcher from './components/PersonaSwitcher.jsx';
 import { TOURS } from './data/tours.js';
+import { PERSONAS, getPersona } from './data/personas.js';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard',       icon: LayoutDashboard },
@@ -22,11 +24,21 @@ export default function App() {
   const [tab, setTab] = useState('dashboard');
   const [activeTour, setActiveTour] = useState(null);
   const [tourStep, setTourStep] = useState(0);
+  const [personaId, setPersonaId] = useState('sr-manager');
+  const persona = getPersona(personaId);
 
   // Sub-tab state for parents that have sub-tabs
   const [decisionsSub, setDecisionsSub] = useState('rice');
   const [operateSub, setOperateSub]     = useState('playbooks');
   const [dataSub, setDataSub]           = useState('schema');
+
+  // Filter tabs based on current persona's RBAC
+  const visibleTabs = TABS.filter(t => !persona.hideTabs.includes(t.id));
+
+  // If user is on a hidden tab after persona switch, jump back to dashboard
+  React.useEffect(() => {
+    if (persona.hideTabs.includes(tab)) setTab('dashboard');
+  }, [persona.hideTabs, tab]);
 
   const startTour = (tourId) => {
     setActiveTour(tourId);
@@ -39,11 +51,13 @@ export default function App() {
     if (idx < 0 || idx >= tour.steps.length) return;
     const step = tour.steps[idx];
     setTourStep(idx);
-    setTab(step.tab);
-    if (step.sub) {
-      if (step.tab === 'decisions') setDecisionsSub(step.sub);
-      if (step.tab === 'operate')   setOperateSub(step.sub);
-      if (step.tab === 'data')      setDataSub(step.sub);
+    if (!persona.hideTabs.includes(step.tab)) {
+      setTab(step.tab);
+      if (step.sub) {
+        if (step.tab === 'decisions') setDecisionsSub(step.sub);
+        if (step.tab === 'operate')   setOperateSub(step.sub);
+        if (step.tab === 'data')      setDataSub(step.sub);
+      }
     }
   };
 
@@ -52,15 +66,13 @@ export default function App() {
     setTourStep(0);
   };
 
-  const backToTourList = () => {
-    setTab('dashboard');
-  };
+  const backToTourList = () => setTab('dashboard');
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-sfnavy text-white">
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-sflight/20 grid place-items-center">
               <Sparkles className="w-5 h-5 text-sflight" />
@@ -70,13 +82,10 @@ export default function App() {
               <p className="text-xs text-white/60">Strategic Portfolio Intelligence</p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-white/60">A Sr Manager's operating workspace for</p>
-            <p className="text-xs text-white font-medium">strategic portfolio management</p>
-          </div>
+          <PersonaSwitcher persona={persona} onChange={(p) => setPersonaId(p.id)} />
         </div>
         <nav className="max-w-[1400px] mx-auto px-6 flex gap-1 flex-wrap">
-          {TABS.map(t => {
+          {visibleTabs.map(t => {
             const Icon = t.icon;
             const active = tab === t.id;
             return (
@@ -103,12 +112,13 @@ export default function App() {
             onStartTour={startTour}
             onCloseTour={exitTour}
             onGoToStep={goToStep}
+            persona={persona}
           />
         )}
         {tab === 'journey'   && <PortfolioJourney />}
-        {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} />}
-        {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} />}
-        {tab === 'data'      && <DataModel sub={dataSub} setSub={setDataSub} />}
+        {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} persona={persona} />}
+        {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} persona={persona} />}
+        {tab === 'data'      && <DataModel sub={dataSub} setSub={setDataSub} persona={persona} />}
         {tab === 'about'     && <HowIBuilt />}
       </main>
 
@@ -116,6 +126,7 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between text-xs text-sfmuted flex-wrap gap-2">
           <span>All mock data · No real systems connected · For demonstration purposes</span>
+          <span className="text-white/40">RBAC simulated · in production, persona derives from identity provider</span>
         </div>
       </footer>
 

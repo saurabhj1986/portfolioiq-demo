@@ -84,21 +84,34 @@ const HERO_CHIPS = [
   }
 ];
 
-export default function Dashboard({ navigateTo, activeTour, onStartTour, tourStep, onGoToStep, onCloseTour }) {
-  const [pillarFilter, setPillarFilter] = useState('all');
+export default function Dashboard({ navigateTo, activeTour, onStartTour, tourStep, onGoToStep, onCloseTour, persona }) {
+  // If persona enforces a pillar filter, lock the dropdown to that pillar
+  const personaPillar = persona?.pillarFilter || null;
+  const [pillarFilter, setPillarFilter] = useState(personaPillar || 'all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [prfaqOpen, setPrfaqOpen] = useState(false);
   const [openChip, setOpenChip] = useState(null);
 
+  // Update local filter when persona changes
+  React.useEffect(() => {
+    if (personaPillar) setPillarFilter(personaPillar);
+    else setPillarFilter('all');
+  }, [personaPillar]);
+
+  // Restrict initiatives universe to persona's pillar (for KPIs + tracker)
+  const SCOPED_INITIATIVES = personaPillar
+    ? INITIATIVES.filter(i => i.pillar === personaPillar)
+    : INITIATIVES;
+
   const filtered = useMemo(() => {
-    return INITIATIVES.filter(i =>
+    return SCOPED_INITIATIVES.filter(i =>
       (pillarFilter === 'all' || i.pillar === pillarFilter) &&
       (statusFilter === 'all' || i.status === statusFilter)
     );
-  }, [pillarFilter, statusFilter]);
+  }, [SCOPED_INITIATIVES, pillarFilter, statusFilter]);
 
   const kpiValues = useMemo(() => {
-    const active = INITIATIVES.filter(i => i.status !== 'complete');
+    const active = SCOPED_INITIATIVES.filter(i => i.status !== 'complete');
     const onTrack = active.filter(i => i.status === 'on_track').length;
     const totalBudget = active.reduce((s, i) => s + i.budget, 0);
     const totalSpent = active.reduce((s, i) => s + i.spent, 0);
@@ -124,8 +137,8 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
   const stageDistribution = useMemo(() => {
     return STAGES.map(s => ({
       ...s,
-      count: INITIATIVES.filter(i => i.stage === s.id && i.status !== 'complete').length,
-      budget: INITIATIVES.filter(i => i.stage === s.id && i.status !== 'complete').reduce((sum, i) => sum + i.budget, 0)
+      count: SCOPED_INITIATIVES.filter(i => i.stage === s.id && i.status !== 'complete').length,
+      budget: SCOPED_INITIATIVES.filter(i => i.stage === s.id && i.status !== 'complete').reduce((sum, i) => sum + i.budget, 0)
     }));
   }, []);
 
@@ -154,6 +167,9 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
               <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-serif font-bold leading-tight tracking-tight">Operate the portfolio. Equip the leaders.</h1>
+            <p className="text-sm text-white/80 mt-2 max-w-3xl leading-relaxed">
+              An interactive workspace for portfolio leaders. <span className="text-sflight">Switch personas in the top right</span> to see how the same product adapts to a Sr Manager, Director, Pillar PM, or Sponsor.
+            </p>
 
             {/* Hybrid chips: always-visible captions + click to expand detail */}
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -186,18 +202,13 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
 
           {/* Right: actions + stats (2/5) */}
           <div className="lg:col-span-2 flex flex-col gap-3">
-            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-white rounded-lg px-4 py-2.5 font-semibold hover:bg-sfblue transition flex items-center justify-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
+            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-sfnavy rounded-lg px-4 py-2.5 font-semibold hover:bg-white transition flex items-center justify-center gap-2 text-sm shadow-lg">
               <PlayCircle className="w-4 h-4" /> Start 2-min tour
-              <span className="text-[10px] bg-white text-sflight rounded px-1.5 py-0.5 font-bold">BEST FOR DEMOS</span>
+              <span className="text-[10px] bg-sfnavy text-sflight rounded px-1.5 py-0.5 font-bold">BEST FOR DEMOS</span>
             </button>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => onStartTour && onStartTour('20s')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center justify-center gap-1.5 text-xs">
-                <Zap className="w-3.5 h-3.5" /> 20-sec scan
-              </button>
-              <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition text-xs">
-                5-min deep dive
-              </button>
-            </div>
+            <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/25 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center justify-center gap-1.5 text-sm">
+              5-min deep dive
+            </button>
             <button onClick={() => setPrfaqOpen(o => !o)} className="bg-white/5 text-white/90 border border-white/20 rounded-lg px-3 py-1.5 font-medium hover:bg-white/15 transition flex items-center justify-center gap-1.5 text-xs">
               <Lightbulb className="w-3.5 h-3.5" /> {prfaqOpen ? 'Hide' : 'Why'} this exists <ChevronDown className={`w-3 h-3 transition-transform ${prfaqOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -210,6 +221,18 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
 
         </div>
       </section>
+
+      {/* RBAC banner — shows what's filtered when persona ≠ Sr Manager */}
+      {persona && persona.id !== 'sr-manager' && (
+        <section className="bg-sfnavy/60 border border-sflight/30 rounded-lg px-4 py-2.5 flex items-center gap-3 text-xs">
+          <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">RBAC</span>
+          <span className={persona.accent + ' font-semibold'}>{persona.role}{persona.pillarLabel ? ` · ${persona.pillarLabel}` : ''}</span>
+          <span className="text-white/70">{persona.desc}</span>
+          {persona.hideTabs.length > 0 && (
+            <span className="ml-auto text-[10px] text-white/50 font-mono">Hidden tabs: {persona.hideTabs.join(' · ')}</span>
+          )}
+        </section>
+      )}
 
       {/* PRFAQ — only shown when toggled */}
       {prfaqOpen && (

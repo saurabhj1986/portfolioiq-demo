@@ -2,15 +2,6 @@
 // Each step has an optional `sub` field for tabs that have sub-tabs.
 
 export const TOURS = {
-  '20s': {
-    label: '20-second scan',
-    description: 'The bare minimum understanding. 3 stops.',
-    steps: [
-      { tab: 'dashboard',                       title: 'The 5 KPIs',           lookFor: 'Health · Capital · Compliance · Cycle · Strategic Alignment. Hover any tile for what + target.' },
-      { tab: 'decisions', sub: 'kpi-studio',    title: 'The recommendations',  lookFor: 'Every initiative bucketed: Accelerate / Continue / Watch / Restructure / Sunset.' },
-      { tab: 'operate',   sub: 'workbench',     title: 'The output',           lookFor: 'How portfolio data becomes exec messaging — 8 templates, AI auto-draft.' }
-    ]
-  },
   '2m': {
     label: '2-minute narrative',
     description: 'The story of one initiative across 5 stops.',
