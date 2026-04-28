@@ -398,7 +398,7 @@ function Header() {
         <div>
           <h2 className="text-lg font-serif font-bold">Sr Manager Workbench</h2>
           <p className="text-sm text-white/80 mt-1 leading-relaxed">
-            Where portfolio-level messaging gets written. Pre-structured templates for the comms a Sr Manager owns weekly: exec updates, sponsor briefs, escalations, launches, rebalances, CFO memos, PM digests. AI auto-drafts pull live numbers from Dashboard, Decision Engine, and Process Health — so you stop re-typing the same KPIs every Friday.
+            Where the Sr Manager <strong className="text-sflight">drafts</strong> portfolio-level messaging for the Director's review. Pre-structured templates for the weekly + monthly + quarterly comms the role owns: exec updates, sponsor briefs, escalations, launches, PM digests. AI auto-drafts pull live numbers from Dashboard, Decision Engine, and Process Health — so the Director's time is spent reviewing, not writing.
           </p>
         </div>
       </div>

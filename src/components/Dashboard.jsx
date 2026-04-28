@@ -104,7 +104,7 @@ export default function Dashboard() {
       <section className="bg-sflight/10 border border-sflight/30 rounded-lg px-4 py-2.5 flex items-center gap-3 text-xs">
         <Sparkles className="w-4 h-4 text-sflight flex-shrink-0" />
         <span className="text-sfnavy">
-          <strong>Portfolio at a glance:</strong> 16 initiatives · 6 pillars · $30M deployed. The 5 KPIs below show the leading indicators. Initiative tracker has the detail.
+          <strong>Sr Manager view:</strong> 16 initiatives across 6 pillars, $30M deployed. The 5 KPIs below are the leading indicators the Sr Manager owns; the tracker is the data the Director gets pre-digested in 1:1s.
         </span>
         <span className="ml-auto text-[11px] text-sfmuted hidden md:inline">Mock data · No real systems connected</span>
       </section>

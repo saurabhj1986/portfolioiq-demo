@@ -44,8 +44,8 @@ export default function App() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-white/60">A single pane of glass for</p>
-            <p className="text-xs text-white font-medium">portfolio leaders managing initiatives across pillars</p>
+            <p className="text-xs text-white/60">A Senior Manager's operating workspace for</p>
+            <p className="text-xs text-white font-medium">strategic portfolio management</p>
           </div>
         </div>
         <nav className="max-w-[1400px] mx-auto px-6 flex gap-1 flex-wrap">

@@ -58,20 +58,20 @@ const TOURS = {
 
 // =================== PRFAQ CONTENT ===================
 const PRFAQ_FAQS = [
-  { q: 'Why does PortfolioIQ exist?',
-    a: 'Most portfolio teams spend the majority of their time triangulating data across systems instead of making decisions. PortfolioIQ collapses that. One Source of Truth, one taxonomy, one set of decision engines, one workbench for comms — so portfolio leaders spend their time on the decisions only they can make.' },
-  { q: 'Who is the target user?',
-    a: 'Senior Directors and Senior Managers of Strategic Portfolio Management. Pillar Portfolio Managers who report to them. Executive Sponsors who fund the work and need to see trade-offs without hunting for them.' },
-  { q: 'What\'s the most differentiated feature?',
-    a: 'The KPI Studio Recommendation Engine. Every other portfolio tool shows you data. This one tells you what to do about it — bucketing every initiative as Accelerate / Continue / Watch / Restructure / Sunset, with auto-generated rationale grounded in your chosen scoring profile.' },
-  { q: 'How is this different from Anaplan, Smartsheet, or ServiceNow SPM?',
-    a: 'Those tools are systems of record. PortfolioIQ is the intelligence + decision layer that sits on top. The architecture assumes existing systems exist and feed in — and focuses on the part those systems don\'t do: surfacing trade-offs, recommending actions, and turning data into comms.' },
+  { q: 'What does the Sr Manager own — and what does the Director own?',
+    a: 'The Sr Manager owns the operating layer: process governance, the team of 4 Pillar PMs, the data layer (Source of Truth, Metric Catalog, Glossary), the cadences (intake, stage-gate review, rebalance, monthly review), and the comms drafts. The Director owns strategy, sponsor relationships, capital allocation authority, and final calls. This prototype reflects that boundary — every recommendation is framed as a draft for sponsor review, never a final decision.' },
+  { q: 'Why a "Recommendation Engine" if the Sr Manager doesn\'t decide?',
+    a: 'It generates a defensible draft. The Director will adjust based on context the data can\'t see (relationships, political signals, board-level priorities). A draft that takes 30 minutes to refine is more valuable than a blank page — and it shows the Sr Manager\'s thinking, which is what the Director is paying for.' },
+  { q: 'Why all the playbooks?',
+    a: 'So the Sr Manager builds reusable practice instead of personal heroics. Playbooks let the team scale beyond the Sr Manager\'s individual time, and let new team members onboard against shared standards instead of tribal knowledge. The 7 playbooks here cover the operational moments the role owns weekly: intake, stage-gate review, capacity planning, risk refresh, rebalance, monthly portfolio review, sunset.' },
+  { q: 'How does this scale to coaching 4 direct reports?',
+    a: 'The Team Cockpit auto-detects coaching opportunities (overdue 1:1s, leave-coverage gaps, growth signals, off-track-initiative pattern detection) so 1:1s become coaching conversations instead of status updates. AI-drafted weekly briefs free ~30 min/week per PM, which at 4 reports is two extra hours of actual coaching time per week.' },
+  { q: 'What\'s outside this prototype\'s scope?',
+    a: 'Org-level strategy, sponsor relationship-building, capital allocation authority, and external GTM — those belong to the Director and above. This is intentionally the operations layer. The boundary is sharp on purpose: a Sr Manager who tries to own strategy without being asked is annoying; a Sr Manager who owns operations rigorously is invaluable.' },
   { q: 'Why mock data?',
     a: 'To enable open exploration without compromising any organization\'s portfolio. The schema is designed so each table maps to a real connector (Anaplan for budget, ServiceNow for tickets, GUS for stage-gate artifacts). Real data is one connector per source system away.' },
-  { q: 'What\'s mock vs production-quality?',
-    a: 'The data is mock. The schema, taxonomy, governance frameworks, decision engines, and AI patterns are designed to lift into production with minimal change. The 4 normalized tables, the 17-metric Catalog, the 33-term Glossary, the 7 Playbooks — all production-ready as v1.' },
-  { q: 'What\'s next if this becomes a real tool?',
-    a: 'v2 priorities: ingest real data via 4 connectors (Anaplan, ServiceNow, GUS, Quip); replace simulated AI with grounded RAG over the actual portfolio data; add a benefits_realization table for post-launch value tracking; integrate with Slack for in-channel decisions.' }
+  { q: 'What does this say about the Sr Manager who built it?',
+    a: 'That they treat governance as a data-architecture problem with an adoption layer on top, that they instrument their own work, that they think in terms of equipping the people above them with decision-ready inputs rather than making decisions themselves, and that they ship working artifacts instead of decks.' }
 ];
 
 // =================== COMPONENTS ===================
@@ -165,30 +165,38 @@ function TourPanel({ tourId, navigateTo, onClose }) {
 function PRFAQ({ faqOpen, setFaqOpen }) {
   return (
     <div>
-      {/* Press Release */}
+      {/* Operating Notes — Sr Manager-scoped, replaces product launch framing */}
       <div className="bg-sfbg border border-slate-200 rounded-lg p-5">
-        <div className="text-[10px] uppercase tracking-widest text-sfmuted font-semibold mb-2">For Immediate Release · April 2026</div>
-        <h3 className="text-2xl font-serif font-bold text-sfnavy leading-tight">PortfolioIQ launches: a single pane of glass for portfolio leaders managing technology investments at scale</h3>
-        <p className="italic text-sm text-sfmuted mt-2 leading-relaxed">A new tool that empowers Senior Directors, Senior Managers, and Executives to prioritize, allocate capital, govern, and communicate across every pillar of a tech portfolio — replacing the current sprawl of dashboards, spreadsheets, and Slack threads.</p>
+        <div className="text-[10px] uppercase tracking-widest text-sfmuted font-semibold mb-2">Operating Notes · Senior Manager scope</div>
+        <h3 className="text-2xl font-serif font-bold text-sfnavy leading-tight">How a Senior Manager runs strategic portfolio management</h3>
+        <p className="italic text-sm text-sfmuted mt-2 leading-relaxed">A working description of the operating model: the standards, frameworks, cadences, and team rhythms a Senior Manager owns so the Director can focus on strategy and sponsor relationships.</p>
 
         <div className="mt-4 space-y-3 text-sm text-sfnavy leading-relaxed">
-          <p>Portfolio teams managing strategic technology investments spend most of their time triangulating data across systems: <em>"Is this initiative actually on track?" "What's our exposure if Q3 budget gets cut?" "Why did CPQ go off-track?"</em> The answers live in 4 different tools and 12 different definitions, and the time spent stitching context together is time not spent making decisions.</p>
+          <p>The Senior Manager of Strategic Portfolio Management is not the strategist. The Director is. The Sr Manager is the person who turns strategy into <em>observable, governed, repeatable practice</em> — and who builds the team that runs the practice without their constant presence.</p>
 
-          <p>PortfolioIQ replaces the stitching. Every portfolio KPI, every initiative, every stage-gate artifact, every dependency, every capital allocation decision lives in one application — with a defined Source of Truth, a configurable KPI catalog, an AI agent that answers questions with transparent reasoning, and a workbench for the communications a portfolio leader owns weekly.</p>
+          <p>This prototype demonstrates that operating model. Each tab represents a job the role owns weekly:</p>
+
+          <ul className="space-y-1 ml-4 text-sfnavy">
+            <li>• Owning the master taxonomy, Metric Catalog, and Data Glossary so every report uses the same definitions</li>
+            <li>• Running stage-gate reviews against an objective scorer so decisions are <em>discipline</em>, not <em>opinion</em></li>
+            <li>• Preparing decision-ready inputs (capital scenarios, RICE rankings, risk exposures) so sponsor conversations produce decisions, not "let me think about it"</li>
+            <li>• Coaching 4 Pillar PM direct reports through their own portfolios, with AI-detected coaching opportunities</li>
+            <li>• Drafting the comms (sponsor briefs, escalations, monthly exec updates) so the Director's time is spent reviewing, not writing</li>
+          </ul>
 
           <blockquote className="border-l-4 border-sflight pl-4 py-2 italic text-sfmuted bg-white rounded-r">
-            "Most portfolio dashboards show me data. PortfolioIQ shows me the next decision I need to make and the trade-offs of getting it wrong."<br />
-            <span className="text-xs not-italic">— target user, Senior Director of Portfolio Management</span>
+            "What I need from my Sr Manager isn't strategy. It's the discipline that lets me set strategy without worrying the day-to-day will fall apart."<br />
+            <span className="text-xs not-italic">— target user, Sr Director of Portfolio Management</span>
           </blockquote>
 
-          <p><strong className="text-sfnavy">How it works.</strong> A portfolio leader opens PortfolioIQ on Monday morning. The Dashboard surfaces 5 leading KPIs (Health, Capital, Compliance, Cycle Time, Strategic Alignment). The KPI Studio Recommendation Engine has already scored every initiative and bucketed them <em>Accelerate / Continue / Watch / Restructure / Sunset</em>. The leader picks a profile (Margin-First, Risk-Averse, Innovation-First, Trust-First, Balanced), watches the recommendations shift, and exports the top 3 trade-off decisions to her CFO via the Workbench in 90 seconds.</p>
+          <p><strong className="text-sfnavy">The boundary is sharp on purpose.</strong> Every recommendation in this prototype is framed as a <em>draft for sponsor review</em>, never a final decision. The Decision Engine produces analysis, not verdicts. The KPI Studio drafts a recommendation, the sponsor refines it. The Workbench drafts the comms, the Director reviews and signs. This is the role the title actually describes.</p>
 
           <blockquote className="border-l-4 border-sgreen pl-4 py-2 italic text-sfmuted bg-white rounded-r">
-            "Most tools tell me where the portfolio has been. This one tells me what to do about it."<br />
-            <span className="text-xs not-italic">— imagined exec response after a 2-minute walkthrough</span>
+            "A Sr Manager who tries to own strategy without being asked is annoying. A Sr Manager who owns operations rigorously is invaluable."<br />
+            <span className="text-xs not-italic">— operating philosophy this prototype encodes</span>
           </blockquote>
 
-          <p>PortfolioIQ is currently a live demonstration at <a href="https://portfolioiq-demo.vercel.app" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">portfolioiq-demo.vercel.app</a>. All data is mock. The architecture, taxonomy, and frameworks are production-quality.</p>
+          <p>Live at <a href="https://portfolioiq-demo.vercel.app" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">portfolioiq-demo.vercel.app</a>. All data is mock. The schema, taxonomy, frameworks, and AI patterns are designed to lift into production with minimal change.</p>
         </div>
       </div>
 
@@ -229,9 +237,9 @@ export default function Welcome({ navigateTo }) {
             <Sparkles className="w-4 h-4 text-sflight" />
             <span className="text-[11px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif font-bold leading-[1.05]">Run your tech portfolio in one view.</h1>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold leading-[1.05]">Operate the portfolio. Equip the leaders.</h1>
           <p className="text-lg text-white/90 mt-4 leading-relaxed">
-            A single pane of glass for portfolio leaders to <strong className="text-sflight">prioritize</strong> initiatives, <strong className="text-sflight">allocate capital</strong>, <strong className="text-sflight">govern</strong> stage-gates, and <strong className="text-sflight">communicate</strong> decisions — across every pillar, every initiative, every dollar.
+            A Senior Manager's operating workspace for strategic portfolio management — the <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> that turns strategy into observable, repeatable practice. Sponsors and Directors make the calls; the Sr Manager makes sure those calls are decision-ready.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
             <button onClick={() => setActiveTour('20s')} className="bg-white text-sfnavy rounded-lg px-5 py-3 font-semibold hover:bg-white/90 transition flex items-center gap-2 text-sm">
@@ -258,24 +266,24 @@ export default function Welcome({ navigateTo }) {
       {/* SO WHAT — 3 outcome cards (not features) */}
       <section>
         <div className="mb-3">
-          <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">What changes for you</div>
+          <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">Three jobs the Sr Manager owns</div>
           <h2 className="text-2xl font-serif font-bold text-sfnavy">Three outcomes, not three dashboards</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <OutcomeCard
-            icon={Target}
-            title="Decide faster"
-            description="Decision engines turn raw data into Accelerate / Continue / Watch / Restructure / Sunset recommendations in seconds. Switch profiles to test the lens — Margin-First vs Innovation-First — and see how recommendations shift live."
-          />
-          <OutcomeCard
             icon={Shield}
-            title="Govern with discipline"
+            title="Run governance like clockwork"
             description="Stage-gate scorers, audit trails, a 7-playbook library, and a 33-term Data Glossary replace tribal knowledge with reusable standards. Every change is logged, every artifact has a lifecycle, every term has a canonical definition."
           />
           <OutcomeCard
+            icon={Target}
+            title="Equip leaders with decision-ready inputs"
+            description="Calculators (RICE, Capital Optimizer, Risk Heatmap, Scenario Compare) and the KPI Studio Recommendation Engine produce drafted trade-offs, never final calls. The Sr Manager prepares the conversation; the sponsor makes the decision."
+          />
+          <OutcomeCard
             icon={MessageCircle}
-            title="Communicate without friction"
-            description="The Workbench drafts exec updates, sponsor briefs, escalations, launches, and CFO memos. AI auto-fills sections from the underlying data — so you stop re-typing the same KPIs every Friday."
+            title="Own the comms heartbeat"
+            description="The Workbench drafts the weekly + monthly + quarterly comms a Sr Manager owns: PM digests, sponsor briefs, escalations, exec updates. AI auto-fills sections from the underlying data — so the Director's time is spent reviewing, not writing."
           />
         </div>
       </section>
@@ -284,15 +292,15 @@ export default function Welcome({ navigateTo }) {
       <section className="card">
         <div className="mb-4">
           <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">The narrative</div>
-          <h2 className="text-2xl font-serif font-bold text-sfnavy">An initiative’s journey, told in five jobs</h2>
-          <p className="text-sm text-sfmuted mt-1">Every initiative has the same 5 jobs to be done. Each tab supports a specific job — click any to jump to it.</p>
+          <h2 className="text-2xl font-serif font-bold text-sfnavy">Every initiative passes through five Sr Manager touchpoints</h2>
+          <p className="text-sm text-sfmuted mt-1">Each touchpoint is a job the Sr Manager owns — click any to jump to the tab that supports it.</p>
         </div>
         <div className="space-y-4">
-          <NarrativeStep num={1} tab="journey"   navigateTo={navigateTo} title="It starts as an idea" description="An exec has a hypothesis. Watch it move from G0 Concept to G5 Sustain — capital, risk, FTEs, KPIs, and dependencies all ripple as it advances." cta="Open Journey" />
-          <NarrativeStep num={2} tab="decision"  navigateTo={navigateTo} title="It needs to be prioritized" description="RICE scores, capital optimizer, risk heatmap, scenario compare — the calculators that turn 'gut feel' into a defensible portfolio decision." cta="Open Decision Engine" />
-          <NarrativeStep num={3} tab="kpi"       navigateTo={navigateTo} title="It has to compete for capital" description="The KPI Studio scores every initiative against your active KPIs and weights, then recommends Accelerate/Continue/Watch/Restructure/Sunset. Switch profiles to see the trade-offs." cta="Open KPI Studio" />
-          <NarrativeStep num={4} tab="playbooks" navigateTo={navigateTo} title="It has to be governed" description="Foundational playbooks (intake, capacity, risk register, rebalance, sunset) plus a Source of Truth schema, Metric Catalog, Glossary, and Audit Trail." cta="Open Playbooks" />
-          <NarrativeStep num={5} tab="workbench" navigateTo={navigateTo} title="It has to be communicated" description="Templates for exec updates, sponsor briefs, escalations, launches, CFO memos. AI auto-fills sections from the underlying data." cta="Open Workbench" />
+          <NarrativeStep num={1} tab="journey"   navigateTo={navigateTo} title="It starts as an idea — triage it" description="A sponsor has a hypothesis. The Sr Manager runs Initiative Intake. Watch one move from G0 Concept to G5 Sustain — capital, risk, FTEs, KPIs all ripple as it advances." cta="Open Journey" />
+          <NarrativeStep num={2} tab="decision"  navigateTo={navigateTo} title="It needs to be assessed — prepare the analysis" description="RICE scores, Capital Optimizer, Risk Heatmap, Scenario Compare. The Sr Manager runs the analysis so the sponsor walks into a decision conversation, not an exploration." cta="Open Decision Engine" />
+          <NarrativeStep num={3} tab="kpi"       navigateTo={navigateTo} title="It needs sponsor sign-off — draft the recommendation" description="The KPI Studio drafts a recommendation (Accelerate / Continue / Watch / Restructure / Sunset) under the active scoring profile. The draft is the input; the sponsor makes the call." cta="Open KPI Studio" />
+          <NarrativeStep num={4} tab="playbooks" navigateTo={navigateTo} title="It has to be governed — apply the playbook" description="Foundational playbooks (intake, capacity, risk register, rebalance, sunset) + Source of Truth schema, Metric Catalog, Glossary, and Audit Trail. Reusable practice, not personal heroics." cta="Open Playbooks" />
+          <NarrativeStep num={5} tab="workbench" navigateTo={navigateTo} title="It needs to be reported — draft the comms" description="Templates for the weekly + monthly + quarterly comms a Sr Manager owns: PM digests, sponsor briefs, exec updates, escalations. Each draft goes to the Director for sign-off." cta="Open Workbench" />
         </div>
       </section>
 
@@ -315,7 +323,7 @@ export default function Welcome({ navigateTo }) {
           <Lightbulb className="w-5 h-5 text-sflight" />
           <div>
             <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">PRFAQ</div>
-            <h2 className="text-xl font-serif font-bold text-sfnavy">Why this exists, in press-release form</h2>
+            <h2 className="text-xl font-serif font-bold text-sfnavy">The operating model in PRFAQ form</h2>
           </div>
         </div>
         <PRFAQ faqOpen={faqOpen} setFaqOpen={setFaqOpen} />

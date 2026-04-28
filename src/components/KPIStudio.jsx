@@ -310,7 +310,7 @@ export default function KPIStudio() {
           <div className="flex-1">
             <h2 className="text-lg font-serif font-bold">KPI Studio &amp; Recommendation Engine</h2>
             <p className="text-sm text-white/80 mt-1 leading-relaxed">
-              Define which KPIs matter for your portfolio, weight them to reflect the moment, and let the engine score every initiative + recommend a clear action: Accelerate, Continue, Watch, Restructure, or Sunset. Switch profiles instantly to test the lens — Margin-First vs Innovation-First vs Trust-First — and see how the recommendations shift.
+              Define which KPIs matter, weight them to reflect the moment, and let the engine <strong className="text-sflight">draft</strong> a recommendation for every initiative: Accelerate / Continue / Watch / Restructure / Sunset. Switch profiles to test the lens — Margin-First vs Innovation-First vs Trust-First — and see how the drafts shift. <em className="text-white/70">These are starting drafts for the sponsor conversation, not final decisions.</em>
             </p>
           </div>
         </div>
