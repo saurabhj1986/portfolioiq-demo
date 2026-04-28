@@ -64,6 +64,7 @@ export default function App() {
   const exitTour = () => {
     setActiveTour(null);
     setTourStep(0);
+    setTab('dashboard');
   };
 
   const backToTourList = () => setTab('dashboard');
