@@ -17,20 +17,16 @@ function Tooltip({ text }) {
   );
 }
 
-function KpiCard({ icon: Icon, label, value, sub, target, tooltip, jdLink }) {
+function KpiCard({ label, value, sub, target, tooltip, jdLink }) {
   return (
     <div className="card card-hover">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-sfblue/10 grid place-items-center">
-            <Icon className="w-4 h-4 text-sfblue" />
-          </div>
-          <span className="kpi-label">{label}</span>
-        </div>
-        <Tooltip text={`${tooltip}\n\nJD line: "${jdLink}"`} />
+      <div className="flex items-start justify-between mb-5">
+        <span className="kpi-label">{label}</span>
+        <Tooltip text={`${tooltip}\n\nMaps to: "${jdLink}"`} />
       </div>
-      <div className="mt-3 kpi-value">{value}</div>
-      <div className="kpi-sub mt-1">{sub} · target {target}</div>
+      <div className="kpi-value">{value}</div>
+      <div className="kpi-sub mt-3 leading-snug">{sub}</div>
+      <div className="kpi-sub mt-1 text-[10px]" style={{ color: '#5A6A85' }}>target {target}</div>
     </div>
   );
 }
@@ -251,31 +247,35 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         <KpiCard icon={AlertTriangle} label={KPI_DEFINITIONS[4].label} value={kpiValues.alignment}  sub={kpiValues.alignmentSub}  target={KPI_DEFINITIONS[4].target} tooltip={KPI_DEFINITIONS[4].tooltip} jdLink={KPI_DEFINITIONS[4].jdLink} />
       </section>
 
-      {/* Stage-Gate Pipeline */}
+      {/* Stage-Gate Pipeline — circular nodes with connector arrows */}
       <section className="card">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-lg font-semibold text-sfnavy">Stage-Gate Pipeline</h2>
-            <p className="text-xs text-sfmuted">Active initiatives flowing through G0 → G5. Budget shown per stage.</p>
+            <p className="text-xs text-sfmuted mt-0.5">Active initiatives flowing through G0 → G5. Budget per stage.</p>
           </div>
-          <Tooltip text="Counts and budget exclude Complete initiatives. Stage definitions are uniform across all DET Pillars per the master taxonomy." />
+          <Tooltip text="Counts and budget exclude Complete initiatives. Stage definitions are uniform across all Pillars per the master taxonomy." />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div className="flex items-start justify-between gap-1 overflow-x-auto pb-2">
           {stageDistribution.map((s, idx) => (
-            <div key={s.id} className="relative">
-              <div className="bg-sfbg rounded-lg p-3 border border-slate-200">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-mono text-sfdeep font-bold">{s.id}</span>
-                  <span className="text-2xl font-serif font-bold text-sfnavy">{s.count}</span>
+            <React.Fragment key={s.id}>
+              <div className="flex flex-col items-center text-center" style={{ minWidth: 100 }}>
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full grid place-items-center border-2" style={{ background: 'rgba(103, 232, 249, 0.08)', borderColor: 'rgba(103, 232, 249, 0.4)' }}>
+                    <span className="font-serif font-bold text-3xl text-white leading-none">{s.count}</span>
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full grid place-items-center text-[10px] font-bold text-white" style={{ background: '#0B5CAB' }}>
+                    {idx + 1}
+                  </div>
                 </div>
-                <div className="text-xs font-medium text-sfnavy">{s.name}</div>
-                <div className="text-[11px] text-sfmuted">{fmtMoney(s.budget)}</div>
-                <div className="text-[10px] text-sfmuted mt-1 leading-tight">{s.desc}</div>
+                <div className="text-[10px] font-mono text-sflight font-bold mt-2.5 tracking-widest">{s.id}</div>
+                <div className="text-xs font-semibold text-sfnavy mt-1">{s.name}</div>
+                <div className="text-[10px] text-sfmuted mt-0.5">{fmtMoney(s.budget)}</div>
               </div>
               {idx < stageDistribution.length - 1 && (
-                <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-px bg-slate-300" />
+                <div className="flex items-center pt-7 px-1 text-sfmuted text-2xl select-none" style={{ minWidth: 16 }}>→</div>
               )}
-            </div>
+            </React.Fragment>
           ))}
         </div>
       </section>

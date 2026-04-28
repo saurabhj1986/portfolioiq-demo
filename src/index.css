@@ -2,46 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =================================================================
+   DARK THEME — modeled on TrustReply formatting reference.
+   Deep navy surfaces, bright accents, large serif numbers.
+   ================================================================= */
+
 @layer base {
   html { scroll-behavior: smooth; }
   body {
-    background: #F3F6FA;
-    color: #032D60;
+    background: #0A0F1C;
+    color: #E5ECF6;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: 'Source Serif 4', Georgia, serif; }
+  h1, h2, h3, h4 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: #F8FAFC;
+    letter-spacing: -0.01em;
+  }
 }
 
 @layer components {
   .pill {
     @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
   }
-  .pill-green   { @apply pill bg-emerald-50 text-sgreen border border-emerald-200; }
-  .pill-yellow  { @apply pill bg-orange-50 text-syellow border border-orange-200; }
-  .pill-red     { @apply pill bg-red-50 text-sred border border-red-200; }
-  .pill-blue    { @apply pill bg-sky-50 text-sfblue border border-sky-200; }
-  .pill-gray    { @apply pill bg-slate-100 text-sgray border border-slate-200; }
+  .pill-green   { @apply pill text-emerald-300 border border-emerald-700/50; background: rgba(74, 222, 128, 0.12); }
+  .pill-yellow  { @apply pill text-amber-300   border border-amber-700/50;   background: rgba(251, 191, 36, 0.12); }
+  .pill-red     { @apply pill text-red-300     border border-red-700/50;     background: rgba(248, 113, 113, 0.12); }
+  .pill-blue    { @apply pill text-sky-300     border border-sky-700/50;     background: rgba(96, 165, 250, 0.12); }
+  .pill-gray    { @apply pill text-slate-300   border border-slate-600;      background: rgba(148, 163, 184, 0.12); }
 
-  .card { @apply bg-white rounded-xl shadow-card p-5; }
-  .card-hover { @apply hover:shadow-cardHover transition-shadow; }
+  .card {
+    background: #131927;
+    border: 1px solid #1E2638;
+    @apply rounded-xl p-6;
+  }
+  .card-hover { @apply transition-all hover:border-sflight/40; }
 
   .tab-btn {
-    @apply px-4 py-3 text-sm font-medium text-white/70 hover:text-white border-b-2 border-transparent transition-colors;
+    @apply px-4 py-3 text-sm font-medium text-white/60 hover:text-white border-b-2 border-transparent transition-colors;
   }
   .tab-btn-active { @apply text-white border-sflight; }
 
-  .kpi-label { @apply text-xs uppercase tracking-wide text-sfmuted font-semibold; }
-  .kpi-value { @apply text-3xl font-serif font-bold text-sfnavy; }
-  .kpi-sub   { @apply text-xs text-sfmuted; }
+  .kpi-label {
+    @apply text-[10px] uppercase font-bold;
+    letter-spacing: 0.15em;
+    color: #8B9CB8;
+  }
+  .kpi-value {
+    @apply font-serif font-bold;
+    color: #F8FAFC;
+    font-size: 3rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .kpi-sub {
+    @apply text-xs;
+    color: #8B9CB8;
+  }
 
   .sql-block {
-    @apply font-mono text-xs bg-sfnavy text-sky-100 rounded-lg p-4 overflow-x-auto leading-6;
+    @apply font-mono text-xs rounded-lg p-4 overflow-x-auto leading-6;
+    background: #06121F;
+    color: #67E8F9;
+    border: 1px solid #1E2638;
   }
 
-  .step-fade-in {
-    animation: stepFade 360ms ease-out both;
-  }
+  .step-fade-in { animation: stepFade 360ms ease-out both; }
 }
 
 @keyframes stepFade {
@@ -49,8 +76,78 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Scrollbar polish */
+/* =================================================================
+   UTILITY OVERRIDES — remap light-theme classes to dark equivalents
+   ================================================================= */
+
+/* Surfaces */
+.bg-white  { background-color: #131927 !important; }
+.bg-sfbg   { background-color: #0F1623 !important; }
+
+/* Text */
+.text-sfnavy  { color: #F8FAFC !important; }
+.text-sfdeep  { color: #93C5FD !important; }
+.text-sfmuted { color: #8B9CB8 !important; }
+
+/* Borders */
+.border-slate-100 { border-color: #1E2638 !important; }
+.border-slate-200 { border-color: #232D43 !important; }
+.border-slate-300 { border-color: #2D3A52 !important; }
+
+/* Slate fills */
+.bg-slate-50  { background-color: #182236 !important; }
+.bg-slate-100 { background-color: #1F2A3D !important; }
+.bg-slate-200 { background-color: #2A3A52 !important; }
+.bg-slate-800 { background-color: #1F2A3D !important; }
+.bg-slate-900 { background-color: #0A0F1C !important; }
+
+/* Brighten status text */
+.text-sgreen  { color: #4ADE80 !important; }
+.text-syellow { color: #FBBF24 !important; }
+.text-sred    { color: #F87171 !important; }
+.text-sfblue  { color: #60A5FA !important; }
+.text-sflight { color: #67E8F9 !important; }
+
+/* Status backgrounds → dark tints */
+.bg-emerald-50  { background-color: rgba(74, 222, 128, 0.10) !important; }
+.bg-emerald-100 { background-color: rgba(74, 222, 128, 0.16) !important; }
+.bg-orange-50   { background-color: rgba(251, 191, 36, 0.10) !important; }
+.bg-orange-100  { background-color: rgba(251, 191, 36, 0.16) !important; }
+.bg-red-50      { background-color: rgba(248, 113, 113, 0.10) !important; }
+.bg-red-100     { background-color: rgba(248, 113, 113, 0.16) !important; }
+.bg-sky-50      { background-color: rgba(96, 165, 250, 0.10) !important; }
+.bg-sky-100     { background-color: rgba(96, 165, 250, 0.16) !important; }
+
+/* Status borders */
+.border-emerald-200, .border-emerald-300 { border-color: rgba(74, 222, 128, 0.30) !important; }
+.border-orange-200,  .border-orange-300  { border-color: rgba(251, 191, 36, 0.30) !important; }
+.border-red-200,     .border-red-300     { border-color: rgba(248, 113, 113, 0.30) !important; }
+.border-sky-200,     .border-sky-300     { border-color: rgba(96, 165, 250, 0.30) !important; }
+
+/* Inputs */
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+select, textarea {
+  background-color: #0F1623 !important;
+  color: #F8FAFC !important;
+  border-color: #2D3A52 !important;
+}
+input::placeholder, textarea::placeholder { color: #6F8298 !important; }
+select option { background-color: #131927; color: #F8FAFC; }
+
+/* Tooltips that use sfnavy bg */
+.bg-sfnavy { background-color: #06121F !important; }
+
+/* Code/font-mono backgrounds */
+code.bg-sfbg { background-color: #1F2A3D !important; color: #67E8F9 !important; }
+
+/* Shadows for dark mode */
+.shadow-card     { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important; }
+.shadow-cardHover{ box-shadow: 0 6px 24px rgba(103, 232, 249, 0.15), 0 2px 8px rgba(0, 0, 0, 0.5) !important; }
+
+/* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+::-webkit-scrollbar-track { background: #0A0F1C; }
+::-webkit-scrollbar-thumb { background: #2D3A52; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #3D5274; }
+
+.bg-white.rounded-xl { background-color: #131927 !important; }
