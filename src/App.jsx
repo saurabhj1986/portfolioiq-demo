@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings, PlayCircle } from 'lucide-react';
+import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings, PlayCircle, PenSquare } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
 import PortfolioJourney from './components/PortfolioJourney.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
 import KPIStudio from './components/KPIStudio.jsx';
 import Playbooks from './components/Playbooks.jsx';
 import TeamCockpit from './components/TeamCockpit.jsx';
+import Workbench from './components/Workbench.jsx';
 import PortfolioCopilot from './components/PortfolioCopilot.jsx';
 import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
@@ -17,8 +18,9 @@ const TABS = [
   { id: 'kpi',       label: 'KPI Studio',        icon: Settings },
   { id: 'playbooks', label: 'Playbooks',         icon: BookOpen },
   { id: 'team',      label: 'Team Cockpit',      icon: Users },
+  { id: 'workbench', label: 'Workbench',         icon: PenSquare },
   { id: 'copilot',   label: 'Copilot',           icon: Bot },
-  { id: 'data',      label: 'Data Model',        icon: Database },
+  { id: 'data',      label: 'Source of Truth',   icon: Database },
   { id: 'how',       label: 'How I Built This',  icon: Hammer }
 ];
 
@@ -44,7 +46,7 @@ export default function App() {
             <p className="text-xs text-white font-medium">portfolio leaders managing initiatives across pillars</p>
           </div>
         </div>
-        <nav className="max-w-[1400px] mx-auto px-6 flex gap-1">
+        <nav className="max-w-[1400px] mx-auto px-6 flex gap-1 flex-wrap">
           {TABS.map(t => {
             const Icon = t.icon;
             const active = tab === t.id;
@@ -70,6 +72,7 @@ export default function App() {
         {tab === 'kpi'       && <KPIStudio />}
         {tab === 'playbooks' && <Playbooks />}
         {tab === 'team'      && <TeamCockpit />}
+        {tab === 'workbench' && <Workbench />}
         {tab === 'copilot'   && <PortfolioCopilot />}
         {tab === 'data'      && <DataModel />}
         {tab === 'how'       && <HowIBuilt />}
