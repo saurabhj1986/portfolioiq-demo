@@ -1,0 +1,39 @@
+// Tour definitions — shared by Welcome.jsx (renders the panel)
+// and App.jsx (renders the persistent TourBar).
+
+export const TOURS = {
+  '20s': {
+    label: '20-second scan',
+    description: 'The bare minimum understanding. 3 stops.',
+    steps: [
+      { tab: 'dashboard', title: 'The 5 KPIs',           lookFor: 'Health · Capital · Compliance · Cycle · Strategic Alignment. Hover any tile for what + target.' },
+      { tab: 'kpi',       title: 'The recommendations',  lookFor: 'Every initiative bucketed: Accelerate / Continue / Watch / Restructure / Sunset.' },
+      { tab: 'workbench', title: 'The output',           lookFor: 'How portfolio data becomes exec messaging — 8 templates, AI auto-draft.' }
+    ]
+  },
+  '2m': {
+    label: '2-minute narrative',
+    description: 'The story of one initiative across 5 stops.',
+    steps: [
+      { tab: 'dashboard', title: 'Get the shape',                  lookFor: '16 initiatives, 6 pillars, $30M deployed. The Stage-Gate Pipeline shows where capital concentrates.' },
+      { tab: 'journey',   title: 'Press Play',                      lookFor: 'Watch Agentforce move G0→G5. Risk peaks at G2 Build then falls — by design.' },
+      { tab: 'decision',  title: 'Drag the budget slider',          lookFor: 'Capital Optimizer recomputes the optimal mix in real-time. Pin Trust initiatives to protect them.' },
+      { tab: 'kpi',       title: 'Switch the profile',              lookFor: 'Pick "Margin-First" → see CPQ shift to Sunset. Pick "Innovation-First" → see Customer 360 Voice rise.' },
+      { tab: 'workbench', title: 'Open a template',                 lookFor: 'Click Compose on "Monthly Exec Update" — 5 sections, AI auto-draft, distribution list ready.' }
+    ]
+  },
+  '5m': {
+    label: '5-minute deep dive',
+    description: 'Every tab with one specific thing to notice.',
+    steps: [
+      { tab: 'dashboard', title: 'KPIs as governance signals',     lookFor: 'Stage-Gate Compliance at 88% — improving. The trend line on Process Health shows +17pts in 6 months.' },
+      { tab: 'journey',   title: 'Cross-pillar ripple',             lookFor: 'At G2 Build, Trust & Security activates (AI Governance dependency). At G4 Launch, dependencies unblock.' },
+      { tab: 'decision',  title: 'Process Health anti-patterns',    lookFor: '4 detected anti-patterns with recommendations — this is "data-driven audits to provide strategic feedback."' },
+      { tab: 'kpi',       title: 'Per-initiative drill-down',        lookFor: 'Click any initiative row → see auto-rationale + per-KPI breakdown showing what dragged the score down.' },
+      { tab: 'playbooks', title: 'Adoption gradient',                lookFor: '4 playbooks at GA, 2 in Pilot, 1 in Draft. Adoption tracked per pillar.' },
+      { tab: 'team',      title: 'AI Coaching Feed',                 lookFor: 'Auto-detected: "Renata 1:1 overdue 19 days." "Marcus on leave June 17 — propose Aisha as backfill."' },
+      { tab: 'workbench', title: 'Workbench composer',               lookFor: 'AI auto-draft button fills sections from PortfolioIQ data. Completeness % bar updates live.' },
+      { tab: 'data',      title: 'Source of Truth',                   lookFor: 'Schema · Metric Catalog (17) · Data Glossary (33 terms with "Don\'t confuse with") · Audit Trail.' }
+    ]
+  }
+};

@@ -3,6 +3,7 @@ import {
   Sparkles, ArrowRight, PlayCircle, Target, Shield, MessageCircle,
   ChevronDown, Lightbulb, X, Clock, Zap, BookOpen
 } from 'lucide-react';
+import { TOURS } from '../data/tours.js';
 
 // =================== TAB QUICK REFERENCE ===================
 const TAB_REFERENCE = [
@@ -19,42 +20,7 @@ const TAB_REFERENCE = [
 ];
 
 // =================== TOURS ===================
-const TOURS = {
-  '20s': {
-    label: '20-second scan',
-    description: 'The bare minimum understanding. 3 stops.',
-    steps: [
-      { tab: 'dashboard', title: 'The 5 KPIs',           lookFor: 'Health · Capital · Compliance · Cycle · Strategic Alignment. Hover any tile for what + target.' },
-      { tab: 'kpi',       title: 'The recommendations',  lookFor: 'Every initiative bucketed: Accelerate / Continue / Watch / Restructure / Sunset.' },
-      { tab: 'workbench', title: 'The output',           lookFor: 'How portfolio data becomes exec messaging — 8 templates, AI auto-draft.' }
-    ]
-  },
-  '2m': {
-    label: '2-minute narrative',
-    description: 'The story of one initiative across 5 stops.',
-    steps: [
-      { tab: 'dashboard', title: 'Get the shape',                  lookFor: '16 initiatives, 6 pillars, $30M deployed. The Stage-Gate Pipeline shows where capital concentrates.' },
-      { tab: 'journey',   title: 'Press Play',                      lookFor: 'Watch Agentforce move G0→G5. Risk peaks at G2 Build then falls — by design.' },
-      { tab: 'decision',  title: 'Drag the budget slider',          lookFor: 'Capital Optimizer recomputes the optimal mix in real-time. Pin Trust initiatives to protect them.' },
-      { tab: 'kpi',       title: 'Switch the profile',              lookFor: 'Pick "Margin-First" → see CPQ shift to Sunset. Pick "Innovation-First" → see Customer 360 Voice rise.' },
-      { tab: 'workbench', title: 'Open a template',                 lookFor: 'Click Compose on "Monthly Exec Update" — 5 sections, AI auto-draft, distribution list ready.' }
-    ]
-  },
-  '5m': {
-    label: '5-minute deep dive',
-    description: 'Every tab with one specific thing to notice.',
-    steps: [
-      { tab: 'dashboard', title: 'KPIs as governance signals',     lookFor: 'Stage-Gate Compliance at 88% — improving. The trend line on Process Health shows +17pts in 6 months.' },
-      { tab: 'journey',   title: 'Cross-pillar ripple',             lookFor: 'At G2 Build, Trust & Security activates (AI Governance dependency). At G4 Launch, dependencies unblock.' },
-      { tab: 'decision',  title: 'Process Health anti-patterns',    lookFor: '4 detected anti-patterns with recommendations — this is "data-driven audits to provide strategic feedback."' },
-      { tab: 'kpi',       title: 'Per-initiative drill-down',        lookFor: 'Click any initiative row → see auto-rationale + per-KPI breakdown showing what dragged the score down.' },
-      { tab: 'playbooks', title: 'Adoption gradient',                lookFor: '4 playbooks at GA, 2 in Pilot, 1 in Draft. Adoption tracked per pillar.' },
-      { tab: 'team',      title: 'AI Coaching Feed',                 lookFor: 'Auto-detected: "Renata 1:1 overdue 19 days." "Marcus on leave June 17 — propose Aisha as backfill."' },
-      { tab: 'workbench', title: 'Workbench composer',               lookFor: 'AI auto-draft button fills sections from PortfolioIQ data. Completeness % bar updates live.' },
-      { tab: 'data',      title: 'Source of Truth',                   lookFor: 'Schema · Metric Catalog (17) · Data Glossary (33 terms with "Don\'t confuse with") · Audit Trail.' }
-    ]
-  }
-};
+// (Imported from src/data/tours.js — shared with App.jsx for the persistent TourBar)
 
 // =================== PRFAQ CONTENT ===================
 const PRFAQ_FAQS = [
@@ -133,13 +99,13 @@ function TourCard({ duration, title, description, onClick, icon: Icon, active })
   );
 }
 
-function TourPanel({ tourId, navigateTo, onClose }) {
+function TourPanel({ tourId, tourStep, onGoToStep, onClose }) {
   const tour = TOURS[tourId];
   return (
     <section className="card border-l-4 border-sflight bg-sflight/5 step-fade-in">
       <div className="flex items-baseline justify-between gap-3 mb-1">
         <div>
-          <div className="text-[11px] uppercase tracking-widest text-sflight font-semibold">Active tour</div>
+          <div className="text-[11px] uppercase tracking-widest text-sflight font-semibold">Active tour · {tour.steps.length} stops</div>
           <h3 className="text-lg font-serif font-bold text-sfnavy">{tour.label}</h3>
           <p className="text-xs text-sfmuted">{tour.description}</p>
         </div>
@@ -147,19 +113,30 @@ function TourPanel({ tourId, navigateTo, onClose }) {
           <X className="w-3 h-3" /> Close
         </button>
       </div>
-      <div className="space-y-2 mt-4">
-        {tour.steps.map((step, i) => (
-          <div key={i} className="bg-white p-3 rounded-lg border border-slate-200 flex items-start gap-3 step-fade-in" style={{ animationDelay: `${i * 80}ms` }}>
-            <div className="w-7 h-7 rounded-full bg-sflight text-white grid place-items-center text-xs font-bold flex-shrink-0">{i + 1}</div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold text-sfnavy">{step.title}</div>
-              <p className="text-xs text-sfblue mt-1"><strong>Look for:</strong> <span className="text-sfnavy font-normal">{step.lookFor}</span></p>
+      <div className="text-[11px] text-sfmuted mt-2 mb-3 italic">Click any step to jump there. The floating tour bar at the bottom of every tab will let you Prev/Next without coming back here.</div>
+      <div className="space-y-2">
+        {tour.steps.map((step, i) => {
+          const isCurrent = i === tourStep;
+          return (
+            <div
+              key={i}
+              className={`p-3 rounded-lg border flex items-start gap-3 step-fade-in transition-all ${isCurrent ? 'bg-sflight/10 border-sflight ring-2 ring-sflight/40' : 'bg-white border-slate-200'}`}
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div className={`w-7 h-7 rounded-full grid place-items-center text-xs font-bold flex-shrink-0 ${isCurrent ? 'bg-sflight text-white ring-2 ring-sflight/30' : 'bg-sflight text-white'}`}>{i + 1}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold text-sfnavy flex items-center gap-2">
+                  {step.title}
+                  {isCurrent && <span className="text-[10px] uppercase tracking-wider text-sflight font-bold">· current</span>}
+                </div>
+                <p className="text-xs text-sfblue mt-1"><strong>Look for:</strong> <span className="text-sfnavy font-normal">{step.lookFor}</span></p>
+              </div>
+              <button onClick={() => onGoToStep(i)} className={`text-xs rounded-lg px-3 py-1.5 font-medium flex-shrink-0 flex items-center gap-1 ${isCurrent ? 'bg-sfblue text-white hover:bg-sfdeep' : 'bg-sflight text-white hover:bg-sfblue'}`}>
+                {isCurrent ? 'Re-open' : 'Open'} <ArrowRight className="w-3 h-3" />
+              </button>
             </div>
-            <button onClick={() => navigateTo(step.tab)} className="text-xs bg-sflight text-white rounded-lg px-3 py-1.5 font-medium hover:bg-sfblue flex-shrink-0 flex items-center gap-1">
-              Open <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -226,8 +203,7 @@ function PRFAQ({ faqOpen, setFaqOpen }) {
 }
 
 // =================== MAIN ===================
-export default function Welcome({ navigateTo }) {
-  const [activeTour, setActiveTour] = useState(null);
+export default function Welcome({ navigateTo, activeTour, tourStep, onStartTour, onCloseTour, onGoToStep }) {
   const [faqOpen, setFaqOpen] = useState(null);
   const tourRef = useRef(null);
 
@@ -254,10 +230,10 @@ export default function Welcome({ navigateTo }) {
             A Senior Manager's operating workspace for strategic portfolio management — the <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> that turns strategy into observable, repeatable practice. Sponsors and Directors make the calls; the Sr Manager makes sure those calls are decision-ready.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
-            <button onClick={() => setActiveTour('20s')} className="bg-white text-sfnavy rounded-lg px-5 py-3 font-semibold hover:bg-white/90 transition flex items-center gap-2 text-sm">
+            <button onClick={() => onStartTour('20s')} className="bg-white text-sfnavy rounded-lg px-5 py-3 font-semibold hover:bg-white/90 transition flex items-center gap-2 text-sm">
               <Clock className="w-4 h-4" /> 20-second scan
             </button>
-            <button onClick={() => setActiveTour('2m')} className="bg-sflight text-white rounded-lg px-5 py-3 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg">
+            <button onClick={() => onStartTour('2m')} className="bg-sflight text-white rounded-lg px-5 py-3 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg">
               <PlayCircle className="w-4 h-4" /> 2-minute tour
             </button>
             <button onClick={() => navigateTo('dashboard')} className="bg-white/10 text-white border border-white/30 rounded-lg px-5 py-3 font-semibold hover:bg-white/20 transition flex items-center gap-2 text-sm">
@@ -320,15 +296,15 @@ export default function Welcome({ navigateTo }) {
           <h2 className="text-2xl font-serif font-bold text-sfnavy">Pick a tour</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <TourCard duration="20 seconds" title="Just the so-what" description="3 stops. The minimum viable understanding for someone with no time." icon={Zap} onClick={() => setActiveTour('20s')} active={activeTour === '20s'} />
-          <TourCard duration="2 minutes"   title="The narrative arc" description="5 stops. One initiative, end-to-end. Why each engine exists." icon={PlayCircle} onClick={() => setActiveTour('2m')} active={activeTour === '2m'} />
-          <TourCard duration="5 minutes"   title="Deep dive"        description="8 stops. Every tab with one specific thing to look for." icon={BookOpen} onClick={() => setActiveTour('5m')} active={activeTour === '5m'} />
+          <TourCard duration="20 seconds" title="Just the so-what" description="3 stops. The minimum viable understanding for someone with no time." icon={Zap} onClick={() => onStartTour('20s')} active={activeTour === '20s'} />
+          <TourCard duration="2 minutes"   title="The narrative arc" description="5 stops. One initiative, end-to-end. Why each engine exists." icon={PlayCircle} onClick={() => onStartTour('2m')} active={activeTour === '2m'} />
+          <TourCard duration="5 minutes"   title="Deep dive"        description="8 stops. Every tab with one specific thing to look for." icon={BookOpen} onClick={() => onStartTour('5m')} active={activeTour === '5m'} />
         </div>
       </section>
 
       {/* Active tour panel — anchored here so clicks from tour cards or hero CTAs scroll into view */}
       <div ref={tourRef}>
-        {activeTour && <TourPanel tourId={activeTour} navigateTo={navigateTo} onClose={() => setActiveTour(null)} />}
+        {activeTour && <TourPanel tourId={activeTour} tourStep={tourStep} onGoToStep={onGoToStep} onClose={onCloseTour} />}
       </div>
 
       {/* PRFAQ */}

@@ -11,6 +11,8 @@ import Workbench from './components/Workbench.jsx';
 import PortfolioCopilot from './components/PortfolioCopilot.jsx';
 import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
+import TourBar from './components/TourBar.jsx';
+import { TOURS } from './data/tours.js';
 
 const TABS = [
   { id: 'welcome',   label: 'Welcome',           icon: Home },
@@ -28,6 +30,34 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('welcome');
+  const [activeTour, setActiveTour] = useState(null); // tour id or null
+  const [tourStep, setTourStep] = useState(0);
+
+  const startTour = (tourId) => {
+    setActiveTour(tourId);
+    setTourStep(0);
+    // First step navigation handled by user clicking step "Open" in panel,
+    // OR optionally auto-jumping to first step. We'll keep them on Welcome
+    // so they can see the step list, then click into step 1.
+  };
+
+  const goToStep = (idx) => {
+    if (!activeTour) return;
+    const tour = TOURS[activeTour];
+    if (idx < 0 || idx >= tour.steps.length) return;
+    setTourStep(idx);
+    setTab(tour.steps[idx].tab);
+  };
+
+  const exitTour = () => {
+    setActiveTour(null);
+    setTourStep(0);
+  };
+
+  const backToTourList = () => {
+    setTab('welcome');
+    // keep activeTour set so the Welcome panel shows the steps
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -67,8 +97,17 @@ export default function App() {
       </header>
 
       {/* Body */}
-      <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6">
-        {tab === 'welcome'   && <Welcome navigateTo={setTab} />}
+      <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6 pb-32">
+        {tab === 'welcome'   && (
+          <Welcome
+            navigateTo={setTab}
+            activeTour={activeTour}
+            tourStep={tourStep}
+            onStartTour={startTour}
+            onCloseTour={exitTour}
+            onGoToStep={goToStep}
+          />
+        )}
         {tab === 'dashboard' && <Dashboard />}
         {tab === 'journey'   && <PortfolioJourney />}
         {tab === 'decision'  && <DecisionEngine />}
@@ -87,6 +126,17 @@ export default function App() {
           <span>All mock data · No real systems connected · For demonstration purposes</span>
         </div>
       </footer>
+
+      {/* Persistent Tour Bar — appears across all tabs while a tour is active */}
+      <TourBar
+        tour={activeTour ? TOURS[activeTour] : null}
+        step={tourStep}
+        currentTab={tab}
+        onPrev={() => goToStep(tourStep - 1)}
+        onNext={() => goToStep(tourStep + 1)}
+        onExit={exitTour}
+        onBackToList={backToTourList}
+      />
     </div>
   );
 }
