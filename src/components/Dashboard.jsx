@@ -5,6 +5,7 @@ import {
   fmtMoney, pillarById, stageById
 } from '../data/portfolioData.js';
 import { STAGE_GATE_ARTIFACTS } from '../data/portfolioData.js';
+import { RED_INITIATIVES, CROSS_ORG_BLOCKERS } from '../data/attentionData.js';
 
 function Tooltip({ text }) {
   return (
@@ -42,6 +43,8 @@ function ProgressBar({ pct, color }) {
 
 // PRFAQ FAQs (compact — collapsed by default)
 const PRFAQ_FAQS = [
+  { q: 'Why AI on top of JIRA, GANTT, Smartsheet — what doesn\'t already exist?',
+    a: 'JIRA tracks tasks. GANTT shows schedules. Smartsheet structures lists. None aggregate across pillars to answer "which pillar is over-capacity next quarter?" or "what if I shift $4M from Customer Experience to Trust?" or "draft the 1:1 brief for my PM running at-risk CPQ." That\'s the layer added here. PortfolioIQ does not replace those tools — in production the data layer connects to them. JIRA + ServiceNow + Anaplan feed initiative_inventory; PortfolioIQ adds decision support, AI agent, and exec-comms drafting on top.' },
   { q: 'What does the Sr Manager own — and what does the Director own?',
     a: 'The Sr Manager owns process governance, the team of 4 Pillar PMs, the data layer, the cadences, and the comms drafts. The Director owns strategy, sponsor relationships, and final calls on capital allocation. Every recommendation here is a draft for sponsor review, never a final decision.' },
   { q: 'Why a Recommendation Engine if the Sr Manager doesn\'t decide?',
@@ -51,6 +54,95 @@ const PRFAQ_FAQS = [
   { q: 'Why mock data?',
     a: 'To enable open exploration without compromising any organization\'s portfolio. The schema maps to real connectors (Anaplan, ServiceNow, GUS, Quip) — real data is one connector per source system away.' }
 ];
+
+// =================== EXEC ATTENTION ===================
+function ExecAttentionRow({ item, rank }) {
+  const [open, setOpen] = useState(false);
+  const isOff = item.status === 'off_track';
+  return (
+    <button
+      onClick={() => setOpen(!open)}
+      className={`w-full text-left rounded-lg border transition-all ${open ? 'bg-white/10 border-white/30' : 'bg-white/5 border-white/15 hover:bg-white/10 hover:border-white/25'}`}
+    >
+      <div className="px-4 py-3 flex items-center gap-3">
+        <span className="font-mono text-xs text-sfmuted w-6">#{rank}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="font-semibold text-white text-sm">{item.name}</span>
+            <span className="text-[11px] text-sfmuted">{item.id} · {item.pillar}</span>
+          </div>
+          <div className="text-[11px] text-sfmuted mt-0.5">
+            <span className={`text-${item.okrCritColor} font-semibold`}>{item.okrCriticality}</span> · {item.daysRed} days red · {item.spendVsPlan}
+          </div>
+        </div>
+        <span className={`pill ${isOff ? 'pill-red' : 'pill-yellow'} flex-shrink-0`}>
+          {isOff ? 'OFF TRACK' : 'AT RISK'}
+        </span>
+        <ChevronDown className={`w-4 h-4 text-white/60 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </div>
+      {open && (
+        <div className="px-4 pb-4 pt-2 border-t border-white/10 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-sfmuted font-bold mb-1">Root cause</div>
+            <p className="text-white/85 leading-relaxed">{item.rootCause}</p>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-sfmuted font-bold mb-1">Accountable</div>
+            <p className="text-white/85"><strong>{item.accountable}</strong> ({item.accountableRole})</p>
+            <p className="text-sfmuted mt-1">↳ Sponsor: {item.sponsor} ({item.sponsorRole})</p>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-sgreen font-bold mb-1">Path to green · by {item.decisionBy}</div>
+            <p className="text-white/85 leading-relaxed">{item.pathToGreen}</p>
+            <p className="text-sflight text-[11px] mt-1.5"><strong>Next:</strong> {item.nextStep}</p>
+          </div>
+        </div>
+      )}
+    </button>
+  );
+}
+
+// =================== CROSS-ORG BLOCKERS ===================
+function BlockerRow({ b }) {
+  const tone = b.risk === 'high' ? 'sred' : 'syellow';
+  const typeLabel = { gates: 'GATES', blocks: 'BLOCKS', shares_resources: 'SHARES FTE', informs: 'INFORMS' }[b.type] || b.type;
+  return (
+    <div className="bg-white/5 border border-white/15 rounded-lg p-3">
+      <div className="flex items-center gap-2 text-xs flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <span className="font-mono text-sflight text-[11px]">{b.blocker.id}</span>
+          <span className="text-white text-sm font-medium">{b.blocker.name}</span>
+          <span className="text-[10px] text-sfmuted bg-white/5 rounded px-1.5 py-0.5">{b.blocker.pillar}</span>
+        </div>
+        <span className={`pill pill-${tone === 'sred' ? 'red' : 'yellow'} font-mono text-[10px]`}>{typeLabel}</span>
+        <span className="text-sfmuted">→</span>
+        <div className="flex items-center gap-1.5">
+          <span className="font-mono text-sflight text-[11px]">{b.blocked.id}</span>
+          <span className="text-white text-sm font-medium">{b.blocked.name}</span>
+          <span className="text-[10px] text-sfmuted bg-white/5 rounded px-1.5 py-0.5">{b.blocked.pillar}</span>
+        </div>
+        {b.daysOpen > 0 && (
+          <span className={`text-[10px] ml-auto text-${tone}`}>{b.daysOpen}d open</span>
+        )}
+      </div>
+      <p className="text-[11px] text-white/70 mt-2 leading-relaxed">{b.impact}</p>
+    </div>
+  );
+}
+
+// Small section kicker for hierarchy
+function SectionKicker({ num, label, sub, accent = 'sflight' }) {
+  return (
+    <div className="mb-3">
+      <div className="flex items-baseline gap-2">
+        <span className={`text-[10px] uppercase tracking-[0.2em] font-bold text-${accent}`}>{num}</span>
+        <span className={`text-[10px] uppercase tracking-[0.2em] font-bold text-${accent}`}>·</span>
+        <span className={`text-[10px] uppercase tracking-[0.2em] font-bold text-${accent}`}>{label}</span>
+      </div>
+      {sub && <p className="text-xs text-sfmuted mt-1">{sub}</p>}
+    </div>
+  );
+}
 
 // Hybrid chips for hero — always-visible captions + click-to-expand detail
 const HERO_CHIPS = [
@@ -234,6 +326,28 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </section>
       )}
 
+      {/* 01 · EXECUTIVE ATTENTION — top-of-page red items */}
+      {(!persona || !persona.pillarFilter) && (
+        <section className="card border-l-4" style={{ borderLeftColor: '#F87171' }}>
+          <SectionKicker num="01" label="Decisions needed this week" sub="Stack-ranked by status × OKR criticality × days red. Click any row for path-to-green and accountable owner." accent="sred" />
+          <div className="space-y-2">
+            {RED_INITIATIVES.map((it, idx) => (
+              <ExecAttentionRow key={it.id} item={it} rank={idx + 1} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 02 · CROSS-ORG BLOCKERS */}
+      {(!persona || !persona.pillarFilter) && (
+        <section className="card">
+          <SectionKicker num="02" label="Active cross-pillar blockers" sub="Where a decision in one pillar is gating delivery in another. Roadblocks executives need to know about." accent="syellow" />
+          <div className="space-y-2">
+            {CROSS_ORG_BLOCKERS.map((b, i) => <BlockerRow key={i} b={b} />)}
+          </div>
+        </section>
+      )}
+
       {/* PRFAQ — only shown when toggled */}
       {prfaqOpen && (
         <section className="card border-l-4 border-sflight">
@@ -261,7 +375,8 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
       )}
 
 
-      {/* KPI Strip */}
+      {/* 03 · KPI STRIP */}
+      <SectionKicker num="03" label="Portfolio health · 5 leading KPIs" />
       <section className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <KpiCard icon={TrendingUp}    label={KPI_DEFINITIONS[0].label} value={kpiValues.health}     sub={kpiValues.healthSub}     target={KPI_DEFINITIONS[0].target} tooltip={KPI_DEFINITIONS[0].tooltip} jdLink={KPI_DEFINITIONS[0].jdLink} />
         <KpiCard icon={DollarSign}    label={KPI_DEFINITIONS[1].label} value={kpiValues.capital}    sub={kpiValues.capitalSub}    target={KPI_DEFINITIONS[1].target} tooltip={KPI_DEFINITIONS[1].tooltip} jdLink={KPI_DEFINITIONS[1].jdLink} />
@@ -270,25 +385,24 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         <KpiCard icon={AlertTriangle} label={KPI_DEFINITIONS[4].label} value={kpiValues.alignment}  sub={kpiValues.alignmentSub}  target={KPI_DEFINITIONS[4].target} tooltip={KPI_DEFINITIONS[4].tooltip} jdLink={KPI_DEFINITIONS[4].jdLink} />
       </section>
 
-      {/* Stage-Gate Pipeline — circular nodes with connector arrows */}
+      {/* 04 · STAGE-GATE PIPELINE */}
       <section className="card">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-lg font-semibold text-sfnavy">Stage-Gate Pipeline</h2>
-            <p className="text-xs text-sfmuted mt-0.5">Active initiatives flowing through G0 → G5. Budget per stage.</p>
-          </div>
-          <Tooltip text="Counts and budget exclude Complete initiatives. Stage definitions are uniform across all Pillars per the master taxonomy." />
-        </div>
-        <div className="flex items-start justify-between gap-1 overflow-x-auto pb-2">
+        <SectionKicker num="04" label="Stage-Gate Pipeline · G0 → G5" sub="Initiatives flowing through the lifecycle. Hover any stage for definition." />
+        <div className="flex items-start justify-around gap-2 flex-wrap pt-2 px-2">
           {stageDistribution.map((s, idx) => (
             <React.Fragment key={s.id}>
-              <div className="flex flex-col items-center text-center" style={{ minWidth: 100 }}>
-                <div className="relative">
-                  <div className="w-20 h-20 rounded-full grid place-items-center border-2" style={{ background: 'rgba(103, 232, 249, 0.08)', borderColor: 'rgba(103, 232, 249, 0.4)' }}>
+              <div className="flex flex-col items-center text-center" style={{ minWidth: 90 }}>
+                <div className="relative group">
+                  <div className="w-20 h-20 rounded-full grid place-items-center border-2 cursor-help" style={{ background: 'rgba(103, 232, 249, 0.08)', borderColor: 'rgba(103, 232, 249, 0.4)' }}>
                     <span className="font-serif font-bold text-3xl text-white leading-none">{s.count}</span>
                   </div>
                   <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full grid place-items-center text-[10px] font-bold text-white" style={{ background: '#0B5CAB' }}>
                     {idx + 1}
+                  </div>
+                  {/* Hover tooltip explaining the stage */}
+                  <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition absolute z-30 bottom-full mb-3 left-1/2 -translate-x-1/2 w-56 bg-sfnavy text-white text-[11px] rounded-lg p-3 shadow-2xl leading-relaxed border border-sflight/30 pointer-events-none">
+                    <div className="font-mono font-bold text-sflight mb-1">{s.id} · {s.name}</div>
+                    <div className="text-white/85">{s.desc}</div>
                   </div>
                 </div>
                 <div className="text-[10px] font-mono text-sflight font-bold mt-2.5 tracking-widest">{s.id}</div>
@@ -296,18 +410,18 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
                 <div className="text-[10px] text-sfmuted mt-0.5">{fmtMoney(s.budget)}</div>
               </div>
               {idx < stageDistribution.length - 1 && (
-                <div className="flex items-center pt-7 px-1 text-sfmuted text-2xl select-none" style={{ minWidth: 16 }}>→</div>
+                <div className="flex items-center pt-7 text-sfmuted text-xl select-none">→</div>
               )}
             </React.Fragment>
           ))}
         </div>
       </section>
 
-      {/* Pillar Performance Grid */}
+      {/* 05 · PILLAR PERFORMANCE */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold text-sfnavy">Pillar Performance</h2>
-          <span className="text-xs text-sfmuted">Click a pillar to filter the tracker below</span>
+          <SectionKicker num="05" label="By pillar · capacity + risk" sub="Click any pillar card to filter the tracker below." />
+          <span className="text-xs text-sfmuted hidden md:inline"></span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
           {pillarMetrics.map(p => {
@@ -347,12 +461,11 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </div>
       </section>
 
-      {/* Initiative Tracker */}
+      {/* 06 · INITIATIVE TRACKER */}
       <section className="card">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
-            <h2 className="text-lg font-semibold text-sfnavy">Initiative Tracker</h2>
-            <p className="text-xs text-sfmuted">{filtered.length} of {INITIATIVES.length} initiatives shown</p>
+            <SectionKicker num="06" label="All initiatives · full table" sub={`${filtered.length} of ${INITIATIVES.length} shown.`} />
           </div>
           <div className="flex items-center gap-2 text-xs">
             <select
@@ -401,7 +514,7 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
                   i.status === 'at_risk'   ? 'bg-syellow' :
                                               'bg-sfblue';
                 return (
-                  <tr key={i.id} className="border-b border-slate-100 hover:bg-sfbg/60">
+                  <tr key={i.id} className="border-b border-slate-100 hover:bg-white/5 transition-colors">
                     <td className="py-2 pr-3 font-mono text-xs text-sfmuted">{i.id}</td>
                     <td className="py-2 pr-3 font-medium text-sfnavy">{i.name}</td>
                     <td className="py-2 pr-3 text-xs text-sfmuted">{p.name}</td>
