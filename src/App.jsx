@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Database, Hammer, Sparkles, Calculator, PlayCircle, Briefcase, Bot } from 'lucide-react';
+import { LayoutDashboard, Database, Hammer, Sparkles, Calculator, PlayCircle, Briefcase, Bot, Compass } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
+import Guide from './components/Guide.jsx';
 import PortfolioJourney from './components/PortfolioJourney.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
 import Operate from './components/Operate.jsx';
@@ -14,6 +15,7 @@ import { PERSONAS, getPersona } from './data/personas.js';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard',       icon: LayoutDashboard },
+  { id: 'guide',     label: 'Guide',           icon: Compass },
   { id: 'journey',   label: 'Journey',         icon: PlayCircle },
   { id: 'decisions', label: 'Decisions',       icon: Calculator },
   { id: 'operate',   label: 'Operate',         icon: Briefcase },
@@ -118,6 +120,7 @@ export default function App() {
             persona={persona}
           />
         )}
+        {tab === 'guide'     && <Guide navigateTo={setTab} onStartTour={startTour} />}
         {tab === 'journey'   && <PortfolioJourney />}
         {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} persona={persona} />}
         {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} persona={persona} />}
