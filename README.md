@@ -1,5 +1,8 @@
 # PortfolioIQ — DET Strategic Portfolio Intelligence (Demo)
 
+🌐 **Live demo:** https://portfolioiq-demo.vercel.app/
+📁 **Repo:** https://github.com/saurabhj1986/portfolioiq-demo
+
 Interview artifact for **Salesforce JR337298 — Senior Manager, Strategic Portfolio Management**.
 
 A 7-tab React prototype, **strictly tailored to JR337298** — every feature maps to a verbatim JD line. Nothing built outside scope.

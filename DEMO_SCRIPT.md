@@ -1,5 +1,7 @@
 # Demo Script — PortfolioIQ for JR337298
 
+🌐 **Live URL to share:** https://portfolioiq-demo.vercel.app/
+
 ## 30-second opener (memorize this)
 
 > "This is **PortfolioIQ** — a portfolio intelligence prototype I built specifically for the DET Senior Manager role. The premise: portfolio governance is fundamentally a **data architecture problem with an adoption layer on top**. I translated every line of the JD into a working feature — playbooks, stage-gate scoring, capital optimization, an AI agent for portfolio questions, and a team cockpit for the four direct reports. All mock data, no real Salesforce systems connected — the architecture is what's transferable on day one."

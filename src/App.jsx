@@ -71,9 +71,13 @@ export default function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white">
-        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between text-xs text-sfmuted">
-          <span>Mock data · No real Salesforce systems connected · Built April 2026</span>
-          <span>Pattern transfer evidence: <a href="https://trustreply-demo.vercel.app" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">trustreply-demo.vercel.app</a></span>
+        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between text-xs text-sfmuted flex-wrap gap-2">
+          <span>Mock data · No real Salesforce systems connected · Built April 2026 · Saurabh Jhaveri</span>
+          <span className="flex items-center gap-3">
+            <a href="https://github.com/saurabhj1986/portfolioiq-demo" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">GitHub</a>
+            <span>·</span>
+            <a href="https://trustreply-demo.vercel.app" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">Pattern transfer: trustreply-demo</a>
+          </span>
         </div>
       </footer>
     </div>
