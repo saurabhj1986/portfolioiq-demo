@@ -1,97 +1,165 @@
 import React, { useState } from 'react';
-import { Lightbulb, MessageCircleQuestion, AlertCircle, Map, ArrowRightLeft, ChevronDown, Target, CheckCircle2 } from 'lucide-react';
+import {
+  Lightbulb, Layers, Plug, FlaskConical, AlertOctagon, ChevronDown,
+  Database, Cog, Eye, ArrowDown, CheckCircle2, Code2
+} from 'lucide-react';
 
-// Every JD line, mapped to where it lives in the prototype.
-// 15 JD responsibilities + qualifications, all with explicit feature attribution.
-const JD_COVERAGE = [
-  { line: 'Architect a unified framework for initiative data management',                          where: 'Data Model · initiative_inventory schema',                                           tab: 'Data Model' },
-  { line: 'Lead the creation and adoption of foundational playbooks and assets',                   where: '7 playbooks (4 GA, 2 Pilot, 1 Draft); adoption tracked per pillar',                  tab: 'Playbooks' },
-  { line: 'Establish comprehensive guardrails and stage-gate processes',                           where: 'Stage-Gate Pipeline (Dashboard) + Stage-Gate Scorer (Decision Engine)',              tab: 'Dashboard + Decision Engine' },
-  { line: 'Implement oversight mechanisms and audit trails',                                       where: 'portfolio_audit_trail (Data Model) + artifact lifecycle states',                     tab: 'Data Model' },
-  { line: 'Define and govern master taxonomy and metadata standards',                              where: 'PILLARS / STAGES / STATUS / OKR taxonomies in portfolioData.js',                     tab: 'Data Model' },
-  { line: 'Identify friction points in current data workflows',                                    where: 'Process Health sub-tab — cycle time, rework rate, NPS, anti-patterns',               tab: 'Decision Engine' },
-  { line: 'Source of Truth supporting high-fidelity reporting + automated insights',               where: 'Every component reads from initiative_inventory; PortfolioCopilot grounded in same', tab: 'Data Model + PortfolioCopilot' },
-  { line: 'Drive organizational excellence through regular evaluations',                           where: 'Portfolio Review Playbook (PB-06); compliance trend in Process Health',              tab: 'Playbooks + Decision Engine' },
-  { line: 'Data-driven audits to provide strategic feedback to leadership',                        where: 'Anti-Patterns section in Process Health (4 detected, with recommendations)',         tab: 'Decision Engine' },
-  { line: 'Support quarterly portfolio planning, prioritization, and rebalancing',                 where: 'Quarterly Rebalance Playbook (PB-05) + Scenario Compare',                            tab: 'Playbooks + Decision Engine' },
-  { line: 'Maintain a forward-looking view (dependencies, capacity constraints, market impacts)',  where: 'Pillar Performance grid + dependencies table + Influence Factors (Market Timing)',   tab: 'Dashboard + Data Model + Decision Engine' },
-  { line: 'Provide executive insights to guide strategic trade-offs and capital allocation',       where: 'Capital Optimizer + Value & TCO Engine + Scenario Compare + KPI Studio Recommendation Engine (Accelerate / Continue / Watch / Restructure / Sunset per initiative)', tab: 'Decision Engine + KPI Studio' },
-  { line: 'Define and manage portfolio KPIs (value realization, time-to-market, resource util, risk)', where: '5 KPIs on Dashboard + KPI Studio (17 configurable KPIs across 7 categories with weight + recommendation engine)', tab: 'Dashboard + KPI Studio' },
-  { line: 'Drive adoption of enterprise tools and analytics for portfolio visibility + scenario planning', where: 'Tooltip-everywhere UX + PortfolioCopilot AI agent + Scenario Compare',     tab: 'PortfolioCopilot + Decision Engine' },
-  { line: 'Build a collaborative teaming environment that champions creativity, innovation, learning', where: 'Team Cockpit AI Coaching Feed (growth opportunities, not just risks)',           tab: 'Team Cockpit' },
-  { line: '[BONUS] Experience building portfolio tools with AI',                                   where: 'PortfolioCopilot agent + AI Coaching Feed + auto-drafted weekly briefs',             tab: 'PortfolioCopilot + Team Cockpit' }
-];
-
+// =================== DESIGN DECISIONS ===================
 const DECISIONS = [
-  { d: 'Domain framing', chose: 'Treat portfolio governance as a data-architecture problem with an adoption layer on top', why: 'Judette\'s 60–90 day plan reads as taxonomy + standards + frameworks. That\'s a schema problem first, a process problem second. Demo leads with the data model for that reason.' },
-  { d: 'Schema scope', chose: '4 tables (initiative, stage-gate artifact, dependency, capacity)', why: 'Covers the 80% of portfolio questions an exec actually asks. Resist the urge to over-model — benefits_realization and stage_history can be added in v2 once teams adopt v1.' },
-  { d: 'Stage-gates', chose: 'G0 Concept → G5 Sustain', why: 'Aligns with how DET likely already thinks about lifecycle. "Test once, audit many" applies — same gate definition for every Pillar.' },
-  { d: 'Master taxonomy unit', chose: 'Initiative (not project, not epic)', why: 'A project is execution-scoped. An initiative ties to a V25 OKR and a sponsor. The Sr Mgr role is funded to manage the initiative layer.' },
-  { d: 'AI agent boundary', chose: 'Copilot answers questions; humans make decisions', why: 'The agent surfaces evidence and trade-offs with confidence scores. Humans decide. Same governance principle as TrustReply: AI is a force multiplier on top of governed data.' },
-  { d: 'Reasoning transparency', chose: 'Show classify → resolve → reason → confidence for every agent answer', why: 'Capital allocation decisions need an audit trail. Opaque AI is unauditable. Transparent reasoning is what makes the agent trustworthy in a portfolio context.' },
-  { d: 'KPI definitions', chose: 'Tooltipped on every metric — WHAT, TARGET, JD line', why: 'Eliminates the "every report defines metrics differently" problem. Aligns three-VP audiences without an alignment meeting.' },
-  { d: 'Mock data realism', chose: 'Plausible Salesforce-shaped pillars, V25 OKR codes, $30M portfolio scale', why: 'Demo only matters if it feels like the real org. Numbers chosen to be realistic for a single DET sub-portfolio at Salesforce scale.' },
-  { d: 'Reuse from TrustReply', chose: 'Lift the architecture pattern (registry + lifecycle + AI + reasoning) and re-skin', why: 'Demonstrates pattern transfer. The same governance discipline works whether the unit is a control or an initiative.' }
+  {
+    d: 'Framing',
+    chose: 'Treat portfolio governance as a data-architecture problem with an adoption layer on top',
+    why: 'The standards / frameworks / playbooks asks read as a schema problem first, a process problem second. The demo leads with the data model for that reason.'
+  },
+  {
+    d: 'Schema scope',
+    chose: '4 normalized tables + 1 audit log',
+    why: 'Covers ~80% of the portfolio questions execs actually ask. Resist over-modelling — benefits_realization and stage_history can be added in v2 once teams adopt v1.'
+  },
+  {
+    d: 'Stage-gates',
+    chose: 'G0 Concept → G5 Sustain (6 gates)',
+    why: 'Aligns with how most engineering orgs already think about lifecycle. Same gate definition across every Pillar — discipline, not opinion.'
+  },
+  {
+    d: 'Taxonomy unit',
+    chose: 'Initiative (not project, not epic)',
+    why: 'A project is execution-scoped. An initiative ties to a strategic OKR and an executive sponsor. Sr Manager roles are funded to manage the initiative layer.'
+  },
+  {
+    d: 'AI boundary',
+    chose: 'AI surfaces evidence; humans decide',
+    why: 'Capital allocation decisions need an audit trail. The agent gives confidence scores and transparent reasoning; the human makes the call. AI is a force multiplier on top of governed data — not a substitute for governance.'
+  },
+  {
+    d: 'Reasoning transparency',
+    chose: 'classify → resolve → reason → confidence on every agent answer',
+    why: 'Opaque AI is unauditable. Transparent reasoning is what makes the agent trustworthy in a portfolio context.'
+  },
+  {
+    d: 'KPI definitions',
+    chose: 'Tooltipped on every metric — WHAT, TARGET, SOURCE',
+    why: 'Eliminates the "every report defines metrics differently" problem. Aligns multi-VP audiences without an alignment meeting.'
+  },
+  {
+    d: 'Recommendation framing',
+    chose: 'Every output is a draft for sponsor review, never a final decision',
+    why: 'Sharp boundary between operations (Sr Manager) and strategy (Director). The tool reflects that boundary in the language of every screen.'
+  },
+  {
+    d: 'Mock data',
+    chose: 'Production-quality schema, fictional data',
+    why: 'Enables open exploration without compromising any real organisation\'s portfolio. Lifts to production with one connector per source system.'
+  }
 ];
 
-const QUESTIONS = [
-  { q: 'What\'s the current source of truth for DET portfolio data?', why: 'Asana? Smartsheet? Anaplan? GUS? The answer determines whether v1 is a schema build or a migration. Big effort delta.' },
-  { q: 'How many Pillars actually exist, and who are the Pillar Portfolio Managers?', why: 'The team works "across DET Pillars." Real names + count change the stakeholder map and the rollout sequence.' },
-  { q: 'Which stage-gate artifacts are mandatory vs. recommended today, and what\'s the enforcement mechanism?', why: 'If gates are advisory, governance is theater. If gates block budget release, governance has teeth. v1 design depends on which it is.' },
-  { q: 'What\'s the relationship between V2MOM and the V25 OKRs at the initiative level?', why: 'Want to design the okr_mapping field correctly. Is it a free array or a controlled vocabulary? Who owns the master list?' },
-  { q: 'What does "value realization" actually mean in DET — leading indicator (adoption) or lagging (revenue/cost)?', why: 'Drives the benefits_realization table design and the Strategic Alignment KPI definition.' },
-  { q: 'Who has been building portfolio reports today, and what do they hate about the current process?', why: 'The fastest path to adoption is solving the analyst\'s problem, not just the exec\'s. Want their pain points before designing v1.' },
-  { q: 'When is the next quarterly portfolio review, and what 3 questions does Judette want to answer differently?', why: 'Working backwards from a real meeting forces concrete scope. v1 ships to support that meeting.' }
+// =================== ARCHITECTURE LAYERS ===================
+const LAYERS = [
+  {
+    name: 'Experience layer',
+    icon: Eye,
+    color: 'sflight',
+    items: 'Dashboard · Journey · Decisions · Operate (Playbooks / Team / Workbench) · Source of Truth · Copilot',
+    note: 'React 18 + Vite + Tailwind + Lucide. No backend in v1 — pure UI on mock data.'
+  },
+  {
+    name: 'Logic layer',
+    icon: Cog,
+    color: 'sfblue',
+    items: 'RICE · Capital Optimizer · Risk Heatmap · Stage-Gate Scorer · Value/TCO · Influence Factors · Process Health · Scenario Compare · KPI Studio',
+    note: 'Pure JS calculation engines. Deterministic, testable. Each engine is a small file with a single responsibility.'
+  },
+  {
+    name: 'Data layer (Source of Truth)',
+    icon: Database,
+    color: 'sfdeep',
+    items: 'initiative_inventory · stage_gate_artifacts · dependencies · capacity_snapshots · portfolio_audit_trail',
+    note: 'Snowflake-flavoured DDL designed for production. Append-only audit. Foreign keys enforce referential integrity.'
+  },
+  {
+    name: 'Source systems (production target)',
+    icon: Plug,
+    color: 'sgreen',
+    items: 'Anaplan · ServiceNow · Workday · Snowflake / Data Cloud · Quip / Confluence · Slack · Calendar · Identity provider',
+    note: 'Each source feeds one or more tables in the Data layer via a thin connector.'
+  }
 ];
 
-const GAPS = [
-  'How DET\'s governance ladder actually works — what does the Pillar PM authority vs. Sr Mgr authority look like in practice?',
-  'Whether Anaplan, Smartsheet, ServiceNow, or something else holds the official initiative list today',
-  'Salesforce\'s internal data classification rules — does portfolio data sit on a specific tier with PII restrictions?',
-  'How V25 OKRs are versioned — do they change mid-year, and if so, how do we re-cascade alignment?',
-  'The exact Salesforce flavor of "Source of Truth" — Tableau CRM? Data Cloud? A different tool I haven\'t learned yet?',
-  'Whether agentic-workforce planning (the prep guide called it out) is part of this role\'s scope or a separate workstream',
-  'How Pillar capacity is actually planned — is it FTE-based, story-points, or a Salesforce-specific unit?'
+// =================== INTEGRATION POINTS ===================
+const INTEGRATIONS = [
+  { source: 'Anaplan',                  feeds: 'capacity_snapshots · initiative_inventory.budget_*',  type: 'API pull',         refresh: 'Daily',     notes: 'Capital plans, budget actuals, FTE capacity' },
+  { source: 'ServiceNow',               feeds: 'stage_gate_artifacts (risk register, capacity plan)', type: 'Webhooks',         refresh: 'Real-time', notes: 'Incident → risk; CR → artifact' },
+  { source: 'Workday HRIS',             feeds: 'capacity_snapshots.fte_capacity · pillar.lead',       type: 'API pull',         refresh: 'Weekly',    notes: 'Headcount, org structure, leave calendar' },
+  { source: 'Snowflake / Data Cloud',   feeds: 'aggregated KPIs (Process Health, Compliance trend)',  type: 'SQL views',        refresh: 'Hourly',    notes: 'Materialized views; query through a semantic layer' },
+  { source: 'Quip / Confluence',         feeds: 'stage_gate_artifacts (PRD, Architecture Review)',     type: 'URL + metadata',   refresh: 'On-update', notes: 'Webhook on doc change; extract status + approver' },
+  { source: 'Slack',                    feeds: 'Workbench distribution · Team Cockpit signals',       type: 'Slack API',        refresh: 'Real-time', notes: 'Send drafted messages; detect stalled threads' },
+  { source: 'Calendar (Outlook/Gcal)',   feeds: 'Team Cockpit.last1on1 · stale-1:1 signal',           type: 'Calendar API',     refresh: 'Hourly',    notes: 'Detect overdue 1:1s, portfolio reviews' },
+  { source: 'Identity provider (Okta)',  feeds: 'auth + role-based access',                            type: 'SAML / OIDC',      refresh: 'At login',  notes: 'Sponsor-only views, audit-trail attribution' }
 ];
 
-const PLAN = [
-  { phase: 'Days 0–14', focus: 'Listen + map', work: [
-    'Meet every Pillar PM 1:1 — get current process, pain points, and "what would you change?" list',
-    'Inventory existing tools: where data lives, who owns it, refresh cadence',
-    'Read the last 4 quarterly review decks Judette has run/inherited',
-    'Sit in on at least one stage-gate meeting per Pillar to observe the actual mechanics'
-  ]},
-  { phase: 'Days 15–30', focus: 'Draft taxonomy v0', work: [
-    'Publish a strawman initiative taxonomy + stage-gate artifact list',
-    'Pilot on 1 Pillar (volunteer — likely the team most under-served by current state)',
-    'Stand up a lightweight "current state" dashboard pulling from existing systems (read-only, no migration yet)',
-    'Identify the 3 highest-impact KPIs for v1 (likely: portfolio health, stage-gate compliance, capital utilization)'
-  ]},
-  { phase: 'Days 31–60', focus: 'Standardize + document', work: [
-    'Lock the master taxonomy with Pillar PM consensus',
-    'Publish the playbook: what each gate requires, who approves, escalation path',
-    'Stand up the Source of Truth in the agreed system (build vs. configure decision made by day 30)',
-    'Run a stage-gate review using the new framework as a controlled experiment — measure cycle time before/after'
-  ]},
-  { phase: 'Days 61–90', focus: 'Pilot + scale', work: [
-    'Roll v1 to 2 more Pillars, instrument adoption (logins, artifact upload rate, KPI freshness)',
-    'Show measurable improvement in data quality + reporting consistency at the next exec review',
-    'Identify the top 3 questions executives ask repeatedly → automate via AI agent (this is where PortfolioCopilot would slot in)',
-    'Publish the v2 roadmap for the back half of the year'
-  ]}
+// =================== POCs ===================
+const POCS = [
+  {
+    n: 1,
+    title: 'Read-only Source of Truth',
+    duration: '4 weeks',
+    pillars: 'All',
+    goal: 'Connect data layer to existing source systems; stand up Dashboard with real KPIs alongside the mock view.',
+    measure: 'KPI freshness vs source · query latency p90 · daily-active-user count',
+    success: 'KPIs refresh within target cadence; user count grows 3 weeks consecutively'
+  },
+  {
+    n: 2,
+    title: 'Stage-gate enforcement',
+    duration: '6 weeks',
+    pillars: '1 volunteer pillar',
+    goal: 'Pilot the Stage-Gate Scorer with budget release gated on artifact compliance.',
+    measure: 'Median cycle time per gate (before/after) · % artifacts approved at gate entry · Pillar PM NPS',
+    success: '≥10% reduction in cycle time, no drop in PM NPS, sponsor signs off on rollout to next 2 pillars'
+  },
+  {
+    n: 3,
+    title: 'Recommendation Engine dry-run',
+    duration: '1 quarter',
+    pillars: 'All (read-only)',
+    goal: 'Generate engine recommendations every 2 weeks; compare against actual sponsor decisions.',
+    measure: '% agreement between engine and sponsor · time-to-decision delta',
+    success: '≥60% agreement on tier; engine flags surfaced ≥2 issues exec hadn\'t seen'
+  },
+  {
+    n: 4,
+    title: 'Copilot grounded in real data',
+    duration: '4 weeks',
+    pillars: 'Sr Manager team only',
+    goal: 'Replace mock response map with RAG over the production schema; restrict to retrieval-only.',
+    measure: 'Answer accuracy (audited sample) · hallucination rate · time saved per query',
+    success: '≥90% accuracy on factual queries; <2% hallucination; user count grows week-on-week'
+  },
+  {
+    n: 5,
+    title: 'Workbench AI auto-draft',
+    duration: '3 months',
+    pillars: 'Sr Mgr + 4 reports',
+    goal: 'Wire auto-draft to pull live KPIs; pilot on Monthly Exec Update + Pillar PM Weekly Digest.',
+    measure: 'Drafting time (median) · edit volume (% of words changed) · exec read rate',
+    success: '≥40% drafting time reduction, ≤30% edit volume, exec read rate ≥90%'
+  }
 ];
 
-const TRANSFER = [
-  { trust: 'control_inventory (CC-01..CC-23)',     port: 'initiative_inventory (INI-101..INI-116)' },
-  { trust: 'evidence_submissions (PRD, scan, log)', port: 'stage_gate_artifacts (PRD, capacity plan, risk register)' },
-  { trust: 'CCF taxonomy (test once, audit many)',  port: 'V25 OKR mapping (one initiative, many reports)' },
-  { trust: 'Evidence lifecycle (current/expired)',  port: 'Artifact lifecycle (approved/needs_review/expired/missing)' },
-  { trust: 'TrustReply Agent (CCF-grounded)',       port: 'PortfolioCopilot (data-model-grounded)' },
-  { trust: 'Reuse rate KPI (84%)',                  port: 'Strategic alignment KPI (91%)' },
-  { trust: '"Test once, audit many"',                port: '"Capture once, report many"' }
+// =================== RISKS ===================
+const RISKS = [
+  { risk: 'Source data quality is worse than assumed',                     likelihood: 'High',   impact: 'High',   mitigation: 'Start with read-only POC; build data-quality monitors as KPIs; surface gaps before they become reporting bugs.' },
+  { risk: 'Pillar PMs reject new process as overhead',                       likelihood: 'Medium', impact: 'High',   mitigation: 'Co-create with one volunteer pillar first; instrument time savings; let early adopters become internal champions before broad rollout.' },
+  { risk: 'AI hallucinations in Copilot answers',                            likelihood: 'Medium', impact: 'High',   mitigation: 'Confidence scoring + transparent reasoning + retrieval-only constraint (no free generation). Hard cap on confidence ≥0.6 to display answer; below that, route to human.' },
+  { risk: 'Adoption stalls without an executive sponsor',                    likelihood: 'Medium', impact: 'High',   mitigation: 'Pre-align with sponsor before v1 launch; tie v1 launch to a specific recurring exec review meeting so the tool has a clear "job to be done."' },
+  { risk: 'Schema migration breaks downstream reports',                      likelihood: 'Low',    impact: 'High',   mitigation: 'Treat the schema as a versioned API; semantic versioning + 90-day deprecation cycle; backfill new columns before retiring old ones.' },
+  { risk: 'Compliance / SOX audit reveals access or audit-trail gaps',        likelihood: 'Low',    impact: 'High',   mitigation: 'SOC2-aligned append-only audit trail from day 1; role-based access tied to identity provider; quarterly access review.' },
+  { risk: 'Vendor lock-in on AI provider',                                   likelihood: 'Medium', impact: 'Medium', mitigation: 'Abstract LLM calls behind a model-agnostic interface; swap-in mock for testing; benchmark 2 alternative providers per quarter.' },
+  { risk: 'Data warehouse cost overrun (especially with AI grounding)',       likelihood: 'Medium', impact: 'Medium', mitigation: 'Cache hot queries; auto-suspend cold tables; pre-compute Process Health aggregates; monthly cost review tied to value-delivered KPIs.' }
 ];
 
-function Section({ icon: Icon, title, children, subtitle }) {
+// =================== UI COMPONENTS ===================
+function Section({ icon: Icon, title, subtitle, children }) {
   return (
     <section className="card">
       <div className="flex items-start gap-3 mb-4">
@@ -100,7 +168,7 @@ function Section({ icon: Icon, title, children, subtitle }) {
         </div>
         <div>
           <h2 className="text-lg font-serif font-semibold text-sfnavy">{title}</h2>
-          {subtitle && <p className="text-xs text-sfmuted">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-sfmuted mt-0.5">{subtitle}</p>}
         </div>
       </div>
       {children}
@@ -108,66 +176,67 @@ function Section({ icon: Icon, title, children, subtitle }) {
   );
 }
 
-function Expandable({ q, children }) {
-  const [open, setOpen] = useState(false);
+function LayerBlock({ layer, isLast }) {
+  const Icon = layer.icon;
   return (
-    <button
-      onClick={() => setOpen(o => !o)}
-      className="w-full text-left bg-sfbg border border-slate-200 rounded-lg p-3 hover:border-sfblue/40 transition"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <span className="text-sm font-medium text-sfnavy">{q}</span>
-        <ChevronDown className={`w-4 h-4 text-sfmuted transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`} />
+    <div className="relative">
+      <div className={`bg-${layer.color}/5 border-2 border-${layer.color}/30 rounded-lg p-4`}>
+        <div className="flex items-start gap-3">
+          <div className={`w-9 h-9 rounded-lg bg-${layer.color}/15 grid place-items-center flex-shrink-0`}>
+            <Icon className={`w-5 h-5 text-${layer.color}`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className={`font-serif font-bold text-${layer.color}`}>{layer.name}</h4>
+            <p className="text-xs text-sfnavy mt-1 font-mono leading-relaxed">{layer.items}</p>
+            <p className="text-[11px] text-sfmuted mt-1.5 italic">{layer.note}</p>
+          </div>
+        </div>
       </div>
-      {open && <div className="mt-2 text-xs text-sfmuted leading-relaxed">{children}</div>}
-    </button>
+      {!isLast && (
+        <div className="flex justify-center my-1.5">
+          <ArrowDown className="w-4 h-4 text-sfmuted" />
+        </div>
+      )}
+    </div>
   );
 }
 
+function Pill({ tone, children }) {
+  const map = {
+    high:   'bg-red-100 text-sred border-red-300',
+    medium: 'bg-orange-100 text-syellow border-orange-300',
+    low:    'bg-emerald-100 text-sgreen border-emerald-300'
+  };
+  return <span className={`pill ${map[children.toLowerCase()] || ''}`}>{children}</span>;
+}
+
+// =================== MAIN ===================
 export default function HowIBuilt() {
   return (
     <div className="space-y-4">
+      {/* Hero */}
       <div className="card bg-gradient-to-r from-sfnavy to-sfdeep text-white">
-        <h2 className="text-xl font-serif font-bold">How I Built This</h2>
-        <p className="text-sm text-white/80 mt-2 leading-relaxed max-w-3xl">
-          This tab matters more than the others. The dashboard and agent show <em>what</em> I built. This tab shows <em>how I think</em> — the JD coverage matrix, the design decisions, the questions I'd ask Judette before locking v1, the honest gaps, and how the prototype maps to the 60–90 day plan in the candidate prep guide.
-        </p>
+        <div className="flex items-start gap-3">
+          <Code2 className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
+          <div>
+            <h2 className="text-xl font-serif font-bold">How I Built This</h2>
+            <p className="text-sm text-white/80 mt-2 leading-relaxed max-w-3xl">
+              Design philosophy, system architecture, integration points, POCs to take it to production, and the risks to manage along the way. The dashboard shows <em>what</em> was built. This tab shows <em>how it was reasoned about</em>.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* JD COVERAGE MATRIX — top of the tab, most important */}
-      <Section icon={Target} title="JD Coverage Matrix" subtitle="Every line of JR337298 mapped to where it lives in this prototype. Nothing built outside scope.">
+      {/* Design Decisions */}
+      <Section
+        icon={Lightbulb}
+        title="Design Decisions"
+        subtitle="9 decisions that shape the product. Each is a defensible trade-off — not a default."
+      >
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase text-sfmuted border-b border-slate-200">
-                <th className="py-2 pr-3 font-semibold w-12">#</th>
-                <th className="py-2 pr-3 font-semibold">JD line</th>
-                <th className="py-2 pr-3 font-semibold">Where in the prototype</th>
-                <th className="py-2 pr-3 font-semibold">Tab</th>
-              </tr>
-            </thead>
-            <tbody>
-              {JD_COVERAGE.map((j, i) => (
-                <tr key={i} className="border-b border-slate-100 align-top">
-                  <td className="py-2 pr-3"><CheckCircle2 className="w-4 h-4 text-sgreen" /></td>
-                  <td className="py-2 pr-3 text-sfnavy">{j.line}</td>
-                  <td className="py-2 pr-3 text-sfmuted">{j.where}</td>
-                  <td className="py-2 pr-3"><span className="text-[11px] font-mono text-sfblue bg-sfblue/10 rounded px-1.5 py-0.5">{j.tab}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-3 bg-sfbg border border-slate-200 rounded-lg p-3 text-xs text-sfnavy">
-          <strong>Discipline note:</strong> Two influence factors (Sustainability, Equality &amp; Inclusion) were intentionally trimmed from v1 — they're Salesforce core values but not in this JD. Easy to add when relevant; out of scope for the role as written.
-        </div>
-      </Section>
-
-      <Section icon={Lightbulb} title="Design Decisions" subtitle="Each decision tied to a JD requirement or a candidate-prep-guide signal">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-xs uppercase text-sfmuted border-b border-slate-200">
+              <tr className="text-left text-[11px] uppercase text-sfmuted border-b border-slate-200">
                 <th className="py-2 pr-3 font-semibold">Decision</th>
                 <th className="py-2 pr-3 font-semibold">What I chose</th>
                 <th className="py-2 pr-3 font-semibold">Why</th>
@@ -176,8 +245,8 @@ export default function HowIBuilt() {
             <tbody>
               {DECISIONS.map((d, i) => (
                 <tr key={i} className="border-b border-slate-100 align-top">
-                  <td className="py-3 pr-3 font-medium text-sfnavy">{d.d}</td>
-                  <td className="py-3 pr-3">{d.chose}</td>
+                  <td className="py-3 pr-3 font-medium text-sfnavy whitespace-nowrap">{d.d}</td>
+                  <td className="py-3 pr-3 text-sfnavy">{d.chose}</td>
                   <td className="py-3 pr-3 text-sfmuted">{d.why}</td>
                 </tr>
               ))}
@@ -186,67 +255,123 @@ export default function HowIBuilt() {
         </div>
       </Section>
 
-      <Section icon={MessageCircleQuestion} title="Questions I'd Ask Judette Before Locking v1" subtitle="Demonstrates curiosity + humility — the two things Round 1 is screening for">
-        <div className="space-y-2">
-          {QUESTIONS.map((q, i) => (
-            <Expandable key={i} q={`${i+1}. ${q.q}`}>{q.why}</Expandable>
+      {/* System Architecture */}
+      <Section
+        icon={Layers}
+        title="System Architecture"
+        subtitle="Four layers, each with a single responsibility. Designed to lift to production with the data layer connected to real source systems."
+      >
+        <div className="space-y-0">
+          {LAYERS.map((layer, i) => (
+            <LayerBlock key={layer.name} layer={layer} isLast={i === LAYERS.length - 1} />
           ))}
+        </div>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+          <div className="bg-sfbg rounded p-2"><strong className="text-sfnavy">Build path:</strong> Data layer first → Logic layer → Experience layer.</div>
+          <div className="bg-sfbg rounded p-2"><strong className="text-sfnavy">Test path:</strong> Each engine is independently testable on mock data.</div>
+          <div className="bg-sfbg rounded p-2"><strong className="text-sfnavy">Production path:</strong> Replace mock data with source connectors; everything above is unchanged.</div>
         </div>
       </Section>
 
-      <Section icon={Map} title="60–90 Day Plan — Mapped Directly to the Candidate Prep Guide" subtitle="Prep guide milestones: 60 days = taxonomy/process/guidance documentation; 90 days = pilot frameworks, drive adoption, measurable improvements">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {PLAN.map((p, i) => (
-            <div key={i} className="bg-sfbg border border-slate-200 rounded-lg p-3">
-              <div className="text-[11px] uppercase tracking-wider text-sfblue font-semibold">{p.phase}</div>
-              <div className="text-sm font-semibold text-sfnavy mt-0.5">{p.focus}</div>
-              <ul className="mt-2 space-y-1.5">
-                {p.work.map((w, j) => (
-                  <li key={j} className="text-xs text-sfnavy leading-snug flex gap-1.5">
-                    <span className="text-sfblue flex-shrink-0">→</span>
-                    <span>{w}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section icon={AlertCircle} title="What I Don't Know Yet" subtitle="Honest gaps — these are the questions I'd close in week 1">
-        <ul className="space-y-2">
-          {GAPS.map((g, i) => (
-            <li key={i} className="flex gap-2 text-sm text-sfnavy">
-              <span className="text-syellow flex-shrink-0">•</span>
-              <span>{g}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section icon={ArrowRightLeft} title="Architecture Transfer — TrustReply → PortfolioIQ" subtitle="Same governance pattern, different domain. Talking point for Round 2 with Kyle (Drive Innovation, AI-enhanced portfolio tools).">
+      {/* Integration Points */}
+      <Section
+        icon={Plug}
+        title="Integration Points"
+        subtitle="Production connections needed to lift this from demo to live system. One connector per source — small surface area, big leverage."
+      >
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase text-sfmuted border-b border-slate-200">
-                <th className="py-2 pr-3 font-semibold">TrustReply (Harvey AI / Compliance)</th>
-                <th className="py-2 pr-3 font-semibold">PortfolioIQ (Salesforce DET / Portfolio)</th>
+              <tr className="text-left text-[11px] uppercase text-sfmuted border-b border-slate-200">
+                <th className="py-2 pr-3 font-semibold">Source system</th>
+                <th className="py-2 pr-3 font-semibold">Feeds (data layer)</th>
+                <th className="py-2 pr-3 font-semibold">Connection</th>
+                <th className="py-2 pr-3 font-semibold">Refresh</th>
+                <th className="py-2 pr-3 font-semibold">Notes</th>
               </tr>
             </thead>
             <tbody>
-              {TRANSFER.map((t, i) => (
-                <tr key={i} className="border-b border-slate-100">
-                  <td className="py-2 pr-3 font-mono text-xs">{t.trust}</td>
-                  <td className="py-2 pr-3 font-mono text-xs text-sfblue">{t.port}</td>
+              {INTEGRATIONS.map((c, i) => (
+                <tr key={i} className="border-b border-slate-100 align-top">
+                  <td className="py-2 pr-3 font-semibold text-sfnavy">{c.source}</td>
+                  <td className="py-2 pr-3 font-mono text-[11px] text-sfdeep">{c.feeds}</td>
+                  <td className="py-2 pr-3 text-xs"><span className="bg-sfblue/10 text-sfblue rounded px-2 py-0.5">{c.type}</span></td>
+                  <td className="py-2 pr-3 text-xs text-sfmuted">{c.refresh}</td>
+                  <td className="py-2 pr-3 text-xs text-sfmuted">{c.notes}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-sfmuted mt-3 leading-relaxed">
-          The architectural pattern — central registry + lifecycle states + AI agent + transparent reasoning + reuse engine — is domain-agnostic. Building it twice in different domains demonstrates that the framework, not the domain, is the durable PM skill.
-        </p>
       </Section>
+
+      {/* POCs */}
+      <Section
+        icon={FlaskConical}
+        title="POCs to Production"
+        subtitle="5 progressive proof-of-concepts. Each isolates one risk and produces a measurable answer before broader rollout."
+      >
+        <div className="space-y-3">
+          {POCS.map(p => (
+            <div key={p.n} className="bg-sfbg border border-slate-200 rounded-lg p-3">
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <div className="w-8 h-8 rounded-full bg-sfblue text-white grid place-items-center font-bold text-sm flex-shrink-0">{p.n}</div>
+                <h4 className="font-serif font-semibold text-sfnavy">{p.title}</h4>
+                <span className="text-[11px] font-mono text-sfmuted">{p.duration} · {p.pillars}</span>
+              </div>
+              <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div><strong className="text-sfnavy block mb-0.5">Goal</strong><span className="text-sfmuted">{p.goal}</span></div>
+                <div><strong className="text-sfnavy block mb-0.5">Measure</strong><span className="text-sfmuted font-mono text-[11px]">{p.measure}</span></div>
+                <div><strong className="text-sgreen block mb-0.5">Success criteria</strong><span className="text-sfnavy">{p.success}</span></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Risks */}
+      <Section
+        icon={AlertOctagon}
+        title="Risks &amp; Mitigations"
+        subtitle="What could go wrong on the path to production — and the mitigation already designed in."
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-[11px] uppercase text-sfmuted border-b border-slate-200">
+                <th className="py-2 pr-3 font-semibold">Risk</th>
+                <th className="py-2 pr-3 font-semibold">Likelihood</th>
+                <th className="py-2 pr-3 font-semibold">Impact</th>
+                <th className="py-2 pr-3 font-semibold">Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RISKS.map((r, i) => (
+                <tr key={i} className="border-b border-slate-100 align-top">
+                  <td className="py-3 pr-3 font-medium text-sfnavy">{r.risk}</td>
+                  <td className="py-3 pr-3"><Pill>{r.likelihood}</Pill></td>
+                  <td className="py-3 pr-3"><Pill>{r.impact}</Pill></td>
+                  <td className="py-3 pr-3 text-sfmuted text-xs leading-relaxed">{r.mitigation}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-3 bg-sfbg border border-slate-200 rounded p-3 text-xs text-sfnavy leading-relaxed">
+          <strong>Risk philosophy:</strong> the demo encodes the mitigations into the architecture. Audit trail is append-only by design. The Recommendation Engine surfaces drafts, not decisions, so AI errors degrade gracefully. Source-of-Truth-first means data quality is observable before it becomes a reporting problem.
+        </div>
+      </Section>
+
+      {/* Tech stack footer */}
+      <div className="card bg-sfbg border-2 border-slate-200">
+        <h4 className="text-sm font-semibold text-sfnavy mb-2 flex items-center gap-2"><Code2 className="w-4 h-4 text-sfblue" />Tech stack</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+          <div><strong className="text-sfnavy">Frontend</strong><br /><span className="text-sfmuted">React 18 · Vite · Tailwind 3 · Lucide</span></div>
+          <div><strong className="text-sfnavy">State</strong><br /><span className="text-sfmuted">Pure useState (no global store yet)</span></div>
+          <div><strong className="text-sfnavy">Data</strong><br /><span className="text-sfmuted">Mock JSON · production target: Snowflake</span></div>
+          <div><strong className="text-sfnavy">Deploy</strong><br /><span className="text-sfmuted">Vercel · auto-deploy on git push</span></div>
+        </div>
+      </div>
     </div>
   );
 }
