@@ -78,15 +78,15 @@ function NarrativeStep({ num, tab, navigateTo, title, description, cta }) {
   );
 }
 
-function TourCard({ duration, title, description, onClick, icon: Icon, active }) {
+function TourCard({ duration, title, description, onClick, icon: Icon, active, featured }) {
   return (
     <button
       onClick={onClick}
-      className={`card card-hover text-left flex flex-col items-start group transition-all ${active ? 'ring-2 ring-sflight bg-sflight/5' : ''}`}
+      className={`card card-hover text-left flex flex-col items-start group transition-all ${active ? 'ring-2 ring-sflight bg-sflight/5' : featured ? 'ring-2 ring-sflight/40' : ''}`}
     >
       <div className="flex items-center gap-2 mb-2">
-        <div className={`w-8 h-8 rounded-lg grid place-items-center ${active ? 'bg-sflight text-white' : 'bg-sflight/15'}`}>
-          <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-sflight'}`} />
+        <div className={`w-8 h-8 rounded-lg grid place-items-center ${active || featured ? 'bg-sflight text-white' : 'bg-sflight/15'}`}>
+          <Icon className={`w-4 h-4 ${active || featured ? 'text-white' : 'text-sflight'}`} />
         </div>
         <span className="text-[11px] uppercase tracking-wider text-sflight font-bold">{duration}</span>
       </div>
@@ -205,6 +205,7 @@ function PRFAQ({ faqOpen, setFaqOpen }) {
 // =================== MAIN ===================
 export default function Welcome({ navigateTo, activeTour, tourStep, onStartTour, onCloseTour, onGoToStep }) {
   const [faqOpen, setFaqOpen] = useState(null);
+  const [prfaqOpen, setPrfaqOpen] = useState(false);
   const tourRef = useRef(null);
 
   // When a tour starts, scroll the panel into view (works whether triggered from
@@ -226,15 +227,16 @@ export default function Welcome({ navigateTo, activeTour, tourStep, onStartTour,
             <span className="text-[11px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-serif font-bold leading-[1.05]">Operate the portfolio. Equip the leaders.</h1>
-          <p className="text-lg text-white/90 mt-4 leading-relaxed">
-            A Senior Manager's operating workspace for strategic portfolio management — the <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> that turns strategy into observable, repeatable practice. Sponsors and Directors make the calls; the Sr Manager makes sure those calls are decision-ready.
+          <p className="text-base text-white/90 mt-3 leading-relaxed">
+            A Sr Manager's workspace for portfolio <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> — so Directors can focus on strategy.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
-            <button onClick={() => onStartTour('20s')} className="bg-white text-sfnavy rounded-lg px-5 py-3 font-semibold hover:bg-white/90 transition flex items-center gap-2 text-sm">
-              <Clock className="w-4 h-4" /> 20-second scan
+            <button onClick={() => onStartTour('2m')} className="bg-sflight text-white rounded-lg px-5 py-3 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
+              <PlayCircle className="w-4 h-4" /> Start 2-minute tour
+              <span className="text-[10px] bg-white text-sflight rounded px-1.5 py-0.5 font-bold ml-1">BEST FOR DEMOS</span>
             </button>
-            <button onClick={() => onStartTour('2m')} className="bg-sflight text-white rounded-lg px-5 py-3 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg">
-              <PlayCircle className="w-4 h-4" /> 2-minute tour
+            <button onClick={() => onStartTour('20s')} className="bg-white/10 text-white border border-white/30 rounded-lg px-5 py-3 font-semibold hover:bg-white/20 transition flex items-center gap-2 text-sm">
+              <Clock className="w-4 h-4" /> 20-second scan
             </button>
             <button onClick={() => navigateTo('dashboard')} className="bg-white/10 text-white border border-white/30 rounded-lg px-5 py-3 font-semibold hover:bg-white/20 transition flex items-center gap-2 text-sm">
               Skip to dashboard <ArrowRight className="w-4 h-4" />
@@ -255,50 +257,37 @@ export default function Welcome({ navigateTo, activeTour, tourStep, onStartTour,
           <h2 className="text-2xl font-serif font-bold text-sfnavy">Three outcomes, not three dashboards</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <OutcomeCard
-            icon={Shield}
-            title="Run governance like clockwork"
-            description="Stage-gate scorers, audit trails, a 7-playbook library, and a 33-term Data Glossary replace tribal knowledge with reusable standards. Every change is logged, every artifact has a lifecycle, every term has a canonical definition."
-          />
-          <OutcomeCard
-            icon={Target}
-            title="Equip leaders with decision-ready inputs"
-            description="Calculators (RICE, Capital Optimizer, Risk Heatmap, Scenario Compare) and the KPI Studio Recommendation Engine produce drafted trade-offs, never final calls. The Sr Manager prepares the conversation; the sponsor makes the decision."
-          />
-          <OutcomeCard
-            icon={MessageCircle}
-            title="Own the comms heartbeat"
-            description="The Workbench drafts the weekly + monthly + quarterly comms a Sr Manager owns: PM digests, sponsor briefs, escalations, exec updates. AI auto-fills sections from the underlying data — so the Director's time is spent reviewing, not writing."
-          />
+          <OutcomeCard icon={Shield}         title="Run governance like clockwork"           description="Stage-gate scorers, audit trails, 7 playbooks, 33-term glossary." />
+          <OutcomeCard icon={Target}         title="Equip leaders with decision-ready inputs" description="RICE, capital optimizer, risk heatmap, scenarios. Drafts for sponsor review." />
+          <OutcomeCard icon={MessageCircle}  title="Own the comms heartbeat"                  description="8 templates with AI auto-draft. Director reviews, doesn't write." />
         </div>
       </section>
 
-      {/* THE NARRATIVE ARC — initiative as a story */}
+      {/* THE NARRATIVE ARC — initiative as a story (one line per step) */}
       <section className="card">
         <div className="mb-4">
           <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">The narrative</div>
-          <h2 className="text-2xl font-serif font-bold text-sfnavy">Every initiative passes through five Sr Manager touchpoints</h2>
-          <p className="text-sm text-sfmuted mt-1">Each touchpoint is a job the Sr Manager owns — click any to jump to the tab that supports it.</p>
+          <h2 className="text-2xl font-serif font-bold text-sfnavy">Every initiative passes through 5 Sr Manager touchpoints</h2>
         </div>
-        <div className="space-y-4">
-          <NarrativeStep num={1} tab="journey"   navigateTo={navigateTo} title="It starts as an idea — triage it" description="A sponsor has a hypothesis. The Sr Manager runs Initiative Intake. Watch one move from G0 Concept to G5 Sustain — capital, risk, FTEs, KPIs all ripple as it advances." cta="Open Journey" />
-          <NarrativeStep num={2} tab="decision"  navigateTo={navigateTo} title="It needs to be assessed — prepare the analysis" description="RICE scores, Capital Optimizer, Risk Heatmap, Scenario Compare. The Sr Manager runs the analysis so the sponsor walks into a decision conversation, not an exploration." cta="Open Decision Engine" />
-          <NarrativeStep num={3} tab="kpi"       navigateTo={navigateTo} title="It needs sponsor sign-off — draft the recommendation" description="The KPI Studio drafts a recommendation (Accelerate / Continue / Watch / Restructure / Sunset) under the active scoring profile. The draft is the input; the sponsor makes the call." cta="Open KPI Studio" />
-          <NarrativeStep num={4} tab="playbooks" navigateTo={navigateTo} title="It has to be governed — apply the playbook" description="Foundational playbooks (intake, capacity, risk register, rebalance, sunset) + Source of Truth schema, Metric Catalog, Glossary, and Audit Trail. Reusable practice, not personal heroics." cta="Open Playbooks" />
-          <NarrativeStep num={5} tab="workbench" navigateTo={navigateTo} title="It needs to be reported — draft the comms" description="Templates for the weekly + monthly + quarterly comms a Sr Manager owns: PM digests, sponsor briefs, exec updates, escalations. Each draft goes to the Director for sign-off." cta="Open Workbench" />
+        <div className="space-y-3">
+          <NarrativeStep num={1} tab="journey"   navigateTo={navigateTo} title="Triage it"            description="Run intake. Watch G0→G5 ripples in Journey." cta="Journey" />
+          <NarrativeStep num={2} tab="decision"  navigateTo={navigateTo} title="Assess it"            description="RICE, Capital Optimizer, Risk Heatmap, Scenarios — prepare the analysis." cta="Decision Engine" />
+          <NarrativeStep num={3} tab="kpi"       navigateTo={navigateTo} title="Draft a recommendation" description="Accelerate / Continue / Watch / Restructure / Sunset. The sponsor decides." cta="KPI Studio" />
+          <NarrativeStep num={4} tab="playbooks" navigateTo={navigateTo} title="Govern it"            description="Apply the playbook. Log to audit trail. Reference Source of Truth." cta="Playbooks" />
+          <NarrativeStep num={5} tab="workbench" navigateTo={navigateTo} title="Report it"            description="Draft sponsor briefs, exec updates, escalations. Director reviews." cta="Workbench" />
         </div>
       </section>
 
-      {/* TOUR SELECTOR */}
+      {/* TOUR SELECTOR — 2-min is featured */}
       <section>
         <div className="mb-3">
-          <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">Three depths</div>
-          <h2 className="text-2xl font-serif font-bold text-sfnavy">Pick a tour</h2>
+          <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">Pick a tour</div>
+          <h2 className="text-2xl font-serif font-bold text-sfnavy">Three depths — start with 2-min for a demo</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <TourCard duration="20 seconds" title="Just the so-what" description="3 stops. The minimum viable understanding for someone with no time." icon={Zap} onClick={() => onStartTour('20s')} active={activeTour === '20s'} />
-          <TourCard duration="2 minutes"   title="The narrative arc" description="5 stops. One initiative, end-to-end. Why each engine exists." icon={PlayCircle} onClick={() => onStartTour('2m')} active={activeTour === '2m'} />
-          <TourCard duration="5 minutes"   title="Deep dive"        description="8 stops. Every tab with one specific thing to look for." icon={BookOpen} onClick={() => onStartTour('5m')} active={activeTour === '5m'} />
+          <TourCard duration="2 min · BEST FOR DEMOS" title="The narrative arc"  description="5 stops. One initiative, end-to-end."             icon={PlayCircle} onClick={() => onStartTour('2m')}  active={activeTour === '2m'} featured />
+          <TourCard duration="20 sec"                title="Just the so-what"   description="3 stops. The minimum viable understanding."      icon={Zap}        onClick={() => onStartTour('20s')} active={activeTour === '20s'} />
+          <TourCard duration="5 min"                 title="Deep dive"          description="8 stops. Every tab, one thing to look for."     icon={BookOpen}   onClick={() => onStartTour('5m')}  active={activeTour === '5m'} />
         </div>
       </section>
 
@@ -307,16 +296,21 @@ export default function Welcome({ navigateTo, activeTour, tourStep, onStartTour,
         {activeTour && <TourPanel tourId={activeTour} tourStep={tourStep} onGoToStep={onGoToStep} onClose={onCloseTour} />}
       </div>
 
-      {/* PRFAQ */}
+      {/* PRFAQ — collapsed by default; expand only if the viewer wants depth */}
       <section className="card">
-        <div className="flex items-center gap-2 mb-3">
-          <Lightbulb className="w-5 h-5 text-sflight" />
-          <div>
-            <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">PRFAQ</div>
-            <h2 className="text-xl font-serif font-bold text-sfnavy">The operating model in PRFAQ form</h2>
+        <button onClick={() => setPrfaqOpen(o => !o)} className="w-full flex items-center gap-2 text-left">
+          <Lightbulb className="w-5 h-5 text-sflight flex-shrink-0" />
+          <div className="flex-1">
+            <div className="text-[11px] uppercase tracking-widest text-sflight font-bold">PRFAQ · operating notes</div>
+            <h2 className="text-base font-serif font-bold text-sfnavy">The operating model in press-release form</h2>
           </div>
-        </div>
-        <PRFAQ faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
+          <span className="text-xs text-sfmuted flex items-center gap-1">{prfaqOpen ? 'Hide' : 'Read'} <ChevronDown className={`w-4 h-4 transition-transform ${prfaqOpen ? 'rotate-180' : ''}`} /></span>
+        </button>
+        {prfaqOpen && (
+          <div className="mt-4">
+            <PRFAQ faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
+          </div>
+        )}
       </section>
 
       {/* WHAT'S ON EACH TAB */}

@@ -397,9 +397,7 @@ function Header() {
         <PenSquare className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
         <div>
           <h2 className="text-lg font-serif font-bold">Sr Manager Workbench</h2>
-          <p className="text-sm text-white/80 mt-1 leading-relaxed">
-            Where the Sr Manager <strong className="text-sflight">drafts</strong> portfolio-level messaging for the Director's review. Pre-structured templates for the weekly + monthly + quarterly comms the role owns: exec updates, sponsor briefs, escalations, launches, PM digests. AI auto-drafts pull live numbers from Dashboard, Decision Engine, and Process Health — so the Director's time is spent reviewing, not writing.
-          </p>
+          <p className="text-sm text-white/80 mt-1">Where the Sr Manager <strong className="text-sflight">drafts</strong> comms for Director review. 8 templates: exec updates, sponsor briefs, escalations, launches, PM digests. AI auto-fills from PortfolioIQ data.</p>
         </div>
       </div>
     </div>

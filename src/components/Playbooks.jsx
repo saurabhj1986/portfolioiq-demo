@@ -79,13 +79,8 @@ export default function Playbooks() {
         <div className="flex items-start gap-3">
           <BookOpen className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h2 className="text-lg font-serif font-bold">Foundational Playbooks Library</h2>
-            <p className="text-sm text-white/80 mt-1 leading-relaxed">
-              Standardized playbooks every Pillar PM pulls from. One way to do common work — written down, version-controlled, adoption-tracked. This is Judette's literal 60-day milestone (<em>"Establish documentation around taxonomy, process, and guidance for updated Portfolio Processes"</em>) executed.
-            </p>
-            <div className="text-[11px] text-white/60 mt-2">
-              <strong>JD line:</strong> #2 — "Lead the creation and adoption of foundational playbooks and assets to ensure a seamless, consistent experience for all portfolio teams and stakeholders."
-            </div>
+            <h2 className="text-lg font-serif font-bold">Foundational Playbooks</h2>
+            <p className="text-sm text-white/80 mt-1">7 standardized playbooks Pillar PMs pull from. Written, versioned, adoption-tracked.</p>
           </div>
           <div className="grid grid-cols-2 gap-2 text-center text-xs flex-shrink-0">
             <div className="bg-white/10 rounded p-2">

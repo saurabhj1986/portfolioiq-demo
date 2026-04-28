@@ -35,19 +35,25 @@ function Tip({ children }) {
 }
 
 function Header({ title, blurb, framework }) {
+  const [showFramework, setShowFramework] = React.useState(false);
   return (
     <div className="card bg-gradient-to-r from-sfnavy to-sfdeep text-white">
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="flex-1 min-w-0">
           <h2 className="text-lg font-serif font-bold">{title}</h2>
           <p className="text-sm text-white/80 mt-1">{blurb}</p>
         </div>
         {framework && (
-          <div className="text-right text-[11px] text-white/60 max-w-md leading-relaxed">
-            <strong className="text-sflight">Framework in plain English:</strong><br />{framework}
-          </div>
+          <button onClick={() => setShowFramework(s => !s)} className="text-[11px] text-sflight hover:text-white border border-sflight/40 rounded px-2 py-1 flex-shrink-0 flex items-center gap-1">
+            {showFramework ? 'Hide' : 'What is this?'} <Info className="w-3 h-3" />
+          </button>
         )}
       </div>
+      {showFramework && framework && (
+        <div className="mt-3 pt-3 border-t border-white/10 text-xs text-white/80 leading-relaxed">
+          {framework}
+        </div>
+      )}
     </div>
   );
 }

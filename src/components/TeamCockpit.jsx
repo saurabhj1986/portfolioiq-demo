@@ -190,9 +190,7 @@ export default function TeamCockpit() {
           <Users className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <h2 className="text-lg font-serif font-bold">Team Cockpit — 4 Portfolio Managers</h2>
-            <p className="text-sm text-white/80 mt-1 leading-relaxed">
-              People-leadership view for the Sr Manager role (4 direct reports per JR337298). AI surfaces coaching opportunities, drafts weekly briefs for 1:1 prep, and automates the routine notifications that usually slip. Designed for the actual reality of the team — including <strong className="text-sflight">Marcus's parental leave starting June 17</strong>, which is the hiring driver per Kathrin's screening notes.
-            </p>
+            <p className="text-sm text-white/80 mt-1">AI surfaces coaching opportunities, drafts weekly 1:1 prep, automates routine notifications. Includes leave-coverage detection.</p>
           </div>
           <div className="text-right flex-shrink-0">
             <div className="text-xs text-white/60">Urgent items</div>

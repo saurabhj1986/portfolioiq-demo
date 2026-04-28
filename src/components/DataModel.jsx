@@ -426,14 +426,12 @@ export default function DataModel() {
           <Database className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <h2 className="text-lg font-serif font-bold">Single Source of Truth</h2>
-            <p className="text-sm text-white/80 mt-1 leading-relaxed">
-              The authoritative portfolio registry. <strong className="text-sflight">Every</strong> dashboard tile, KPI, Copilot answer, and exec report joins back here. When two people disagree on a number, this is where the disagreement gets resolved — not in Slack, not in email.
-            </p>
-            <div className="flex flex-wrap gap-3 mt-3 text-[11px] text-white/70">
-              <span>📐 Schema: 4 tables, 1 audit trail</span>
-              <span>📊 {METRIC_CATALOG.length} metrics with canonical definitions</span>
+            <p className="text-sm text-white/80 mt-1">The authoritative portfolio registry. Every KPI, dashboard tile, and report joins back here. Where number disagreements get resolved.</p>
+            <div className="flex flex-wrap gap-3 mt-2 text-[11px] text-white/70">
+              <span>📐 4 tables · 1 audit trail</span>
+              <span>📊 {METRIC_CATALOG.length} metrics</span>
               <span>📖 {DATA_GLOSSARY.length} glossary terms</span>
-              <span>📝 {AUDIT_EVENTS.length} audit events shown (append-only, 7-year retention)</span>
+              <span>📝 {AUDIT_EVENTS.length} audit events</span>
             </div>
           </div>
         </div>

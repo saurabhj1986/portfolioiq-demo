@@ -271,12 +271,10 @@ export default function PortfolioJourney() {
           <Sparkles className="w-6 h-6 text-sflight flex-shrink-0 mt-1" />
           <div className="flex-1">
             <h2 className="text-lg font-serif font-bold">Portfolio Journey — End-to-End Lifecycle</h2>
-            <p className="text-sm text-white/80 mt-1 leading-relaxed">
-              Watch a single initiative move from inception (G0) to value realization (G5) — and see how every stage ripples across <strong>KPIs</strong>, <strong>Pillars</strong>, <strong>Risks</strong>, <strong>Capital</strong>, and <strong>Resources</strong>. Press Play, step manually, or click any stage on the timeline to jump.
-            </p>
+            <p className="text-sm text-white/80 mt-1">Watch one initiative move G0→G5. See how each stage ripples across <strong>KPIs · Pillars · Risks · Capital · Resources</strong>. Press Play.</p>
           </div>
         </div>
-        <div className="mt-3 pt-3 border-t border-white/10 flex items-baseline justify-between text-xs">
+        <div className="mt-3 pt-3 border-t border-white/10 flex items-baseline justify-between text-xs flex-wrap gap-2">
           <span className="text-white/60">Tracking: <span className="text-white font-semibold">{initiative.name}</span> ({initiative.id})</span>
           <span className="text-white/60">Pillar: <span className="text-white font-semibold">{pillar.name}</span> · Sponsor: <span className="text-white">{initiative.sponsor}</span></span>
         </div>
