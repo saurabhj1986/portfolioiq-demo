@@ -100,18 +100,13 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Demo intro card — exec-facing value prop */}
-      <section className="card bg-gradient-to-r from-sfblue to-sflight text-white">
-        <div className="flex items-start gap-3">
-          <Sparkles className="w-6 h-6 flex-shrink-0 mt-1" />
-          <div className="flex-1">
-            <h2 className="text-base font-serif font-bold leading-tight">One view across every pillar in your portfolio.</h2>
-            <p className="text-sm text-white/95 mt-1.5 leading-relaxed">
-              PortfolioIQ gives Senior Directors, Senior Managers, and Executives a single pane of glass for funding decisions, stage-gates, capacity, risk, and value realization across all initiatives. Decision engines — RICE prioritization, capital optimizer, risk heatmap, scenario comparison — plus an AI agent surface the trade-offs that usually take days of back-and-forth across tools and teams.
-            </p>
-            <div className="text-[11px] text-white/70 mt-2 font-mono">All mock data · No real systems connected · For demonstration purposes</div>
-          </div>
-        </div>
+      {/* Slim context strip — Welcome tab owns the full framing */}
+      <section className="bg-sflight/10 border border-sflight/30 rounded-lg px-4 py-2.5 flex items-center gap-3 text-xs">
+        <Sparkles className="w-4 h-4 text-sflight flex-shrink-0" />
+        <span className="text-sfnavy">
+          <strong>Portfolio at a glance:</strong> 16 initiatives · 6 pillars · $30M deployed. The 5 KPIs below show the leading indicators. Initiative tracker has the detail.
+        </span>
+        <span className="ml-auto text-[11px] text-sfmuted hidden md:inline">Mock data · No real systems connected</span>
       </section>
 
       {/* KPI Strip */}
