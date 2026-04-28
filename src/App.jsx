@@ -14,8 +14,8 @@ import { TOURS } from './data/tours.js';
 import { PERSONAS, getPersona } from './data/personas.js';
 
 const TABS = [
-  { id: 'dashboard', label: 'Dashboard',       icon: LayoutDashboard },
   { id: 'guide',     label: 'Guide',           icon: Compass },
+  { id: 'dashboard', label: 'Dashboard',       icon: LayoutDashboard },
   { id: 'journey',   label: 'Journey',         icon: PlayCircle },
   { id: 'decisions', label: 'Decisions',       icon: Calculator },
   { id: 'operate',   label: 'Operate',         icon: Briefcase },
@@ -25,7 +25,7 @@ const TABS = [
 ];
 
 export default function App() {
-  const [tab, setTab] = useState('dashboard');
+  const [tab, setTab] = useState('guide');
   const [activeTour, setActiveTour] = useState(null);
   const [tourStep, setTourStep] = useState(0);
   const [personaId, setPersonaId] = useState('sr-manager');
