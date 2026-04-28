@@ -11,7 +11,10 @@ function Tooltip({ text }) {
   return (
     <span className="relative group cursor-help inline-flex">
       <Info className="w-3.5 h-3.5 text-sfmuted" />
-      <span className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition absolute z-20 left-0 top-5 w-72 bg-sfnavy text-white text-xs rounded-lg p-3 shadow-lg leading-relaxed">
+      <span
+        className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition absolute z-30 right-0 top-6 w-80 text-sm rounded-lg p-3.5 shadow-2xl leading-relaxed pointer-events-none whitespace-pre-line"
+        style={{ background: '#0F1623', color: '#F8FAFC', border: '1px solid #67E8F9', borderColor: 'rgba(103, 232, 249, 0.4)' }}
+      >
         {text}
       </span>
     </span>
