@@ -122,9 +122,20 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
             <span className="text-[11px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight">Operate the portfolio. Equip the leaders.</h1>
-          <p className="text-base text-white/90 mt-2 leading-relaxed max-w-3xl">
-            A Sr Manager's workspace for portfolio <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> — so Directors can focus on strategy.
-          </p>
+          <div className="mt-4 space-y-3 max-w-4xl">
+            <p className="text-base text-white/95 leading-relaxed">
+              <span className="text-[10px] uppercase tracking-widest text-sflight font-bold mr-2">The role</span>
+              Senior Managers in strategic portfolio roles coordinate technology investments at scale — running dozens of major initiatives, working across multiple teams, managing tens of millions in budget, and coaching direct reports who run their own portfolios.
+            </p>
+            <p className="text-base text-white/95 leading-relaxed">
+              <span className="text-[10px] uppercase tracking-widest text-syellow font-bold mr-2">The hidden tax</span>
+              Most of their week is spent <strong className="text-white">chasing the same numbers across different tools</strong> — Anaplan for budgets, ServiceNow for tickets, Slack for status, spreadsheets for capacity. Not making decisions. Not coaching the team. Not governing the work.
+            </p>
+            <p className="text-base text-white/95 leading-relaxed">
+              <span className="text-[10px] uppercase tracking-widest text-sgreen font-bold mr-2">Why PortfolioIQ</span>
+              <strong className="text-sflight">One workspace</strong> where all of it lives — every initiative's health, the trade-off drafts a Director needs to make decisions, AI-detected coaching moments for the team, and the weekly exec comms a Sr Manager owns. Senior Managers run the operation; Directors run the strategy.
+            </p>
+          </div>
           <div className="flex flex-wrap gap-2 mt-4">
             <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-white rounded-lg px-4 py-2 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
               <PlayCircle className="w-4 h-4" /> Start 2-min tour
