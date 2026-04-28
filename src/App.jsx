@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
+import KPIStudio from './components/KPIStudio.jsx';
 import Playbooks from './components/Playbooks.jsx';
 import TeamCockpit from './components/TeamCockpit.jsx';
 import PortfolioCopilot from './components/PortfolioCopilot.jsx';
@@ -11,6 +12,7 @@ import HowIBuilt from './components/HowIBuilt.jsx';
 const TABS = [
   { id: 'dashboard', label: 'Portfolio Dashboard', icon: LayoutDashboard },
   { id: 'decision',  label: 'Decision Engine',     icon: Calculator },
+  { id: 'kpi',       label: 'KPI Studio',          icon: Settings },
   { id: 'playbooks', label: 'Playbooks',           icon: BookOpen },
   { id: 'team',      label: 'Team Cockpit',        icon: Users },
   { id: 'copilot',   label: 'PortfolioCopilot',    icon: Bot },
@@ -62,6 +64,7 @@ export default function App() {
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6">
         {tab === 'dashboard' && <Dashboard />}
         {tab === 'decision'  && <DecisionEngine />}
+        {tab === 'kpi'       && <KPIStudio />}
         {tab === 'playbooks' && <Playbooks />}
         {tab === 'team'      && <TeamCockpit />}
         {tab === 'copilot'   && <PortfolioCopilot />}

@@ -5,7 +5,7 @@
 
 Interview artifact for **Salesforce JR337298 — Senior Manager, Strategic Portfolio Management**.
 
-A 7-tab React prototype, **strictly tailored to JR337298** — every feature maps to a verbatim JD line. Nothing built outside scope.
+An 8-tab React prototype (dark theme) — every feature maps to a portfolio leadership use case. Built for Senior Directors, Senior Managers, and Executives managing initiatives across multiple pillars.
 
 ## Tabs
 
@@ -19,11 +19,12 @@ A 7-tab React prototype, **strictly tailored to JR337298** — every feature map
    - **Influence Factors** — 8 JD-aligned dimensions (Data Quality, Data Governance, Vendor & Tech Concentration, Talent & Capacity, Regulatory & Compliance, Tech Debt, Stakeholder Signal, Market Timing) — *JD #5, #6, #11*
    - **Process Health** — friction metrics, cycle time per gate, rework rate, Pillar PM NPS, anti-patterns with recommendations — *JD #6 + #9*
    - **Scenario Compare** — side-by-side of 4 DET scenarios with auto-generated decision rationale tied to Salesforce core values — *JD #10, #14*
-3. **Playbooks** — 7 foundational playbooks (Stage-Gate Decision, Initiative Intake, Capacity Planning, Risk Register Template, Quarterly Rebalance, Portfolio Review, Sunset/Kill) with adoption tracked per pillar. *Judette's literal 60-day milestone* — *JD #2*
-4. **Team Cockpit** — 4 direct reports, AI coaching feed (auto-detects Marcus's parental leave + proposes Aisha as backfill), auto-drafted weekly briefs for 1:1 prep, 4 workflow automations — *JD #15 + people-leader role*
-5. **PortfolioCopilot** — AI agent with transparent reasoning (classify → resolve → reason → confidence) answering 7 portfolio questions — *JD #14 + bonus AI qualification*
-6. **Data Model** — 4 normalized tables (initiative_inventory, stage_gate_artifacts, dependencies, capacity_snapshots) with full DDL + **portfolio_audit_trail** showing append-only change log — *JD #1, #4, #5, #7*
-7. **How I Built This** — JD Coverage Matrix (every JD line → feature attribution), design decisions, questions for Judette, honest gaps, 60–90 day plan, TrustReply→PortfolioIQ architecture transfer
+3. **KPI Studio** — Configurable KPI catalog (17 KPIs across 7 categories: Value Creation, Business Impact, Resource, Capital, Risk, Sentiment, Strategic Fit) + Portfolio Recommendation Engine. Execs toggle KPIs on/off, adjust weights, switch between 5 pre-baked profiles (Balanced / Margin-First / Risk-Averse / Innovation-First / Trust-First). Engine scores every initiative and outputs **Accelerate / Continue / Watch / Restructure / Sunset** with auto-generated rationale per initiative — *JD #13 + #12*
+4. **Playbooks** — 7 foundational playbooks (Stage-Gate Decision, Initiative Intake, Capacity Planning, Risk Register Template, Quarterly Rebalance, Portfolio Review, Sunset/Kill) with adoption tracked per pillar — *JD #2*
+5. **Team Cockpit** — 4 portfolio manager direct reports, AI coaching feed, auto-drafted weekly briefs for 1:1 prep, 4 workflow automations — *JD #15 + people-leader role*
+6. **PortfolioCopilot** — AI agent with transparent reasoning (classify → resolve → reason → confidence) answering 7 portfolio questions — *JD #14 + bonus AI qualification*
+7. **Data Model** — 4 normalized tables (initiative_inventory, stage_gate_artifacts, dependencies, capacity_snapshots) with full DDL + **portfolio_audit_trail** showing append-only change log — *JD #1, #4, #5, #7*
+8. **How I Built This** — JD Coverage Matrix (every JD line → feature attribution), design decisions, questions for stakeholders, honest gaps, 60–90 day plan, architecture transfer notes
 
 ## What was deliberately cut for scope discipline
 
