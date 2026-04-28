@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings } from 'lucide-react';
+import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings, PlayCircle } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
+import PortfolioJourney from './components/PortfolioJourney.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
 import KPIStudio from './components/KPIStudio.jsx';
 import Playbooks from './components/Playbooks.jsx';
@@ -10,14 +11,15 @@ import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
 
 const TABS = [
-  { id: 'dashboard', label: 'Portfolio Dashboard', icon: LayoutDashboard },
-  { id: 'decision',  label: 'Decision Engine',     icon: Calculator },
-  { id: 'kpi',       label: 'KPI Studio',          icon: Settings },
-  { id: 'playbooks', label: 'Playbooks',           icon: BookOpen },
-  { id: 'team',      label: 'Team Cockpit',        icon: Users },
-  { id: 'copilot',   label: 'PortfolioCopilot',    icon: Bot },
-  { id: 'data',      label: 'Data Model',          icon: Database },
-  { id: 'how',       label: 'How I Built This',    icon: Hammer }
+  { id: 'dashboard', label: 'Dashboard',         icon: LayoutDashboard },
+  { id: 'journey',   label: 'Journey',           icon: PlayCircle },
+  { id: 'decision',  label: 'Decision Engine',   icon: Calculator },
+  { id: 'kpi',       label: 'KPI Studio',        icon: Settings },
+  { id: 'playbooks', label: 'Playbooks',         icon: BookOpen },
+  { id: 'team',      label: 'Team Cockpit',      icon: Users },
+  { id: 'copilot',   label: 'Copilot',           icon: Bot },
+  { id: 'data',      label: 'Data Model',        icon: Database },
+  { id: 'how',       label: 'How I Built This',  icon: Hammer }
 ];
 
 export default function App() {
@@ -63,6 +65,7 @@ export default function App() {
       {/* Body */}
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6">
         {tab === 'dashboard' && <Dashboard />}
+        {tab === 'journey'   && <PortfolioJourney />}
         {tab === 'decision'  && <DecisionEngine />}
         {tab === 'kpi'       && <KPIStudio />}
         {tab === 'playbooks' && <Playbooks />}
