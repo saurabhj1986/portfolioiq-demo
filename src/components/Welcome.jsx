@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles, ArrowRight, PlayCircle, Target, Shield, MessageCircle,
   ChevronDown, Lightbulb, X, Clock, Zap, BookOpen
@@ -112,19 +112,22 @@ function NarrativeStep({ num, tab, navigateTo, title, description, cta }) {
   );
 }
 
-function TourCard({ duration, title, description, onClick, icon: Icon }) {
+function TourCard({ duration, title, description, onClick, icon: Icon, active }) {
   return (
-    <button onClick={onClick} className="card card-hover text-left flex flex-col items-start group">
+    <button
+      onClick={onClick}
+      className={`card card-hover text-left flex flex-col items-start group transition-all ${active ? 'ring-2 ring-sflight bg-sflight/5' : ''}`}
+    >
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-8 h-8 rounded-lg bg-sflight/15 grid place-items-center">
-          <Icon className="w-4 h-4 text-sflight" />
+        <div className={`w-8 h-8 rounded-lg grid place-items-center ${active ? 'bg-sflight text-white' : 'bg-sflight/15'}`}>
+          <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-sflight'}`} />
         </div>
         <span className="text-[11px] uppercase tracking-wider text-sflight font-bold">{duration}</span>
       </div>
       <h4 className="font-serif font-bold text-sfnavy">{title}</h4>
       <p className="text-xs text-sfmuted mt-1 leading-relaxed">{description}</p>
-      <span className="text-xs font-semibold text-sfblue mt-3 flex items-center gap-1 group-hover:gap-2 transition-all">
-        Start <ArrowRight className="w-3 h-3" />
+      <span className={`text-xs font-semibold mt-3 flex items-center gap-1 group-hover:gap-2 transition-all ${active ? 'text-sflight' : 'text-sfblue'}`}>
+        {active ? '✓ Active — scroll down' : 'Start'} <ArrowRight className="w-3 h-3" />
       </span>
     </button>
   );
@@ -226,6 +229,15 @@ function PRFAQ({ faqOpen, setFaqOpen }) {
 export default function Welcome({ navigateTo }) {
   const [activeTour, setActiveTour] = useState(null);
   const [faqOpen, setFaqOpen] = useState(null);
+  const tourRef = useRef(null);
+
+  // When a tour starts, scroll the panel into view (works whether triggered from
+  // the hero CTAs at top or the tour cards further down).
+  useEffect(() => {
+    if (activeTour && tourRef.current) {
+      tourRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeTour]);
 
   return (
     <div className="space-y-4">
@@ -259,9 +271,6 @@ export default function Welcome({ navigateTo }) {
           </div>
         </div>
       </section>
-
-      {/* Active tour panel — appears when a tour is started */}
-      {activeTour && <TourPanel tourId={activeTour} navigateTo={navigateTo} onClose={() => setActiveTour(null)} />}
 
       {/* SO WHAT — 3 outcome cards (not features) */}
       <section>
@@ -311,11 +320,16 @@ export default function Welcome({ navigateTo }) {
           <h2 className="text-2xl font-serif font-bold text-sfnavy">Pick a tour</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <TourCard duration="20 seconds" title="Just the so-what" description="3 stops. The minimum viable understanding for someone with no time." icon={Zap} onClick={() => setActiveTour('20s')} />
-          <TourCard duration="2 minutes"   title="The narrative arc" description="5 stops. One initiative, end-to-end. Why each engine exists." icon={PlayCircle} onClick={() => setActiveTour('2m')} />
-          <TourCard duration="5 minutes"   title="Deep dive"        description="8 stops. Every tab with one specific thing to look for." icon={BookOpen} onClick={() => setActiveTour('5m')} />
+          <TourCard duration="20 seconds" title="Just the so-what" description="3 stops. The minimum viable understanding for someone with no time." icon={Zap} onClick={() => setActiveTour('20s')} active={activeTour === '20s'} />
+          <TourCard duration="2 minutes"   title="The narrative arc" description="5 stops. One initiative, end-to-end. Why each engine exists." icon={PlayCircle} onClick={() => setActiveTour('2m')} active={activeTour === '2m'} />
+          <TourCard duration="5 minutes"   title="Deep dive"        description="8 stops. Every tab with one specific thing to look for." icon={BookOpen} onClick={() => setActiveTour('5m')} active={activeTour === '5m'} />
         </div>
       </section>
+
+      {/* Active tour panel — anchored here so clicks from tour cards or hero CTAs scroll into view */}
+      <div ref={tourRef}>
+        {activeTour && <TourPanel tourId={activeTour} navigateTo={navigateTo} onClose={() => setActiveTour(null)} />}
+      </div>
 
       {/* PRFAQ */}
       <section className="card">
