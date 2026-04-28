@@ -100,16 +100,16 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Demo intro card — what to read aloud or let the interviewer skim */}
+      {/* Demo intro card — exec-facing value prop */}
       <section className="card bg-gradient-to-r from-sfblue to-sflight text-white">
         <div className="flex items-start gap-3">
           <Sparkles className="w-6 h-6 flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h2 className="text-base font-serif font-bold leading-tight">PortfolioIQ — DET Strategic Portfolio Intelligence</h2>
+            <h2 className="text-base font-serif font-bold leading-tight">One view across every pillar in your portfolio.</h2>
             <p className="text-sm text-white/95 mt-1.5 leading-relaxed">
-              <strong>Problem:</strong> DET initiatives live across multiple tools, taxonomies vary by Pillar, stage-gates are advisory, and exec reviews stall on "is this real?" questions about portfolio data. <strong>This prototype:</strong> one schema, one stage-gate framework, one playbook library, plus AI agents that answer the portfolio questions execs actually ask. <strong>Why it matters for JR337298:</strong> Judette's 60–90 day plan — taxonomy + standards + frameworks + adoption — executed as a working artifact, ready for pilot on day one.
+              PortfolioIQ gives Senior Directors, Senior Managers, and Executives a single pane of glass for funding decisions, stage-gates, capacity, risk, and value realization across all initiatives. Decision engines — RICE prioritization, capital optimizer, risk heatmap, scenario comparison — plus an AI agent surface the trade-offs that usually take days of back-and-forth across tools and teams.
             </p>
-            <div className="text-[11px] text-white/70 mt-2 font-mono">All mock data · No real Salesforce systems connected · Built April 2026 · Saurabh Jhaveri</div>
+            <div className="text-[11px] text-white/70 mt-2 font-mono">All mock data · No real systems connected · For demonstration purposes</div>
           </div>
         </div>
       </section>

@@ -32,12 +32,12 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-lg font-serif font-bold tracking-tight">PortfolioIQ</h1>
-              <p className="text-xs text-white/60">DET Strategic Portfolio Intelligence — Demo</p>
+              <p className="text-xs text-white/60">Strategic Portfolio Intelligence</p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-white/60">Built for: <span className="text-white font-medium">Salesforce JR337298</span></p>
-            <p className="text-xs text-white/60">Saurabh Jhaveri · Sr Manager Strategic Portfolio Mgmt</p>
+            <p className="text-xs text-white/60">A single pane of glass for</p>
+            <p className="text-xs text-white font-medium">portfolio leaders managing initiatives across pillars</p>
           </div>
         </div>
         <nav className="max-w-[1400px] mx-auto px-6 flex gap-1">
@@ -72,12 +72,7 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between text-xs text-sfmuted flex-wrap gap-2">
-          <span>Mock data · No real Salesforce systems connected · Built April 2026 · Saurabh Jhaveri</span>
-          <span className="flex items-center gap-3">
-            <a href="https://github.com/saurabhj1986/portfolioiq-demo" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">GitHub</a>
-            <span>·</span>
-            <a href="https://trustreply-demo.vercel.app" className="text-sfblue hover:underline" target="_blank" rel="noreferrer">Pattern transfer: trustreply-demo</a>
-          </span>
+          <span>All mock data · No real systems connected · For demonstration purposes</span>
         </div>
       </footer>
     </div>
