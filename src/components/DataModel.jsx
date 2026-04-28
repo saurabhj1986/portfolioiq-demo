@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import {
   Database, ChevronDown, Network, ListChecks, Users, FolderTree, History, Shield,
-  BookOpen, Tag, Search, Filter
+  BookOpen, Tag, Search, Filter, Bot
 } from 'lucide-react';
 import { METRIC_CATALOG, METRIC_CATEGORIES, DATA_GLOSSARY, GLOSSARY_CATEGORIES } from '../data/standards.js';
+import PortfolioCopilot from './PortfolioCopilot.jsx';
 
 // ---------- Audit trail data (JD #4) ----------
 const AUDIT_EVENTS = [
@@ -412,11 +413,14 @@ const SUB_TABS = [
   { id: 'schema',  label: 'Schema',         icon: Database,    desc: '4 normalized tables — the data backbone' },
   { id: 'metrics', label: 'Metric Catalog', icon: Tag,         desc: '17 canonical metric definitions' },
   { id: 'glossary',label: 'Data Glossary',  icon: BookOpen,    desc: '33 portfolio terms with definitions' },
-  { id: 'audit',   label: 'Audit Trail',    icon: History,     desc: 'Every change, ever — append-only' }
+  { id: 'audit',   label: 'Audit Trail',    icon: History,     desc: 'Every change, ever — append-only' },
+  { id: 'copilot', label: 'Copilot',        icon: Bot,         desc: 'AI agent grounded in this data' }
 ];
 
-export default function DataModel() {
-  const [sub, setSub] = useState('schema');
+export default function DataModel({ sub: subProp, setSub: setSubProp }) {
+  const [internalSub, internalSetSub] = useState('schema');
+  const sub = subProp ?? internalSub;
+  const setSub = setSubProp ?? internalSetSub;
 
   return (
     <div className="space-y-4">
@@ -463,6 +467,7 @@ export default function DataModel() {
       {sub === 'metrics'  && <MetricCatalogView />}
       {sub === 'glossary' && <GlossaryView />}
       {sub === 'audit'    && <AuditTrailView />}
+      {sub === 'copilot'  && <PortfolioCopilot />}
     </div>
   );
 }

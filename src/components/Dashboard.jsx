@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Info, TrendingUp, AlertTriangle, CheckCircle2, Clock, DollarSign, Sparkles } from 'lucide-react';
+import { Info, TrendingUp, AlertTriangle, CheckCircle2, Clock, DollarSign, Sparkles, PlayCircle, ChevronDown, Lightbulb, ArrowRight, Zap } from 'lucide-react';
 import {
   INITIATIVES, PILLARS, STAGES, KPI_DEFINITIONS, STATUS_META,
   fmtMoney, pillarById, stageById
@@ -44,9 +44,22 @@ function ProgressBar({ pct, color }) {
   );
 }
 
-export default function Dashboard() {
+// PRFAQ FAQs (compact — collapsed by default)
+const PRFAQ_FAQS = [
+  { q: 'What does the Sr Manager own — and what does the Director own?',
+    a: 'The Sr Manager owns process governance, the team of 4 Pillar PMs, the data layer, the cadences, and the comms drafts. The Director owns strategy, sponsor relationships, and final calls on capital allocation. Every recommendation here is a draft for sponsor review, never a final decision.' },
+  { q: 'Why a Recommendation Engine if the Sr Manager doesn\'t decide?',
+    a: 'It generates a defensible draft. The Director adjusts based on context the data can\'t see. A draft that takes 30 minutes to refine is more valuable than a blank page.' },
+  { q: 'How does this scale to coaching 4 direct reports?',
+    a: 'The Team Cockpit auto-detects coaching opportunities (overdue 1:1s, leave-coverage, growth signals). AI-drafted weekly briefs free ~30 min/week per PM — at 4 reports, two extra hours of actual coaching per week.' },
+  { q: 'Why mock data?',
+    a: 'To enable open exploration without compromising any organization\'s portfolio. The schema maps to real connectors (Anaplan, ServiceNow, GUS, Quip) — real data is one connector per source system away.' }
+];
+
+export default function Dashboard({ navigateTo, activeTour, onStartTour, tourStep, onGoToStep, onCloseTour }) {
   const [pillarFilter, setPillarFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [prfaqOpen, setPrfaqOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return INITIATIVES.filter(i =>
@@ -100,14 +113,69 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Slim context strip — Welcome tab owns the full framing */}
-      <section className="bg-sflight/10 border border-sflight/30 rounded-lg px-4 py-2.5 flex items-center gap-3 text-xs">
-        <Sparkles className="w-4 h-4 text-sflight flex-shrink-0" />
-        <span className="text-sfnavy">
-          <strong>Sr Manager view:</strong> 16 initiatives across 6 pillars, $30M deployed. The 5 KPIs below are the leading indicators the Sr Manager owns; the tracker is the data the Director gets pre-digested in 1:1s.
-        </span>
-        <span className="ml-auto text-[11px] text-sfmuted hidden md:inline">Mock data · No real systems connected</span>
+      {/* Compact Welcome / Tour CTA / About — was a separate tab, now the front matter of Dashboard */}
+      <section className="card bg-gradient-to-br from-sfnavy via-sfdeep to-sfblue text-white relative overflow-hidden">
+        <div className="absolute -right-8 -top-8 w-48 h-48 bg-sflight/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-4 h-4 text-sflight" />
+            <span className="text-[11px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight">Operate the portfolio. Equip the leaders.</h1>
+          <p className="text-base text-white/90 mt-2 leading-relaxed max-w-3xl">
+            A Sr Manager's workspace for portfolio <strong className="text-sflight">governance</strong>, <strong className="text-sflight">decision support</strong>, <strong className="text-sflight">team coaching</strong>, and <strong className="text-sflight">comms drafting</strong> — so Directors can focus on strategy.
+          </p>
+          <div className="flex flex-wrap gap-2 mt-4">
+            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-white rounded-lg px-4 py-2 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
+              <PlayCircle className="w-4 h-4" /> Start 2-min tour
+              <span className="text-[10px] bg-white text-sflight rounded px-1.5 py-0.5 font-bold">BEST FOR DEMOS</span>
+            </button>
+            <button onClick={() => onStartTour && onStartTour('20s')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center gap-1.5 text-xs">
+              <Zap className="w-3.5 h-3.5" /> 20-sec scan
+            </button>
+            <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition text-xs">
+              5-min deep dive
+            </button>
+            <button onClick={() => setPrfaqOpen(o => !o)} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center gap-1.5 text-xs">
+              <Lightbulb className="w-3.5 h-3.5" /> {prfaqOpen ? 'Hide' : 'Why'} this exists <ChevronDown className={`w-3 h-3 transition-transform ${prfaqOpen ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-4 mt-5 pt-4 border-t border-white/20 max-w-md">
+            <div><div className="text-2xl font-serif font-bold">16</div><div className="text-[10px] uppercase text-white/60">Initiatives</div></div>
+            <div><div className="text-2xl font-serif font-bold">$30M</div><div className="text-[10px] uppercase text-white/60">Capital</div></div>
+            <div><div className="text-2xl font-serif font-bold">6</div><div className="text-[10px] uppercase text-white/60">Pillars</div></div>
+          </div>
+        </div>
       </section>
+
+      {/* PRFAQ — only shown when toggled */}
+      {prfaqOpen && (
+        <section className="card border-l-4 border-sflight">
+          <div className="flex items-center gap-2 mb-2">
+            <Lightbulb className="w-4 h-4 text-sflight" />
+            <h3 className="text-base font-serif font-bold text-sfnavy">How a Sr Manager runs strategic portfolio management</h3>
+          </div>
+          <p className="italic text-xs text-sfmuted mb-3">An operating-model description: the standards, frameworks, cadences, and team rhythms a Sr Manager owns so the Director can focus on strategy.</p>
+          <div className="space-y-2 text-sm text-sfnavy leading-relaxed">
+            <p>The Sr Manager is not the strategist. The Director is. The Sr Manager turns strategy into <em>observable, governed, repeatable practice</em> — and builds the team that runs the practice.</p>
+            <blockquote className="border-l-4 border-sflight pl-3 py-1 italic text-sfmuted bg-sfbg rounded-r my-2 text-xs">
+              "What I need from my Sr Manager isn't strategy. It's the discipline that lets me set strategy without worrying the day-to-day will fall apart." — <em className="not-italic">target user, Sr Director of Portfolio Management</em>
+            </blockquote>
+            <p>Every recommendation here is a <em>draft for sponsor review</em>, never a final decision. The Decision Engine produces analysis, not verdicts. The KPI Studio drafts a recommendation; the sponsor refines. The Workbench drafts the comms; the Director signs.</p>
+          </div>
+          <div className="mt-3 space-y-1.5">
+            {PRFAQ_FAQS.map((f, i) => (
+              <details key={i} className="bg-sfbg border border-slate-200 rounded p-2 text-xs">
+                <summary className="font-semibold text-sfnavy cursor-pointer">{f.q}</summary>
+                <p className="text-sfnavy mt-2 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Mock data note */}
+      <div className="text-[11px] text-sfmuted italic">All mock data · No real systems connected · Built for demonstration.</div>
 
       {/* KPI Strip */}
       <section className="grid grid-cols-1 md:grid-cols-5 gap-4">

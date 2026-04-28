@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   Calculator, Scale, AlertTriangle, CheckSquare, GitCompare, DollarSign,
-  Info, Lock, X, ArrowRight, Layers, Activity, TrendingDown, TrendingUp, Search
+  Info, Lock, X, ArrowRight, Layers, Activity, TrendingDown, TrendingUp, Search, Settings
 } from 'lucide-react';
 import { INITIATIVES, fmtMoney, pillarById, STAGE_GATE_ARTIFACTS } from '../data/portfolioData.js';
 import {
@@ -11,16 +11,18 @@ import {
 } from '../data/decisionData.js';
 import { INFLUENCE_FACTORS, FACTOR_META, avgInfluenceScore } from '../data/influenceFactors.js';
 import { PROCESS_HEALTH } from '../data/playbooks.js';
+import KPIStudio from './KPIStudio.jsx';
 
 const SUB_TABS = [
-  { id: 'rice',     label: 'RICE Prioritization',  icon: Calculator,   blurb: 'Score and rank every initiative on a single comparable number',                       jd: '#10 prioritization' },
-  { id: 'capital',  label: 'Capital Optimizer',     icon: Scale,        blurb: 'Given a budget cap, pick the highest-value mix',                                       jd: '#12 capital allocation' },
-  { id: 'risk',     label: 'Risk Heatmap',          icon: AlertTriangle,blurb: 'Plot probability × impact for every initiative',                                       jd: '#4 early risk detection' },
-  { id: 'gate',     label: 'Stage-Gate Scorer',     icon: CheckSquare,  blurb: 'Objective check before passing an initiative to the next gate',                        jd: '#3 stage-gate processes' },
-  { id: 'value',    label: 'Value & TCO Engine',    icon: DollarSign,   blurb: 'Total cost of ownership vs. full benefit decomposition',                               jd: '#13 value realization' },
-  { id: 'factors',  label: 'Influence Factors',     icon: Layers,       blurb: '8 JD-aligned non-financial dimensions including data quality + governance',           jd: '#6 data quality, #5 metadata' },
-  { id: 'health',   label: 'Process Health',        icon: Activity,     blurb: 'Friction metrics, cycle times, anti-patterns detected — strategic feedback for execs', jd: '#6 friction, #9 audit feedback' },
-  { id: 'compare',  label: 'Scenario Compare',      icon: GitCompare,   blurb: 'Side-by-side with auto-generated decision rationale',                                  jd: '#10 rebalancing, #14 scenario' }
+  { id: 'rice',       label: 'RICE Prioritization', icon: Calculator,   blurb: 'Score and rank every initiative on a single comparable number' },
+  { id: 'capital',    label: 'Capital Optimizer',    icon: Scale,        blurb: 'Given a budget cap, pick the highest-value mix' },
+  { id: 'risk',       label: 'Risk Heatmap',         icon: AlertTriangle,blurb: 'Plot probability × impact for every initiative' },
+  { id: 'gate',       label: 'Stage-Gate Scorer',    icon: CheckSquare,  blurb: 'Objective check before passing an initiative to the next gate' },
+  { id: 'value',      label: 'Value & TCO Engine',   icon: DollarSign,   blurb: 'Total cost of ownership vs. full benefit decomposition' },
+  { id: 'factors',    label: 'Influence Factors',    icon: Layers,       blurb: '8 non-financial dimensions including data quality + governance' },
+  { id: 'health',     label: 'Process Health',       icon: Activity,     blurb: 'Friction metrics, cycle times, anti-patterns detected' },
+  { id: 'compare',    label: 'Scenario Compare',     icon: GitCompare,   blurb: 'Side-by-side with auto-generated decision rationale' },
+  { id: 'kpi-studio', label: 'KPI Studio',           icon: Settings,     blurb: 'Configurable KPI catalog + portfolio recommendation engine' }
 ];
 
 function Tip({ children }) {
@@ -884,8 +886,10 @@ function CmpRow({ label, cells, bold }) {
 }
 
 // -------------------- MAIN --------------------
-export default function DecisionEngine() {
-  const [sub, setSub] = useState('rice');
+export default function DecisionEngine({ sub: subProp, setSub: setSubProp }) {
+  const [internalSub, internalSetSub] = useState('rice');
+  const sub = subProp ?? internalSub;
+  const setSub = setSubProp ?? internalSetSub;
   const ActiveSub = {
     rice: RiceMatrix,
     capital: CapitalOptimizer,
@@ -894,7 +898,8 @@ export default function DecisionEngine() {
     value: ValueEngine,
     factors: InfluenceFactors,
     health: ProcessHealth,
-    compare: ScenarioCompare
+    compare: ScenarioCompare,
+    'kpi-studio': KPIStudio
   }[sub];
 
   return (

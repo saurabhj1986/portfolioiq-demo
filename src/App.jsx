@@ -1,52 +1,50 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Bot, Database, Hammer, Sparkles, Calculator, Users, BookOpen, Settings, PlayCircle, PenSquare, Home } from 'lucide-react';
-import Welcome from './components/Welcome.jsx';
+import { LayoutDashboard, Database, Hammer, Sparkles, Calculator, PlayCircle, Briefcase } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
 import PortfolioJourney from './components/PortfolioJourney.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
-import KPIStudio from './components/KPIStudio.jsx';
-import Playbooks from './components/Playbooks.jsx';
-import TeamCockpit from './components/TeamCockpit.jsx';
-import Workbench from './components/Workbench.jsx';
-import PortfolioCopilot from './components/PortfolioCopilot.jsx';
+import Operate from './components/Operate.jsx';
 import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
 import TourBar from './components/TourBar.jsx';
 import { TOURS } from './data/tours.js';
 
 const TABS = [
-  { id: 'welcome',   label: 'Welcome',           icon: Home },
-  { id: 'dashboard', label: 'Dashboard',         icon: LayoutDashboard },
-  { id: 'journey',   label: 'Journey',           icon: PlayCircle },
-  { id: 'decision',  label: 'Decision Engine',   icon: Calculator },
-  { id: 'kpi',       label: 'KPI Studio',        icon: Settings },
-  { id: 'playbooks', label: 'Playbooks',         icon: BookOpen },
-  { id: 'team',      label: 'Team Cockpit',      icon: Users },
-  { id: 'workbench', label: 'Workbench',         icon: PenSquare },
-  { id: 'copilot',   label: 'Copilot',           icon: Bot },
-  { id: 'data',      label: 'Source of Truth',   icon: Database },
-  { id: 'how',       label: 'How I Built This',  icon: Hammer }
+  { id: 'dashboard', label: 'Dashboard',       icon: LayoutDashboard },
+  { id: 'journey',   label: 'Journey',         icon: PlayCircle },
+  { id: 'decisions', label: 'Decisions',       icon: Calculator },
+  { id: 'operate',   label: 'Operate',         icon: Briefcase },
+  { id: 'data',      label: 'Source of Truth', icon: Database },
+  { id: 'about',     label: 'About',           icon: Hammer }
 ];
 
 export default function App() {
-  const [tab, setTab] = useState('welcome');
-  const [activeTour, setActiveTour] = useState(null); // tour id or null
+  const [tab, setTab] = useState('dashboard');
+  const [activeTour, setActiveTour] = useState(null);
   const [tourStep, setTourStep] = useState(0);
+
+  // Sub-tab state for parents that have sub-tabs
+  const [decisionsSub, setDecisionsSub] = useState('rice');
+  const [operateSub, setOperateSub]     = useState('playbooks');
+  const [dataSub, setDataSub]           = useState('schema');
 
   const startTour = (tourId) => {
     setActiveTour(tourId);
     setTourStep(0);
-    // First step navigation handled by user clicking step "Open" in panel,
-    // OR optionally auto-jumping to first step. We'll keep them on Welcome
-    // so they can see the step list, then click into step 1.
   };
 
   const goToStep = (idx) => {
     if (!activeTour) return;
     const tour = TOURS[activeTour];
     if (idx < 0 || idx >= tour.steps.length) return;
+    const step = tour.steps[idx];
     setTourStep(idx);
-    setTab(tour.steps[idx].tab);
+    setTab(step.tab);
+    if (step.sub) {
+      if (step.tab === 'decisions') setDecisionsSub(step.sub);
+      if (step.tab === 'operate')   setOperateSub(step.sub);
+      if (step.tab === 'data')      setDataSub(step.sub);
+    }
   };
 
   const exitTour = () => {
@@ -55,8 +53,7 @@ export default function App() {
   };
 
   const backToTourList = () => {
-    setTab('welcome');
-    // keep activeTour set so the Welcome panel shows the steps
+    setTab('dashboard');
   };
 
   return (
@@ -74,7 +71,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-white/60">A Senior Manager's operating workspace for</p>
+            <p className="text-xs text-white/60">A Sr Manager's operating workspace for</p>
             <p className="text-xs text-white font-medium">strategic portfolio management</p>
           </div>
         </div>
@@ -98,8 +95,8 @@ export default function App() {
 
       {/* Body */}
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6 pb-32">
-        {tab === 'welcome'   && (
-          <Welcome
+        {tab === 'dashboard' && (
+          <Dashboard
             navigateTo={setTab}
             activeTour={activeTour}
             tourStep={tourStep}
@@ -108,16 +105,11 @@ export default function App() {
             onGoToStep={goToStep}
           />
         )}
-        {tab === 'dashboard' && <Dashboard />}
         {tab === 'journey'   && <PortfolioJourney />}
-        {tab === 'decision'  && <DecisionEngine />}
-        {tab === 'kpi'       && <KPIStudio />}
-        {tab === 'playbooks' && <Playbooks />}
-        {tab === 'team'      && <TeamCockpit />}
-        {tab === 'workbench' && <Workbench />}
-        {tab === 'copilot'   && <PortfolioCopilot />}
-        {tab === 'data'      && <DataModel />}
-        {tab === 'how'       && <HowIBuilt />}
+        {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} />}
+        {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} />}
+        {tab === 'data'      && <DataModel sub={dataSub} setSub={setDataSub} />}
+        {tab === 'about'     && <HowIBuilt />}
       </main>
 
       {/* Footer */}
@@ -127,7 +119,7 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Persistent Tour Bar — appears across all tabs while a tour is active */}
+      {/* Persistent Tour Bar */}
       <TourBar
         tour={activeTour ? TOURS[activeTour] : null}
         step={tourStep}
