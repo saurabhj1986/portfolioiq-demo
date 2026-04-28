@@ -112,50 +112,59 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
   }, []);
 
   return (
-    <div className="space-y-6">
-      {/* Compact Welcome / Tour CTA / About — was a separate tab, now the front matter of Dashboard */}
+    <div className="space-y-4">
+      {/* Compact 2-col hero: story left, actions+stats right */}
       <section className="card bg-gradient-to-br from-sfnavy via-sfdeep to-sfblue text-white relative overflow-hidden">
         <div className="absolute -right-8 -top-8 w-48 h-48 bg-sflight/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-sflight" />
-            <span className="text-[11px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
+        <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+          {/* Left: story (3/5) */}
+          <div className="lg:col-span-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-sflight" />
+              <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-serif font-bold leading-tight tracking-tight">Operate the portfolio. Equip the leaders.</h1>
+            <div className="mt-3 space-y-2 text-sm text-white/85 leading-relaxed">
+              <p>
+                <span className="font-semibold text-white">The role.</span>{' '}
+                Senior Managers in strategic portfolio roles coordinate technology investments at scale — dozens of initiatives, multiple teams, tens of millions in budget, direct reports running their own portfolios.
+              </p>
+              <p>
+                <span className="font-semibold text-white">The hidden tax.</span>{' '}
+                Most of the week goes to chasing the same numbers across different tools — Anaplan for budgets, ServiceNow for tickets, Slack for status, spreadsheets for capacity. Not making decisions. Not coaching. Not governing.
+              </p>
+              <p>
+                <span className="font-semibold text-white">Why PortfolioIQ.</span>{' '}
+                One workspace for every KPI, decision draft, coaching insight, and exec comm. Sr Managers run operations; Directors run strategy.
+              </p>
+            </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight tracking-tight">Operate the portfolio. Equip the leaders.</h1>
-          <div className="mt-5 space-y-3 max-w-4xl text-base text-white/85 leading-relaxed">
-            <p>
-              <span className="font-semibold text-white">The role.</span>{' '}
-              Senior Managers in strategic portfolio roles coordinate technology investments at scale — running dozens of major initiatives across multiple teams, managing tens of millions in budget, and coaching direct reports who run their own portfolios.
-            </p>
-            <p>
-              <span className="font-semibold text-white">The hidden tax.</span>{' '}
-              Most of their week is spent chasing the same numbers across different tools — Anaplan for budgets, ServiceNow for tickets, Slack for status, spreadsheets for capacity. Not making decisions. Not coaching. Not governing.
-            </p>
-            <p>
-              <span className="font-semibold text-white">Why PortfolioIQ.</span>{' '}
-              One workspace where all of it lives — every initiative's health, the trade-off drafts a Director needs, AI-detected coaching moments, the weekly exec comms a Sr Manager owns. Senior Managers run the operation; Directors run the strategy.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-4">
-            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-white rounded-lg px-4 py-2 font-semibold hover:bg-sfblue transition flex items-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
+
+          {/* Right: actions + stats (2/5) */}
+          <div className="lg:col-span-2 flex flex-col gap-3">
+            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-white rounded-lg px-4 py-2.5 font-semibold hover:bg-sfblue transition flex items-center justify-center gap-2 text-sm shadow-lg ring-2 ring-white/30">
               <PlayCircle className="w-4 h-4" /> Start 2-min tour
               <span className="text-[10px] bg-white text-sflight rounded px-1.5 py-0.5 font-bold">BEST FOR DEMOS</span>
             </button>
-            <button onClick={() => onStartTour && onStartTour('20s')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center gap-1.5 text-xs">
-              <Zap className="w-3.5 h-3.5" /> 20-sec scan
-            </button>
-            <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition text-xs">
-              5-min deep dive
-            </button>
-            <button onClick={() => setPrfaqOpen(o => !o)} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center gap-1.5 text-xs">
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={() => onStartTour && onStartTour('20s')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center justify-center gap-1.5 text-xs">
+                <Zap className="w-3.5 h-3.5" /> 20-sec scan
+              </button>
+              <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/30 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition text-xs">
+                5-min deep dive
+              </button>
+            </div>
+            <button onClick={() => setPrfaqOpen(o => !o)} className="bg-white/5 text-white/90 border border-white/20 rounded-lg px-3 py-1.5 font-medium hover:bg-white/15 transition flex items-center justify-center gap-1.5 text-xs">
               <Lightbulb className="w-3.5 h-3.5" /> {prfaqOpen ? 'Hide' : 'Why'} this exists <ChevronDown className={`w-3 h-3 transition-transform ${prfaqOpen ? 'rotate-180' : ''}`} />
             </button>
+            <div className="mt-auto pt-3 border-t border-white/15 grid grid-cols-3 gap-2 text-center">
+              <div><div className="text-xl font-serif font-bold leading-none">16</div><div className="text-[10px] uppercase text-white/60 mt-1">Initiatives</div></div>
+              <div><div className="text-xl font-serif font-bold leading-none">$30M</div><div className="text-[10px] uppercase text-white/60 mt-1">Capital</div></div>
+              <div><div className="text-xl font-serif font-bold leading-none">6</div><div className="text-[10px] uppercase text-white/60 mt-1">Pillars</div></div>
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-5 pt-4 border-t border-white/20 max-w-md">
-            <div><div className="text-2xl font-serif font-bold">16</div><div className="text-[10px] uppercase text-white/60">Initiatives</div></div>
-            <div><div className="text-2xl font-serif font-bold">$30M</div><div className="text-[10px] uppercase text-white/60">Capital</div></div>
-            <div><div className="text-2xl font-serif font-bold">6</div><div className="text-[10px] uppercase text-white/60">Pillars</div></div>
-          </div>
+
         </div>
       </section>
 
@@ -185,8 +194,6 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </section>
       )}
 
-      {/* Mock data note */}
-      <div className="text-[11px] text-sfmuted italic">All mock data · No real systems connected · Built for demonstration.</div>
 
       {/* KPI Strip */}
       <section className="grid grid-cols-1 md:grid-cols-5 gap-4">
