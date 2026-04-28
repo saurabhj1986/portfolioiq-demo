@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Database, Hammer, Sparkles, Calculator, PlayCircle, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Database, Hammer, Sparkles, Calculator, PlayCircle, Briefcase, Bot } from 'lucide-react';
 import Dashboard from './components/Dashboard.jsx';
 import PortfolioJourney from './components/PortfolioJourney.jsx';
 import DecisionEngine from './components/DecisionEngine.jsx';
 import Operate from './components/Operate.jsx';
+import Agents from './components/Agents.jsx';
 import DataModel from './components/DataModel.jsx';
 import HowIBuilt from './components/HowIBuilt.jsx';
 import TourBar from './components/TourBar.jsx';
@@ -16,6 +17,7 @@ const TABS = [
   { id: 'journey',   label: 'Journey',         icon: PlayCircle },
   { id: 'decisions', label: 'Decisions',       icon: Calculator },
   { id: 'operate',   label: 'Operate',         icon: Briefcase },
+  { id: 'agents',    label: 'Agents',          icon: Bot },
   { id: 'data',      label: 'Source of Truth', icon: Database },
   { id: 'about',     label: 'About',           icon: Hammer }
 ];
@@ -119,6 +121,7 @@ export default function App() {
         {tab === 'journey'   && <PortfolioJourney />}
         {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} persona={persona} />}
         {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} persona={persona} />}
+        {tab === 'agents'    && <Agents />}
         {tab === 'data'      && <DataModel sub={dataSub} setSub={setDataSub} persona={persona} />}
         {tab === 'about'     && <HowIBuilt />}
       </main>
