@@ -218,13 +218,13 @@ function ActiveDrafts({ onOpenDraft }) {
               const meta = STATUS_META[d.status];
               const dl = DISTRIBUTION_LISTS.find(x => x.id === d.distributionId);
               return (
-                <tr key={d.id} className="border-b border-slate-100 hover:bg-sfbg/60">
+                <tr key={d.id} className="border-b border-slate-100 hover:bg-white/5 transition-colors">
                   <td className="py-2 pr-3 font-medium text-sfnavy">{d.title}</td>
-                  <td className="py-2 pr-3 text-xs text-sfmuted">{d.template}</td>
+                  <td className="py-2 pr-3 text-xs text-sflight">{d.template}</td>
                   <td className="py-2 pr-3"><span className={meta.pill}>{meta.label}</span></td>
-                  <td className="py-2 pr-3 text-xs text-sfmuted">{dl?.name || '—'}</td>
-                  <td className="py-2 pr-3 text-xs text-sfmuted">{d.reviewers}</td>
-                  <td className="py-2 pr-3 text-xs font-mono text-sfmuted">{d.dueDate}</td>
+                  <td className="py-2 pr-3 text-xs text-white/80">{dl?.name || '—'}</td>
+                  <td className="py-2 pr-3 text-xs text-white/70">{d.reviewers}</td>
+                  <td className="py-2 pr-3 text-xs font-mono text-white/80">{d.dueDate}</td>
                   <td className="py-2 pr-3">
                     <div className="flex items-center gap-2">
                       <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
