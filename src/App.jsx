@@ -120,7 +120,7 @@ export default function App() {
             persona={persona}
           />
         )}
-        {tab === 'guide'     && <Guide navigateTo={setTab} onStartTour={startTour} />}
+        {tab === 'guide'     && <Guide navigateTo={setTab} onStartTour={startTour} persona={persona} />}
         {tab === 'journey'   && <PortfolioJourney />}
         {tab === 'decisions' && <DecisionEngine sub={decisionsSub} setSub={setDecisionsSub} persona={persona} />}
         {tab === 'operate'   && <Operate sub={operateSub} setSub={setOperateSub} persona={persona} />}

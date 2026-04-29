@@ -2,8 +2,42 @@ import React, { useState } from 'react';
 import {
   Compass, PlayCircle, ArrowRight, ChevronDown, BookOpen, Calculator,
   Briefcase, Bot, Database, Hammer, LayoutDashboard, Target, Zap, Lightbulb,
-  Users, Workflow, Clock, TrendingUp, AlertCircle
+  Users, Workflow, Clock, TrendingUp, AlertCircle, Lock, User
 } from 'lucide-react';
+
+// =================== PERSONA-SPECIFIC FRAMING ===================
+const PERSONA_FRAMING = {
+  'sr-manager': {
+    bannerLabel: 'Default · full operating view',
+    valueIntro: 'You\'ll save ~18 hrs/week that goes back to governance, coaching, and judgment work.',
+    quickStartHint: 'Start with the 2-min tour to see the full operating loop end-to-end.'
+  },
+  'director': {
+    bannerLabel: 'Strategic lens · operational details hidden',
+    valueIntro: 'Your Sr Mgr team frees up ~18 hrs/week — that capacity comes back to strategy work and sponsor relationships.',
+    quickStartHint: 'Start with the Dashboard\'s "Decisions needed this week" — the 20-second leadership scan.'
+  },
+  'pillar-pm-dap': {
+    bannerLabel: 'Scoped to Data & AI Platform',
+    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
+    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
+  },
+  'pillar-pm-ts': {
+    bannerLabel: 'Scoped to Trust & Security',
+    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
+    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
+  },
+  'pillar-pm-fe': {
+    bannerLabel: 'Scoped to Field Engagement',
+    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
+    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
+  },
+  'sponsor': {
+    bannerLabel: 'Read-only summary',
+    valueIntro: 'A read-only snapshot of the initiatives you sponsor — health, capital, milestones — without operational depth.',
+    quickStartHint: 'Start with the Dashboard for the leadership scan; the rest of the workspace is hidden for your role.'
+  }
+};
 
 // =================== PROBLEM / VALUE DATA ===================
 const HERO_STATS = [
@@ -339,8 +373,40 @@ function WorkflowCard({ wf, navigateTo }) {
   );
 }
 
+// =================== HELPERS ===================
+// A workflow is visible to a persona if every tab it navigates to is visible to that persona.
+function workflowVisibleTo(workflow, persona) {
+  if (!persona) return true;
+  const usedTabs = workflow.steps.filter(s => s.tab).map(s => s.tab);
+  return usedTabs.every(t => !persona.hideTabs.includes(t));
+}
+
 // =================== MAIN ===================
-export default function Guide({ navigateTo, onStartTour }) {
+export default function Guide({ navigateTo, onStartTour, persona }) {
+  const personaId = persona?.id || 'sr-manager';
+  const framing = PERSONA_FRAMING[personaId] || PERSONA_FRAMING['sr-manager'];
+
+  // Filter content based on persona's RBAC
+  const visibleTabGuides = TAB_GUIDES.filter(g => g.id === 'guide' || !persona?.hideTabs?.includes(g.id));
+  const visibleWorkflows = WORKFLOWS.filter(w => workflowVisibleTo(w, persona));
+
+  // Quick start cards — filter by tab visibility
+  const allQuickStart = [
+    { id: 'tour', icon: PlayCircle, label: 'Take the 2-min tour',
+      sub: 'Five stops walking through the demo\'s narrative arc. Floating tour bar auto-navigates between tabs.',
+      action: () => onStartTour('2m'), primary: true, requiresTab: null },
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Jump to Dashboard',
+      sub: 'The 20-second leadership scan: red items ranked, cross-pillar blockers, 5 KPIs, stage-gate pipeline.',
+      action: () => navigateTo('dashboard'), primary: false, requiresTab: 'dashboard' },
+    { id: 'agents', icon: Bot, label: 'See the Agents',
+      sub: '12 niche agents on Agentforce, connected to GUS, Slack, Quip, Tableau, Data Cloud, Einstein.',
+      action: () => navigateTo('agents'), primary: false, requiresTab: 'agents' },
+    { id: 'decisions', icon: Calculator, label: 'Try the Decision Engine',
+      sub: '9 calculators including the KPI Studio Recommendation Engine. Drafts for sponsor review.',
+      action: () => navigateTo('decisions'), primary: false, requiresTab: 'decisions' }
+  ];
+  const visibleQuickStart = allQuickStart.filter(q => !q.requiresTab || !persona?.hideTabs?.includes(q.requiresTab)).slice(0, 3);
+
   return (
     <div className="space-y-8 max-w-[1100px]">
 
@@ -353,10 +419,32 @@ export default function Guide({ navigateTo, onStartTour }) {
         </p>
       </header>
 
+      {/* PERSONA BANNER — shows when viewing as anything other than Sr Manager */}
+      {persona && persona.id !== 'sr-manager' && (
+        <div className="rounded-lg bg-sflight/10 border border-sflight/30 px-4 py-3 flex items-start gap-3">
+          <User className="w-4 h-4 text-sflight flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm">
+            <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">Viewing as · {persona.role}</span>
+            <span className="text-white/90 ml-2">{framing.bannerLabel}</span>
+            <p className="text-xs text-white/70 mt-1 leading-relaxed">
+              The Guide below is filtered to your role. Workflows you can't act on (because their tabs are hidden) are removed. Switch persona in the top-right to see how a different role experiences the same product.
+            </p>
+          </div>
+          {persona.hideTabs.length > 0 && (
+            <span className="text-[10px] text-white/50 font-mono whitespace-nowrap"><Lock className="w-3 h-3 inline mr-0.5" />Hidden: {persona.hideTabs.join(' · ')}</span>
+          )}
+        </div>
+      )}
+
       {/* 01 · PROBLEM & VALUE — landscape snapshot */}
       <section>
         <Kicker ord="01" label="Problem & value" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">Why this exists — and what it changes</h2>
+        <h2 className="text-xl font-serif font-bold text-white mb-2">Why this exists — and what it changes</h2>
+        {persona && persona.id !== 'sr-manager' && (
+          <p className="text-sm text-sflight italic mb-3">
+            <strong>For your role:</strong> {framing.valueIntro}
+          </p>
+        )}
 
         {/* Problem + Context row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -455,48 +543,42 @@ export default function Guide({ navigateTo, onStartTour }) {
       {/* 02 · QUICK START */}
       <section>
         <Kicker ord="02" label="Quick start" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">Three ways to start</h2>
+        <h2 className="text-xl font-serif font-bold text-white mb-1">{visibleQuickStart.length === 1 ? 'Best place to start' : visibleQuickStart.length === 2 ? 'Two ways to start' : 'Three ways to start'}</h2>
+        <p className="text-sm text-sfmuted mb-3">{framing.quickStartHint}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <QuickStartCard
-            icon={PlayCircle}
-            label="Take the 2-min tour"
-            sub="5 stops walking through the demo's narrative arc. Tour bar floats at the bottom and auto-navigates between tabs."
-            onClick={() => onStartTour('2m')}
-            primary
-          />
-          <QuickStartCard
-            icon={LayoutDashboard}
-            label="Jump to Dashboard"
-            sub="The 20-second leadership scan: red items ranked, cross-pillar blockers, 5 KPIs, stage-gate pipeline."
-            onClick={() => navigateTo('dashboard')}
-          />
-          <QuickStartCard
-            icon={Bot}
-            label="See the agents"
-            sub="12 niche agents on Agentforce, connected to GUS, Slack, Quip, Tableau, Data Cloud, Einstein."
-            onClick={() => navigateTo('agents')}
-          />
+          {visibleQuickStart.map(q => (
+            <QuickStartCard key={q.id} icon={q.icon} label={q.label} sub={q.sub} onClick={q.action} primary={q.primary} />
+          ))}
         </div>
       </section>
 
       {/* 03 · TAB-BY-TAB GUIDE */}
       <section>
         <Kicker ord="03" label="What's in each tab" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">8 tabs, one purpose each</h2>
-        <p className="text-sm text-sfmuted mb-4">Click any card to expand. Click the link inside to jump to that tab.</p>
+        <h2 className="text-xl font-serif font-bold text-white mb-3">{visibleTabGuides.length} tabs, one purpose each</h2>
+        <p className="text-sm text-sfmuted mb-4">Click any card to expand. {persona && persona.hideTabs.length > 0 && <span className="text-sflight">Tabs hidden by your role aren't shown.</span>}</p>
         <div className="space-y-2">
-          {TAB_GUIDES.map(g => <TabGuideCard key={g.id} guide={g} navigateTo={navigateTo} />)}
+          {visibleTabGuides.map(g => <TabGuideCard key={g.id} guide={g} navigateTo={navigateTo} />)}
         </div>
       </section>
 
-      {/* 04 · WORKFLOWS */}
+      {/* 04 · WORKFLOWS — filtered to those whose tabs are all visible to this persona */}
       <section>
         <Kicker ord="04" label="Common workflows" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">"I need to…" — task-oriented playbook</h2>
-        <p className="text-sm text-sfmuted mb-4">Each workflow shows the exact path. Click any step's "Go" arrow to jump there.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {WORKFLOWS.map(wf => <WorkflowCard key={wf.n} wf={wf} navigateTo={navigateTo} />)}
-        </div>
+        <p className="text-sm text-sfmuted mb-4">
+          {visibleWorkflows.length} workflow{visibleWorkflows.length === 1 ? '' : 's'} you can act on with your current role.
+          {WORKFLOWS.length > visibleWorkflows.length && <span className="text-sflight"> {WORKFLOWS.length - visibleWorkflows.length} more available to other roles — switch persona to see them.</span>}
+        </p>
+        {visibleWorkflows.length === 0 ? (
+          <div className="rounded-lg bg-white/5 border border-white/15 p-4 text-sm text-sfmuted text-center">
+            No workflows are actionable from your current role. Switch persona in the top-right to see role-specific tasks.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {visibleWorkflows.map(wf => <WorkflowCard key={wf.n} wf={wf} navigateTo={navigateTo} />)}
+          </div>
+        )}
       </section>
 
       {/* 05 · TIPS */}
