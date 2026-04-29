@@ -2,8 +2,37 @@ import React, { useState } from 'react';
 import {
   Compass, PlayCircle, ArrowRight, ChevronDown, BookOpen, Calculator,
   Briefcase, Bot, Database, Hammer, LayoutDashboard, Target, Zap, Lightbulb,
-  Users, Workflow
+  Users, Workflow, Clock, TrendingUp, AlertCircle
 } from 'lucide-react';
+
+// =================== PROBLEM / VALUE DATA ===================
+const HERO_STATS = [
+  { value: '~18',  unit: 'hrs/wk',     label: 'Time saved across team' },
+  { value: '4d → 6h', unit: '',         label: 'Off-track decision lag' },
+  { value: '71→88',  unit: '%',         label: 'Stage-gate compliance' },
+  { value: '12',   unit: 'agents',     label: 'Running on Agentforce' },
+  { value: '6→1',  unit: 'systems',    label: 'Tools collapsed into one workspace' }
+];
+
+const BEFORE_AFTER = [
+  { task: 'Compile portfolio status across pillars',     before: '3–4 hrs/wk',          after: '20 min',           win: 'Tableau-fed Dashboard, single source' },
+  { task: 'Prep for sponsor 1:1',                         before: '45 min',              after: '15 min review',     win: 'Sponsor Brief Agent drafts a Quip doc 24h ahead' },
+  { task: 'Detect & escalate an off-track initiative',    before: '4-day median lag',    after: '6 hours',           win: 'Off-Track Triage Agent fires on status change' },
+  { task: 'Draft the monthly exec update',                before: '4–6 hrs',             after: '~1 hr review',      win: 'Workbench AI auto-draft pulls live KPIs' },
+  { task: 'Refresh a Risk Register',                      before: 'Often skipped',       after: 'Auto-nudged at 90d', win: 'Risk Register Refresher Agent opens GUS work item' },
+  { task: 'Stage-gate review prep',                       before: '2 days · manual',     after: 'Real-time scorer',  win: 'Stage-Gate Scorer reads artifact lifecycle directly' },
+  { task: 'Capital-burn forecast',                        before: 'Reactive · monthly',  after: 'Weekly + projected', win: 'Capital Burn Forecaster · Einstein projection · Tableau dashboard' },
+  { task: 'Cross-pillar dependency awareness',            before: 'Tribal · word-of-mouth', after: '<1h notification', win: 'Dependency Watcher walks the graph in Data Cloud' }
+];
+
+const SYSTEM_LANDSCAPE = [
+  { sys: 'Anaplan',           used: 'Capital plans, budgets',           freq: 'Daily' },
+  { sys: 'ServiceNow / GUS',  used: 'Tickets, change requests',          freq: 'Daily' },
+  { sys: 'Slack',             used: 'Status, escalations, intake',       freq: 'Hourly' },
+  { sys: 'Quip',              used: 'PRDs, architecture reviews',        freq: 'Several/wk' },
+  { sys: 'Workday',           used: 'FTE capacity, leave',               freq: 'Weekly' },
+  { sys: 'Spreadsheets',      used: 'Anything not in the above',         freq: 'Constantly' }
+];
 
 // =================== TAB GUIDE CONTENT ===================
 const TAB_GUIDES = [
@@ -324,9 +353,108 @@ export default function Guide({ navigateTo, onStartTour }) {
         </p>
       </header>
 
-      {/* QUICK START */}
+      {/* 01 · PROBLEM & VALUE — landscape snapshot */}
       <section>
-        <Kicker ord="01" label="Quick start" />
+        <Kicker ord="01" label="Problem & value" />
+        <h2 className="text-xl font-serif font-bold text-white mb-3">Why this exists — and what it changes</h2>
+
+        {/* Problem + Context row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="w-4 h-4 text-red-300" />
+              <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Problem</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              A Sr Mgr running a $30M tech portfolio touches <strong>6+ systems daily</strong>. Every status answer requires triangulating across Anaplan, ServiceNow / GUS, Slack, Quip, Workday, and spreadsheets.
+            </p>
+          </div>
+          <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-amber-300" />
+              <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              Portfolio leaders need <strong>one operating workspace</strong> where every KPI, decision draft, coaching insight, and exec comm is live and grounded — so the Sr Manager spends time on judgment, not data triangulation.
+            </p>
+          </div>
+          <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-4 h-4 text-emerald-300" />
+              <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              <strong>~18 hrs/week saved</strong> across the team. Off-track decision lag drops <strong>4 days → 6 hours</strong>. Stage-gate compliance up <strong>+17 pts</strong> in 6 months. Sr Manager runs operations; Director runs strategy.
+            </p>
+          </div>
+        </div>
+
+        {/* Hero stat strip */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
+          {HERO_STATS.map((s, i) => (
+            <div key={i} className="rounded-lg bg-sflight/10 border border-sflight/30 p-3 text-center">
+              <div className="text-2xl font-serif font-bold text-sflight leading-none">
+                {s.value}<span className="text-xs ml-1 text-white/70">{s.unit}</span>
+              </div>
+              <div className="text-[10px] uppercase tracking-wide text-white/70 mt-1.5 leading-snug">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* SNAPSHOT VIEW IN LANDSCAPE — Before vs After table */}
+        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <Workflow className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">Snapshot — what's different in 8 portfolio tasks</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[900px]">
+              <thead>
+                <tr className="text-left text-[10px] uppercase tracking-wider text-sfmuted border-b border-white/10">
+                  <th className="py-3 px-4 font-bold">Task</th>
+                  <th className="py-3 px-4 font-bold text-red-300">Before · time + friction</th>
+                  <th className="py-3 px-4 font-bold text-emerald-300">After · with PortfolioIQ</th>
+                  <th className="py-3 px-4 font-bold text-sflight">How</th>
+                </tr>
+              </thead>
+              <tbody>
+                {BEFORE_AFTER.map((row, i) => (
+                  <tr key={i} className="border-b border-white/5 align-top">
+                    <td className="py-3 px-4 text-white font-medium">{row.task}</td>
+                    <td className="py-3 px-4 text-red-200/85 font-mono text-xs">{row.before}</td>
+                    <td className="py-3 px-4 text-emerald-200 font-mono text-xs">{row.after}</td>
+                    <td className="py-3 px-4 text-sfmuted text-xs">{row.win}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Systems-collated landscape */}
+        <div className="mt-4 rounded-xl bg-white/5 border border-white/15 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <Database className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">The systems a Sr Mgr collates info from today</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-0 divide-x divide-white/10">
+            {SYSTEM_LANDSCAPE.map((s, i) => (
+              <div key={i} className="p-3">
+                <div className="text-sm font-serif font-bold text-white">{s.sys}</div>
+                <div className="text-[11px] text-sfmuted mt-0.5 leading-snug">{s.used}</div>
+                <div className="text-[10px] uppercase tracking-wider text-sflight font-bold mt-2">{s.freq}</div>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
+            <strong className="text-sflight">→</strong> PortfolioIQ collapses these into <strong>one Source of Truth</strong> via MuleSoft + Data Cloud. Every other tab reads from the same place.
+          </div>
+        </div>
+      </section>
+
+      {/* 02 · QUICK START */}
+      <section>
+        <Kicker ord="02" label="Quick start" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">Three ways to start</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <QuickStartCard
@@ -351,9 +479,9 @@ export default function Guide({ navigateTo, onStartTour }) {
         </div>
       </section>
 
-      {/* TAB-BY-TAB GUIDE */}
+      {/* 03 · TAB-BY-TAB GUIDE */}
       <section>
-        <Kicker ord="02" label="What's in each tab" />
+        <Kicker ord="03" label="What's in each tab" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">8 tabs, one purpose each</h2>
         <p className="text-sm text-sfmuted mb-4">Click any card to expand. Click the link inside to jump to that tab.</p>
         <div className="space-y-2">
@@ -361,9 +489,9 @@ export default function Guide({ navigateTo, onStartTour }) {
         </div>
       </section>
 
-      {/* WORKFLOWS */}
+      {/* 04 · WORKFLOWS */}
       <section>
-        <Kicker ord="03" label="Common workflows" />
+        <Kicker ord="04" label="Common workflows" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">"I need to…" — task-oriented playbook</h2>
         <p className="text-sm text-sfmuted mb-4">Each workflow shows the exact path. Click any step's "Go" arrow to jump there.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -371,9 +499,9 @@ export default function Guide({ navigateTo, onStartTour }) {
         </div>
       </section>
 
-      {/* TIPS */}
+      {/* 05 · TIPS */}
       <section>
-        <Kicker ord="04" label="Tips & tricks" />
+        <Kicker ord="05" label="Tips & tricks" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">Power moves</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {TIPS.map((t, i) => (
@@ -390,9 +518,9 @@ export default function Guide({ navigateTo, onStartTour }) {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* 06 · FAQ */}
       <section>
-        <Kicker ord="05" label="FAQ" />
+        <Kicker ord="06" label="FAQ" />
         <h2 className="text-xl font-serif font-bold text-white mb-3">Common questions</h2>
         <div className="space-y-2">
           {FAQS.map((f, i) => (
