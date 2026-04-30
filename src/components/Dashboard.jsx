@@ -338,9 +338,17 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </section>
       )}
 
-      {/* 03 · KPI STRIP */}
-      <SectionKicker num="03" label="Portfolio health · 5 leading KPIs" />
-      <section className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* 03 · KPI STRIP — 6 leading KPIs incl. Value at Risk */}
+      <SectionKicker num="03" label="Portfolio health · 6 leading KPIs" />
+      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <KpiCard
+          label="Value at Risk"
+          value="$50M"
+          sub="of $600M top-line plan · 8.3% exposed"
+          target="< 10%"
+          tooltip="Total $ value of strategic outcomes exposed by initiatives currently off-track or at-risk. Standard portfolio risk measure tied back to top-line P&L commitment."
+          jdLink="Define and manage portfolio KPIs (risk exposure)"
+        />
         <KpiCard icon={TrendingUp}    label={KPI_DEFINITIONS[0].label} value={kpiValues.health}     sub={kpiValues.healthSub}     target={KPI_DEFINITIONS[0].target} tooltip={KPI_DEFINITIONS[0].tooltip} jdLink={KPI_DEFINITIONS[0].jdLink} />
         <KpiCard icon={DollarSign}    label={KPI_DEFINITIONS[1].label} value={kpiValues.capital}    sub={kpiValues.capitalSub}    target={KPI_DEFINITIONS[1].target} tooltip={KPI_DEFINITIONS[1].tooltip} jdLink={KPI_DEFINITIONS[1].jdLink} />
         <KpiCard icon={CheckCircle2}  label={KPI_DEFINITIONS[2].label} value={kpiValues.compliance} sub={kpiValues.complianceSub} target={KPI_DEFINITIONS[2].target} tooltip={KPI_DEFINITIONS[2].tooltip} jdLink={KPI_DEFINITIONS[2].jdLink} />

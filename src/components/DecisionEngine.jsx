@@ -12,13 +12,15 @@ import {
 import { INFLUENCE_FACTORS, FACTOR_META, avgInfluenceScore } from '../data/influenceFactors.js';
 import { PROCESS_HEALTH } from '../data/playbooks.js';
 import KPIStudio from './KPIStudio.jsx';
+import InvestmentFramework from './InvestmentFramework.jsx';
 
 const SUB_TABS = [
+  { id: 'investment', label: 'Investment Framework', icon: DollarSign,   blurb: 'NPV + Bang-for-Buck per project · top-down 30/50/20 allocation · Value at Risk' },
   { id: 'rice',       label: 'RICE Prioritization', icon: Calculator,   blurb: 'Score and rank every initiative on a single comparable number' },
   { id: 'capital',    label: 'Capital Optimizer',    icon: Scale,        blurb: 'Given a budget cap, pick the highest-value mix' },
   { id: 'risk',       label: 'Risk Heatmap',         icon: AlertTriangle,blurb: 'Plot probability × impact for every initiative' },
   { id: 'gate',       label: 'Stage-Gate Scorer',    icon: CheckSquare,  blurb: 'Objective check before passing an initiative to the next gate' },
-  { id: 'value',      label: 'Value & TCO Engine',   icon: DollarSign,   blurb: 'Total cost of ownership vs. full benefit decomposition' },
+  { id: 'value',      label: 'Value & TCO',          icon: DollarSign,   blurb: 'Total cost of ownership vs. full benefit decomposition' },
   { id: 'factors',    label: 'Influence Factors',    icon: Layers,       blurb: '8 non-financial dimensions including data quality + governance' },
   { id: 'health',     label: 'Process Health',       icon: Activity,     blurb: 'Friction metrics, cycle times, anti-patterns detected' },
   { id: 'compare',    label: 'Scenario Compare',     icon: GitCompare,   blurb: 'Side-by-side with auto-generated decision rationale' },
@@ -891,6 +893,7 @@ export default function DecisionEngine({ sub: subProp, setSub: setSubProp }) {
   const sub = subProp ?? internalSub;
   const setSub = setSubProp ?? internalSetSub;
   const ActiveSub = {
+    investment: InvestmentFramework,
     rice: RiceMatrix,
     capital: CapitalOptimizer,
     risk: RiskHeatmap,
