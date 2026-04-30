@@ -185,6 +185,9 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
     ? INITIATIVES.filter(i => i.pillar === personaPillar)
     : INITIATIVES;
 
+  // Section visibility helper based on persona's dashboardHideSections
+  const hideSection = (id) => persona?.dashboardHideSections?.includes(id);
+
   const filtered = useMemo(() => {
     return SCOPED_INITIATIVES.filter(i =>
       (pillarFilter === 'all' || i.pillar === pillarFilter) &&
@@ -304,15 +307,21 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </div>
       </section>
 
-      {/* RBAC banner — shows what's filtered when persona ≠ Sr Manager */}
+      {/* RBAC banner — shows what content is filtered when persona ≠ Sr Manager */}
       {persona && persona.id !== 'sr-manager' && (
-        <section className="bg-sfnavy/60 border border-sflight/30 rounded-lg px-4 py-2.5 flex items-center gap-3 text-xs">
-          <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">RBAC</span>
-          <span className={persona.accent + ' font-semibold'}>{persona.role}{persona.pillarLabel ? ` · ${persona.pillarLabel}` : ''}</span>
-          <span className="text-white/70">{persona.desc}</span>
-          {persona.hideTabs.length > 0 && (
-            <span className="ml-auto text-[10px] text-white/50 font-mono">Hidden tabs: {persona.hideTabs.join(' · ')}</span>
-          )}
+        <section className="bg-sfnavy/60 border border-sflight/30 rounded-lg px-4 py-3 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs">
+          <span className="text-[10px] uppercase tracking-widest text-sflight font-bold mt-0.5">RBAC</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={persona.accent + ' font-semibold'}>{persona.role}{persona.pillarLabel ? ` · ${persona.pillarLabel}` : ''}</span>
+              <span className="text-white/70">{persona.desc}</span>
+            </div>
+            {persona.focusSummary && (
+              <div className="text-[11px] text-white/60 mt-1 leading-snug">
+                <strong className="text-white/80">What's filtered:</strong> {persona.focusSummary}
+              </div>
+            )}
+          </div>
         </section>
       )}
 
@@ -328,8 +337,8 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </section>
       )}
 
-      {/* 02 · CROSS-ORG BLOCKERS */}
-      {(!persona || !persona.pillarFilter) && (
+      {/* 02 · CROSS-ORG BLOCKERS — hidden for Pillar PMs and Sponsors */}
+      {(!persona || !persona.pillarFilter) && !hideSection('cross-org') && (
         <section className="card">
           <SectionKicker num="02" label="Active cross-pillar blockers" sub="Where a decision in one pillar is gating delivery in another. Roadblocks executives need to know about." accent="syellow" />
           <div className="space-y-2">
@@ -356,7 +365,8 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         <KpiCard icon={AlertTriangle} label={KPI_DEFINITIONS[4].label} value={kpiValues.alignment}  sub={kpiValues.alignmentSub}  target={KPI_DEFINITIONS[4].target} tooltip={KPI_DEFINITIONS[4].tooltip} jdLink={KPI_DEFINITIONS[4].jdLink} />
       </section>
 
-      {/* 04 · STAGE-GATE PIPELINE */}
+      {/* 04 · STAGE-GATE PIPELINE — hidden for Director and Sponsor (too tactical) */}
+      {!hideSection('stage-gate') && (
       <section className="card">
         <SectionKicker num="04" label="Stage-Gate Pipeline · G0 → G5" sub="Initiatives flowing through the lifecycle. Hover any stage for definition." />
         <div className="flex items-start justify-around gap-2 flex-wrap pt-2 px-2">
@@ -387,8 +397,10 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
           ))}
         </div>
       </section>
+      )}
 
-      {/* 05 · PILLAR PERFORMANCE */}
+      {/* 05 · PILLAR PERFORMANCE — hidden for Director, Sponsor, and Pillar PMs */}
+      {!hideSection('pillar-grid') && (
       <section>
         <div className="flex items-center justify-between mb-3">
           <SectionKicker num="05" label="By pillar · capacity + risk" sub="Click any pillar card to filter the tracker below." />
@@ -431,8 +443,10 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
           })}
         </div>
       </section>
+      )}
 
-      {/* 06 · INITIATIVE TRACKER */}
+      {/* 06 · INITIATIVE TRACKER — hidden for Director and Sponsor (too tactical) */}
+      {!hideSection('tracker') && (
       <section className="card">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
@@ -511,6 +525,7 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
           </table>
         </div>
       </section>
+      )}
     </div>
   );
 }

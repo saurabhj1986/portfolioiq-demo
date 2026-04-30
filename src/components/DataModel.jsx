@@ -417,10 +417,21 @@ const SUB_TABS = [
   { id: 'copilot', label: 'Copilot',        icon: Bot,         desc: 'AI agent grounded in this data' }
 ];
 
-export default function DataModel({ sub: subProp, setSub: setSubProp }) {
+export default function DataModel({ sub: subProp, setSub: setSubProp, persona }) {
   const [internalSub, internalSetSub] = useState('schema');
   const sub = subProp ?? internalSub;
   const setSub = setSubProp ?? internalSetSub;
+
+  // Filter sub-tabs by persona
+  const hiddenSubs = persona?.dataHideSubs || [];
+  const visibleSubs = SUB_TABS.filter(t => !hiddenSubs.includes(t.id));
+
+  // Auto-redirect if current sub-tab is hidden
+  React.useEffect(() => {
+    if (hiddenSubs.includes(sub) && visibleSubs[0]) {
+      setSub(visibleSubs[0].id);
+    }
+  }, [persona, sub, hiddenSubs, visibleSubs, setSub]);
 
   return (
     <div className="space-y-4">
@@ -444,7 +455,7 @@ export default function DataModel({ sub: subProp, setSub: setSubProp }) {
       {/* Sub-tab nav */}
       <div className="bg-white rounded-xl shadow-card p-3">
         <div className="flex flex-wrap gap-2">
-          {SUB_TABS.map(t => {
+          {visibleSubs.map(t => {
             const Icon = t.icon;
             const active = t.id === sub;
             return (
