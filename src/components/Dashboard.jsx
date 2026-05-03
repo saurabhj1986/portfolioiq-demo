@@ -121,6 +121,104 @@ function BlockerRow({ b }) {
   );
 }
 
+// Persona-aware attention tiles (4 tiles + 3 quick stats) — adapts to who's logged in
+function getPersonaAttention(persona) {
+  const id = persona?.id || 'sr-manager';
+  const pillarLabel = persona?.pillarLabel || '';
+
+  if (id === 'sponsor') {
+    return {
+      title: 'For your sign-off.',
+      sub: 'You\'re sponsoring 6 active initiatives. Here\'s what needs your attention.',
+      tiles: [
+        { kicker: 'Pending sign-off',     value: '3',          sub: '$32M ACV awaiting your decision', accent: 'red' },
+        { kicker: 'Value at Risk',        value: '$50M',       sub: '8.3% of $600M top-line plan',     accent: 'red' },
+        { kicker: 'Initiatives sponsored',value: '6',          sub: 'Across 3 pillars',                accent: 'amber' },
+        { kicker: 'Latest ship',          value: 'Trust 2.0',  sub: 'Apr 22 · on time, on budget',     accent: 'green' }
+      ],
+      stats: [
+        { value: 3, label: 'Awaiting you' },
+        { value: 1, label: 'Blocked on you' },
+        { value: 6, label: 'You sponsor' }
+      ]
+    };
+  }
+
+  if (id === 'director') {
+    return {
+      title: 'Strategic at a glance.',
+      sub: 'What needs your call this week. Operational details hidden by your role.',
+      tiles: [
+        { kicker: 'Decisions due this week', value: '5',     sub: 'Sponsor escalations · need your call',                 accent: 'red' },
+        { kicker: 'Value at Risk',           value: '$50M', sub: '$600M plan · 8.3% exposed',                            accent: 'red' },
+        { kicker: 'Strategic drift',         value: '4',     sub: 'inits unmapped to V25 OKRs · sunset candidates',       accent: 'amber' },
+        { kicker: 'Capital headroom',        value: '$5.2M', sub: 'uncommitted across portfolio',                         accent: 'orange' }
+      ],
+      stats: [
+        { value: 5, label: 'Decisions due' },
+        { value: 4, label: 'Strategic drift' },
+        { value: 3, label: 'Sponsor briefs queued' }
+      ]
+    };
+  }
+
+  if (persona?.pillarFilter) {
+    return {
+      title: `${pillarLabel} at a glance.`,
+      sub: 'Your pillar\'s scope only. Cross-portfolio context shown but not editable.',
+      tiles: [
+        { kicker: 'Initiatives at risk',  value: '2',    sub: 'In your pillar · 1 off-track',          accent: 'red' },
+        { kicker: 'Overdue artifacts',    value: '2',    sub: 'Stale Risk Registers · refresh by 5/15', accent: 'orange' },
+        { kicker: 'Capacity allocated',   value: '95%',  sub: '5% headroom · healthy',                  accent: 'amber' },
+        { kicker: 'Cross-pillar deps',    value: '3',    sub: '2 high-risk · 1 medium',                 accent: 'orange' }
+      ],
+      stats: [
+        { value: 4, label: 'Active inits' },
+        { value: 2, label: 'Risk reviews due' },
+        { value: 3, label: 'Cross-pillar deps' }
+      ]
+    };
+  }
+
+  // Default: Sr Manager
+  return {
+    title: 'Portfolio at a glance.',
+    sub: 'What needs your attention this week. Switch personas in the top right to see how the view reshapes.',
+    tiles: [
+      { kicker: 'Decisions needed',     value: '5',     sub: '2 off-track · 3 at-risk · this week',     accent: 'red' },
+      { kicker: 'Cross-pillar blockers',value: '5',     sub: '3 high-risk · 2 medium · escalate today', accent: 'orange' },
+      { kicker: 'Value at Risk',        value: '$50M',  sub: 'of $600M plan · top: CPQ ($18M)',         accent: 'red' },
+      { kicker: 'Burn anomalies',       value: '4',     sub: '3 hot · 1 cold · weekly forecast ready',  accent: 'amber' }
+    ],
+    stats: [
+      { value: 4, label: 'Priorities' },
+      { value: 3, label: 'Blocked' },
+      { value: 3, label: 'Decisions due' }
+    ]
+  };
+}
+
+const TILE_COLORS = {
+  red:    { dot: '#F87171', border: 'rgba(248, 113, 113, 0.45)', text: 'text-red-300'    },
+  orange: { dot: '#FB923C', border: 'rgba(251, 146, 60, 0.45)',  text: 'text-orange-300' },
+  amber:  { dot: '#FBBF24', border: 'rgba(251, 191, 36, 0.45)',  text: 'text-amber-300'  },
+  green:  { dot: '#4ADE80', border: 'rgba(74, 222, 128, 0.45)',  text: 'text-emerald-300' }
+};
+
+function AttentionTile({ kicker, value, sub, accent }) {
+  const c = TILE_COLORS[accent] || TILE_COLORS.amber;
+  return (
+    <div className="rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.04)', borderLeft: `3px solid ${c.border}` }}>
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.dot }} />
+        <span className={`text-[10px] uppercase tracking-widest font-bold ${c.text}`}>{kicker}</span>
+      </div>
+      <div className="text-2xl font-serif font-bold text-white leading-none mt-1">{value}</div>
+      <div className="text-[11px] text-white/60 mt-1.5 leading-snug">{sub}</div>
+    </div>
+  );
+}
+
 // Small section kicker for hierarchy
 function SectionKicker({ num, label, sub, accent = 'sflight' }) {
   return (
@@ -238,72 +336,54 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
     });
   }, []);
 
+  // Persona-aware attention content (4 tiles + 3 quick stats)
+  const attention = getPersonaAttention(persona);
+
   return (
     <div className="space-y-4">
-      {/* Compact 2-col hero: story left, actions+stats right */}
-      <section className="card bg-gradient-to-br from-sfnavy via-sfdeep to-sfblue text-white relative overflow-hidden">
-        <div className="absolute -right-8 -top-8 w-48 h-48 bg-sflight/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-6">
+      {/* Compact "at a glance" hero — flat dark surface, no blue gradient. Tiles + content adapt per persona. */}
+      <section className="rounded-xl p-5" style={{ background: '#0F1623', border: '1px solid #1E2638' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
-          {/* Left: story (3/5) */}
+          {/* LEFT (3/5): kicker + title + 4 attention tiles */}
           <div className="lg:col-span-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-sflight" />
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-sflight" />
               <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">PortfolioIQ</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-serif font-bold leading-tight tracking-tight">Operate the portfolio. Equip the leaders.</h1>
-            <p className="text-sm text-white/80 mt-2 max-w-3xl leading-relaxed">
-              An interactive workspace for portfolio leaders. <span className="text-sflight">Switch personas in the top right</span> to see how the same product adapts to a Sr Manager, Director, Pillar PM, or Sponsor.
+            <h1 className="text-2xl md:text-3xl font-serif font-bold text-white leading-tight tracking-tight">{attention.title}</h1>
+            <p className="text-sm text-white/70 mt-1.5 max-w-2xl leading-relaxed">
+              {attention.sub.split(/Switch personas/i).map((part, i, arr) => i < arr.length - 1
+                ? <React.Fragment key={i}>{part}<span className="text-sflight">Switch personas</span></React.Fragment>
+                : <React.Fragment key={i}>{part}</React.Fragment>
+              )}
             </p>
-
-            {/* Hybrid chips: always-visible captions + click to expand detail */}
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {HERO_CHIPS.map(c => {
-                const isOpen = openChip === c.id;
-                return (
-                  <button
-                    key={c.id}
-                    onClick={() => setOpenChip(isOpen ? null : c.id)}
-                    className={`text-left rounded-lg border transition-all ${isOpen ? 'bg-white/15 border-white/35 ring-1 ring-white/20' : 'bg-white/5 border-white/15 hover:bg-white/10'}`}
-                  >
-                    <div className="px-3 py-2.5 flex items-start gap-2">
-                      <span className="text-base flex-shrink-0 leading-none mt-0.5">{c.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-white text-sm leading-tight">{c.label}</div>
-                        <div className="text-[11px] text-white/75 mt-0.5 leading-snug">{c.caption}</div>
-                      </div>
-                      <ChevronDown className={`w-3.5 h-3.5 text-white/50 flex-shrink-0 mt-1 transition-transform ${isOpen ? 'rotate-180 text-white/80' : ''}`} />
-                    </div>
-                    {isOpen && (
-                      <div className="px-3 pb-3 pt-2 border-t border-white/15 text-xs text-white/90 leading-relaxed">
-                        {c.detail}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+              {attention.tiles.map((t, i) => <AttentionTile key={i} {...t} />)}
             </div>
           </div>
 
-          {/* Right: actions + stats (2/5) */}
-          <div className="lg:col-span-2 flex flex-col gap-3">
-            <button onClick={() => onStartTour && onStartTour('2m')} className="bg-sflight text-sfnavy rounded-lg px-4 py-2.5 font-semibold hover:bg-white transition flex items-center justify-center gap-2 text-sm shadow-lg">
+          {/* RIGHT (2/5): CTAs + 3 quick stats */}
+          <div className="lg:col-span-2 flex flex-col gap-2">
+            <button onClick={() => onStartTour && onStartTour('2m')} className="rounded-lg px-4 py-2.5 font-semibold text-white text-sm flex items-center justify-center gap-2 transition" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <PlayCircle className="w-4 h-4" /> Start 2-min tour
-              <span className="text-[10px] bg-sfnavy text-sflight rounded px-1.5 py-0.5 font-bold">BEST FOR DEMOS</span>
+              <span className="text-[10px] bg-sflight/20 text-sflight rounded px-1.5 py-0.5 font-bold tracking-wider">BEST FOR DEMOS</span>
             </button>
-            <button onClick={() => onStartTour && onStartTour('5m')} className="bg-white/10 text-white border border-white/25 rounded-lg px-3 py-2 font-medium hover:bg-white/20 transition flex items-center justify-center gap-1.5 text-sm">
-              5-min deep dive
+            <button onClick={() => onStartTour && onStartTour('5m')} className="rounded-lg px-4 py-2.5 font-medium text-white text-sm flex items-center justify-center gap-2 transition" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <PlayCircle className="w-4 h-4 opacity-70" /> 5-min deep dive
             </button>
-            <button onClick={() => navigateTo && navigateTo('guide')} className="bg-white/5 text-white/90 border border-white/20 rounded-lg px-3 py-1.5 font-medium hover:bg-white/15 transition flex items-center justify-center gap-1.5 text-xs">
+            <button onClick={() => navigateTo && navigateTo('guide')} className="rounded-lg px-4 py-2 font-medium text-white/90 text-xs flex items-center justify-center gap-1.5 transition" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.10)' }}>
               <Lightbulb className="w-3.5 h-3.5" /> Open the Guide <ArrowRight className="w-3 h-3" />
             </button>
-            <div className="mt-auto pt-3 border-t border-white/15 grid grid-cols-3 gap-2 text-center">
-              <div><div className="text-xl font-serif font-bold leading-none">16</div><div className="text-[10px] uppercase text-white/60 mt-1">Initiatives</div></div>
-              <div><div className="text-xl font-serif font-bold leading-none">$30M</div><div className="text-[10px] uppercase text-white/60 mt-1">Capital</div></div>
-              <div><div className="text-xl font-serif font-bold leading-none">6</div><div className="text-[10px] uppercase text-white/60 mt-1">Pillars</div></div>
+            <div className="mt-auto pt-3 border-t grid grid-cols-3 gap-2 text-center" style={{ borderColor: 'rgba(255,255,255,0.10)' }}>
+              {attention.stats.map((s, i) => (
+                <div key={i}>
+                  <div className="text-2xl font-serif font-bold text-white leading-none">{s.value}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-white/50 mt-1.5">{s.label}</div>
+                </div>
+              ))}
             </div>
           </div>
-
         </div>
       </section>
 
@@ -347,8 +427,11 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </section>
       )}
 
-      {/* 03 · KPI STRIP — 6 leading KPIs incl. Value at Risk */}
-      <SectionKicker num="03" label="Portfolio health · 6 leading KPIs" />
+      {/* 03 · KPI STRIP — 6 leading KPIs incl. Value at Risk · label adapts per persona */}
+      <SectionKicker
+        num="03"
+        label={persona?.pillarFilter ? `${persona.pillarLabel} health · 6 KPIs` : (persona?.id === 'director' ? 'Strategic KPIs · 6 indicators' : (persona?.id === 'sponsor' ? 'Your sponsored portfolio · 6 KPIs' : 'Portfolio health · 6 leading KPIs'))}
+      />
       <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <KpiCard
           label="Value at Risk"
@@ -368,7 +451,11 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
       {/* 04 · STAGE-GATE PIPELINE — hidden for Director and Sponsor (too tactical) */}
       {!hideSection('stage-gate') && (
       <section className="card">
-        <SectionKicker num="04" label="Stage-Gate Pipeline · G0 → G5" sub="Initiatives flowing through the lifecycle. Hover any stage for definition." />
+        <SectionKicker
+          num="04"
+          label={persona?.pillarFilter ? `${persona.pillarLabel} · Stage-Gate Pipeline` : 'Stage-Gate Pipeline · G0 → G5'}
+          sub={persona?.pillarFilter ? `Your pillar's initiatives flowing through the lifecycle. Hover any stage for definition.` : 'Initiatives flowing through the lifecycle. Hover any stage for definition.'}
+        />
         <div className="flex items-start justify-around gap-2 flex-wrap pt-2 px-2">
           {stageDistribution.map((s, idx) => (
             <React.Fragment key={s.id}>
@@ -450,7 +537,11 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
       <section className="card">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
-            <SectionKicker num="06" label="All initiatives · full table" sub={`${filtered.length} of ${INITIATIVES.length} shown.`} />
+            <SectionKicker
+              num="06"
+              label={persona?.pillarFilter ? `${persona.pillarLabel} initiatives · full table` : 'All initiatives · full table'}
+              sub={`${filtered.length} of ${INITIATIVES.length} shown.`}
+            />
           </div>
           <div className="flex items-center gap-2 text-xs">
             <select
