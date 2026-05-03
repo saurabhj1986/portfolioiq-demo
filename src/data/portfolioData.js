@@ -1,5 +1,10 @@
 // Mock data — no real Salesforce systems connected.
 // All names, budgets, and statuses are fabricated for demo purposes.
+//
+// CONTEXT: This represents the Digital Enterprise Technology (DET) portfolio under
+// Joe & Zarillo's leadership. The full org runs ~250 initiatives across 7 pillars;
+// 16 illustrative initiatives are loaded here to keep the demo legible without
+// losing the shape of the real portfolio.
 
 export const PILLARS = [
   { id: 'cxt',  name: 'Customer Experience Tech', lead: 'Priya Sundaram',   capacityFte: 38, allocatedFte: 36 },
@@ -7,7 +12,91 @@ export const PILLARS = [
   { id: 'dap',  name: 'Data & AI Platform',       lead: 'Jordan Reilly',    capacityFte: 42, allocatedFte: 40 },
   { id: 'ts',   name: 'Trust & Security',         lead: 'Aisha Patel',      capacityFte: 22, allocatedFte: 19 },
   { id: 'fot',  name: 'Finance & Operations Tech',lead: 'David Lindqvist',  capacityFte: 30, allocatedFte: 33 },
-  { id: 'fe',   name: 'Field Engagement',         lead: 'Renata Oliveira',  capacityFte: 26, allocatedFte: 24 }
+  { id: 'fe',   name: 'Field Engagement',         lead: 'Renata Oliveira',  capacityFte: 26, allocatedFte: 24 },
+  { id: 'etr',  name: 'Emerging Tech & R&D',      lead: 'Hiro Tanaka',      capacityFte: 18, allocatedFte: 16 }
+];
+
+// Reflects Judith's "renovation phase" framing — DET org charter was refocused
+// 6 weeks ago toward a data-driven approach. These 4 data pillars are the
+// foundation we're rebuilding underneath the portfolio.
+export const DATA_PILLARS = [
+  {
+    id: 'planning',
+    name: 'Planning data',
+    state: 'in_flight',
+    blurb: 'Annual + quarterly planning cycles, intake taxonomy, OKR linkage. Single source for what we said we\'d do.',
+    owner: 'Sr Mgr · Strategic Portfolio Mgmt',
+    nextMilestone: 'Charter v2 published — Day 30'
+  },
+  {
+    id: 'portfolio',
+    name: 'Portfolio data',
+    state: 'in_flight',
+    blurb: '~250 initiatives across 7 pillars. Status, stage, sponsor, OKR mapping, dependencies. The thing you\'re looking at right now.',
+    owner: 'Sr Mgr · Strategic Portfolio Mgmt',
+    nextMilestone: 'Schema v2 in Data Cloud — Day 45'
+  },
+  {
+    id: 'capacity',
+    name: 'Capacity planning',
+    state: 'rebuild',
+    blurb: 'FTE supply vs demand by pillar. Today: spreadsheets + Anaplan + tribal knowledge. Target: live in Workday + Data Cloud.',
+    owner: 'Sr Mgr + Director',
+    nextMilestone: 'Re-architecture proposal — Day 60'
+  },
+  {
+    id: 'time',
+    name: 'Time tracking',
+    state: 'solidify',
+    blurb: 'Already set up in DET — needs solidification and consistent adoption. Powers capacity truth and per-initiative cost.',
+    owner: 'Sr Mgr · Strategic Portfolio Mgmt',
+    nextMilestone: 'Adoption ≥ 90% across 7 pillars — Day 60'
+  }
+];
+
+// 60-day plan reflecting Judith's stated priorities (the renovation work).
+// Used by the Guide and About tabs to ground the demo in the real role.
+export const SIXTY_DAY_PLAN = [
+  {
+    horizon: 'Days 0–15',
+    headline: 'Listen, observe, document the renovation',
+    items: [
+      'Shadow each of the 7 Pillar Portfolio Managers · 1 hr each',
+      'Read the 6-week-old charter refresh + every artifact in Quip',
+      'Map the as-is: which data lives where, who owns it, refresh cadence',
+      'No new processes. No new tools. Just observe and document.'
+    ]
+  },
+  {
+    horizon: 'Days 15–30',
+    headline: 'Backbone for processes',
+    items: [
+      'Documentation standard: every process has a 1-pager (Process Excellence model)',
+      'Stage-gate definitions standardized across all 7 pillars',
+      'GUS becomes the single intake — work item → portfolio entry, automatic',
+      'First version of charter v2 shared with Joe & Zarillo for input'
+    ]
+  },
+  {
+    horizon: 'Days 30–45',
+    headline: 'Data governance re-architecture',
+    items: [
+      'Data Cloud schema for portfolio + capacity + planning data',
+      'Time tracking adoption push — close the gaps on the 7 pillars',
+      'Glossary: 33+ canonical terms agreed across DET',
+      'Audit trail live for portfolio mutations'
+    ]
+  },
+  {
+    horizon: 'Days 45–60',
+    headline: 'Robust tooling — built in-house with AI',
+    items: [
+      'PortfolioIQ as the operating workspace (this prototype, but real)',
+      '12 niche agents on Agentforce for the routine governance loops',
+      'Tableau-fed leadership dashboards reading from one schema',
+      'Hire: leader for agentic strategy and tooling — JD drafted'
+    ]
+  }
 ];
 
 export const STAGES = [
@@ -43,7 +132,11 @@ export const INITIATIVES = [
   { id: 'INI-113', name: 'Marketing Cloud Personalization',  pillar: 'cxt', stage: 'G2', status: 'on_track',  budget: 1900000, spent: 870000,  fte: 8, sponsor: 'Sarah Holt (CMO)', pm: 'Priya Sundaram',  okrs: ['V25-Customer-360'], lastReviewed: '2026-04-24', target: '2026-09-30' },
   { id: 'INI-114', name: 'Slack Huddles AI Summaries',       pillar: 'ept', stage: 'G2', status: 'on_track',  budget: 480000,  spent: 220000,  fte: 3, sponsor: 'Nina Burke (CHRO)', pm: 'Marcus Chen',    okrs: ['V25-Employee-AI', 'V25-Agentforce'], lastReviewed: '2026-04-18', target: '2026-08-15' },
   { id: 'INI-115', name: 'AI Governance Framework (CC-18)',  pillar: 'ts',  stage: 'G1', status: 'at_risk',   budget: 850000,  spent: 165000,  fte: 4, sponsor: 'Lena Wu (CTrO)',   pm: 'Aisha Patel',     okrs: ['V25-Trust', 'V25-Agentforce'], lastReviewed: '2026-03-15', target: '2026-10-31' },
-  { id: 'INI-116', name: 'Data Lakehouse on Snowflake',      pillar: 'dap', stage: 'G2', status: 'on_track',  budget: 5200000, spent: 2300000, fte: 16, sponsor: 'Srini K. (CIO)',  pm: 'Jordan Reilly',   okrs: ['V25-Margin', 'V25-Agentforce'], lastReviewed: '2026-04-22', target: '2026-12-31' }
+  { id: 'INI-116', name: 'Data Lakehouse on Snowflake',      pillar: 'dap', stage: 'G2', status: 'on_track',  budget: 5200000, spent: 2300000, fte: 16, sponsor: 'Srini K. (CIO)',  pm: 'Jordan Reilly',   okrs: ['V25-Margin', 'V25-Agentforce'], lastReviewed: '2026-04-22', target: '2026-12-31' },
+  { id: 'INI-117', name: 'Agentic Tooling Strategy POC',     pillar: 'etr', stage: 'G1', status: 'on_track',  budget: 680000,  spent: 110000,  fte: 4, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Agentforce', 'V25-Employee-AI'], lastReviewed: '2026-04-26', target: '2026-09-15' },
+  { id: 'INI-118', name: 'Time Tracking Solidification (DET-wide)', pillar: 'etr', stage: 'G2', status: 'at_risk', budget: 320000, spent: 145000, fte: 3, sponsor: 'Joe & Zarillo', pm: 'Hiro Tanaka', okrs: ['V25-Margin', 'V25-Employee-AI'], lastReviewed: '2026-04-24', target: '2026-07-01' },
+  { id: 'INI-119', name: 'Emerging Tech Scout Lab',          pillar: 'etr', stage: 'G0', status: 'on_track',  budget: 450000,  spent: 30000,   fte: 2, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Agentforce'], lastReviewed: '2026-04-20', target: '2026-12-31' },
+  { id: 'INI-120', name: 'In-house AI Coding Workbench',     pillar: 'etr', stage: 'G2', status: 'on_track',  budget: 540000,  spent: 240000,  fte: 4, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Margin', 'V25-Agentforce'], lastReviewed: '2026-04-25', target: '2026-08-30' }
 ];
 
 export const STAGE_GATE_ARTIFACTS = [

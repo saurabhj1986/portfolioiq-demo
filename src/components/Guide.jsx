@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import {
   Compass, PlayCircle, ArrowRight, ChevronDown, BookOpen, Calculator,
   Briefcase, Bot, Database, Hammer, LayoutDashboard, Target, Zap, Lightbulb,
-  Users, Workflow, Clock, TrendingUp, AlertCircle, Lock, User
+  Users, Workflow, Clock, TrendingUp, AlertCircle, Lock, User, Building2,
+  Wrench, Layers, CalendarClock
 } from 'lucide-react';
+import { DATA_PILLARS, SIXTY_DAY_PLAN, PILLARS } from '../data/portfolioData';
+
+// Real DET portfolio scale — referenced in narrative copy.
+const INITIATIVES_TOTAL = 250;
 
 // =================== PERSONA-SPECIFIC FRAMING ===================
 const PERSONA_FRAMING = {
@@ -415,7 +420,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <Kicker ord="Guide" label="How to use this app" />
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 5-minute orientation.</h1>
         <p className="text-base text-white/80 mt-3 leading-relaxed max-w-3xl">
-          PortfolioIQ is a Sr Manager's operating workspace for strategic portfolio management. This page tells you what each tab does, how to do common tasks, and how to get the most out of the experience.
+          PortfolioIQ is a Sr Manager's operating workspace for strategic portfolio management — designed for the <strong className="text-sflight">Digital Enterprise Technology (DET)</strong> org and its ~{INITIATIVES_TOTAL} initiatives across 7 pillars. This page tells you what each tab does, how to do common tasks, and how to get the most out of the experience.
         </p>
       </header>
 
@@ -536,6 +541,102 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
             <strong className="text-sflight">→</strong> PortfolioIQ collapses these into <strong>one Source of Truth</strong> via MuleSoft + Data Cloud. Every other tab reads from the same place.
+          </div>
+        </div>
+      </section>
+
+      {/* 01b · DET ORG CONTEXT — the renovation, 7 pillars, 4 data pillars, 60-day plan */}
+      <section>
+        <Kicker ord="01b" label="DET org context" />
+        <h2 className="text-xl font-serif font-bold text-white mb-2">The Digital Enterprise Technology renovation</h2>
+        <p className="text-sm text-white/85 leading-relaxed mb-4 max-w-3xl">
+          DET sits under <strong className="text-sflight">Joe &amp; Zarillo's leadership</strong>. The org runs <strong className="text-sflight">~{INITIATIVES_TOTAL} initiatives across {PILLARS.length} pillars</strong> spanning Salesforce-on-Salesforce, IT, emerging tech, R&amp;D, operations. The charter just refocused 6 weeks ago toward a data-driven approach. <em className="text-white/70">PortfolioIQ is the operating workspace this renovation needs.</em>
+        </p>
+
+        {/* Renovation analogy */}
+        <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Wrench className="w-4 h-4 text-amber-300" />
+            <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">The renovation analogy</span>
+          </div>
+          <p className="text-sm text-white/90 leading-relaxed">
+            <strong>The wood structure is strong</strong> — the team, the pillars, the existing tooling are all in place. <strong>The new homeowner wants different sconces, fresh paint, and the lights moved.</strong> This isn't a teardown — it's a re-architecture of how the portfolio is governed, instrumented, and communicated. Heritage preserved; the operating model is what's changing.
+          </p>
+        </div>
+
+        {/* 7 PILLARS GRID */}
+        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">The 7 DET pillars</h3>
+            <span className="text-[10px] text-sfmuted ml-1">· demo loads 16 illustrative initiatives; real portfolio is ~{INITIATIVES_TOTAL}</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-y divide-white/10">
+            {PILLARS.map(p => (
+              <div key={p.id} className="p-3">
+                <div className="text-[11px] font-mono text-sflight uppercase tracking-wider">{p.id}</div>
+                <div className="text-sm font-serif font-bold text-white mt-0.5">{p.name}</div>
+                <div className="text-[11px] text-sfmuted mt-1 leading-snug">Lead · {p.lead}</div>
+                <div className="text-[10px] text-white/60 mt-0.5">{p.allocatedFte}/{p.capacityFte} FTE allocated</div>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
+            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — a primary stakeholder of this Sr Mgr role. Switch persona (top-right) to see the workspace scoped to one pillar.
+          </div>
+        </div>
+
+        {/* 4 DATA PILLARS */}
+        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <Database className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">The 4 data pillars underneath the portfolio</h3>
+            <span className="text-[10px] text-sfmuted ml-1">· this is what gets re-architected first</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 divide-x divide-white/10">
+            {DATA_PILLARS.map(dp => (
+              <div key={dp.id} className="p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-serif font-bold text-white">{dp.name}</span>
+                  <span className={`pill text-[9px] ${dp.state === 'rebuild' ? 'pill-red' : dp.state === 'solidify' ? 'pill-yellow' : 'pill-blue'}`}>
+                    {dp.state.replace('_', ' ')}
+                  </span>
+                </div>
+                <p className="text-[11px] text-white/80 leading-snug">{dp.blurb}</p>
+                <div className="mt-2 pt-2 border-t border-white/10">
+                  <div className="text-[10px] text-sflight font-bold uppercase tracking-wide">Next milestone</div>
+                  <div className="text-[11px] text-white/70 mt-0.5">{dp.nextMilestone}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 60-DAY PLAN */}
+        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <CalendarClock className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">60-day plan — what gets built first</h3>
+            <span className="text-[10px] text-sfmuted ml-1">· grounded in the conversation with Judith on May 1</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 divide-x divide-white/10">
+            {SIXTY_DAY_PLAN.map((p, i) => (
+              <div key={i} className="p-3">
+                <div className="text-[10px] font-mono text-sflight uppercase tracking-wider">{p.horizon}</div>
+                <div className="text-sm font-serif font-bold text-white mt-1 leading-snug">{p.headline}</div>
+                <ul className="mt-2 space-y-1.5">
+                  {p.items.map((it, j) => (
+                    <li key={j} className="text-[11px] text-white/80 leading-snug flex items-start gap-1.5">
+                      <span className="text-sflight flex-shrink-0">·</span>
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
+            <strong className="text-sflight">→</strong> The team to deliver this is <strong>5 people (Director → Analyst)</strong> with 2 currently on (or going on) maternity leave and a new Director joining. The agentic strategy hire fills the gap — and is exactly the work this prototype showcases.
           </div>
         </div>
       </section>

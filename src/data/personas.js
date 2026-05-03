@@ -92,6 +92,21 @@ export const PERSONAS = [
     focusSummary: 'Scoped to fe pillar · 4 portfolio-level Decisions sub-tabs hidden'
   },
   {
+    id: 'pillar-pm-etr',
+    role: 'Pillar PM',
+    label: 'Pillar PM · Emerging Tech & R&D',
+    desc: 'Scoped to Emerging Tech & R&D initiatives — agentic tooling, time tracking solidification, in-house AI workbench.',
+    pillarFilter: 'etr',
+    pillarLabel: 'Emerging Tech & R&D',
+    hideTabs: ['operate'],
+    dashboardHideSections: ['pillar-grid'],
+    decisionsHideSubs: ['investment', 'capital', 'compare', 'kpi-studio'],
+    dataHideSubs: [],
+    readOnly: false,
+    accent: 'text-syellow',
+    focusSummary: 'Scoped to etr pillar (Joe & Zarillo direct sponsorship) · 4 portfolio-level Decisions sub-tabs hidden'
+  },
+  {
     id: 'sponsor',
     role: 'Sponsor',
     label: 'Executive Sponsor',

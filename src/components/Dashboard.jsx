@@ -182,18 +182,18 @@ function getPersonaAttention(persona) {
 
   // Default: Sr Manager
   return {
-    title: 'Portfolio at a glance.',
-    sub: 'What needs your attention this week. Switch personas in the top right to see how the view reshapes.',
+    title: 'DET portfolio at a glance.',
+    sub: '~250 initiatives across 7 pillars under Joe & Zarillo. What needs your attention this week. Switch personas in the top right to see how the view reshapes.',
     tiles: [
       { kicker: 'Decisions needed',     value: '5',     sub: '2 off-track · 3 at-risk · this week',     accent: 'red' },
       { kicker: 'Cross-pillar blockers',value: '5',     sub: '3 high-risk · 2 medium · escalate today', accent: 'orange' },
       { kicker: 'Value at Risk',        value: '$50M',  sub: 'of $600M plan · top: CPQ ($18M)',         accent: 'red' },
-      { kicker: 'Burn anomalies',       value: '4',     sub: '3 hot · 1 cold · weekly forecast ready',  accent: 'amber' }
+      { kicker: 'Renovation phase',     value: 'Day 21',sub: 'of 60 · backbone in flight · time-tracking next', accent: 'amber' }
     ],
     stats: [
-      { value: 4, label: 'Priorities' },
-      { value: 3, label: 'Blocked' },
-      { value: 3, label: 'Decisions due' }
+      { value: 7, label: 'DET pillars' },
+      { value: '~250', label: 'Initiatives' },
+      { value: 5, label: 'Decisions due' }
     ]
   };
 }
@@ -239,15 +239,15 @@ const HERO_CHIPS = [
     id: 'role',
     icon: '💼',
     label: 'The role',
-    caption: 'Many initiatives, multiple teams, $30M+ budget, 4+ direct reports',
-    detail: 'Sr Mgrs running tech portfolios coordinate dozens of initiatives, multiple teams, tens of millions in budget, and direct reports who run their own portfolios.'
+    caption: 'DET org · 7 pillars · ~250 initiatives · 5-person team',
+    detail: 'Sr Mgr, Strategic Portfolio Mgmt within Digital Enterprise Technology (DET) — the org under Joe & Zarillo covering Salesforce-on-Salesforce, IT, emerging tech, R&D, ops. ~250 initiatives across 7 pillars. The team: 5 people (Director → Analyst), 2 currently on/going on maternity leave, new Director joining.'
   },
   {
     id: 'tax',
     icon: '🔧',
     label: 'The hidden tax',
-    caption: 'Time lost chasing the same numbers across 4+ tools',
-    detail: 'Most of the week goes to triangulating data across Anaplan, ServiceNow, Slack, spreadsheets — not making decisions, coaching the team, or governing the work.'
+    caption: 'Renovation in flight — charter refocused 6 wks ago',
+    detail: 'Week-to-week goes to triangulating across Anaplan, GUS, Slack, Quip, Workday, spreadsheets — not coaching, governance, or judgment. Charter just refocused 6 weeks ago toward a data-driven approach. The wood structure is strong; the operating model is what\'s being rebuilt.'
   },
   {
     id: 'workspace',
@@ -493,7 +493,7 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
           <SectionKicker num="05" label="By pillar · capacity + risk" sub="Click any pillar card to filter the tracker below." />
           <span className="text-xs text-sfmuted hidden md:inline"></span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-3">
           {pillarMetrics.map(p => {
             const isActive = pillarFilter === p.id;
             const utilColor =

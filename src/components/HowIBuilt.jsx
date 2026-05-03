@@ -85,7 +85,43 @@ export default function HowIBuilt() {
         <p className="text-base text-sfmuted mt-4 leading-relaxed max-w-2xl">
           Design philosophy, system architecture, integration points, and the path from this demo to a production system — including the risks to manage along the way.
         </p>
+        <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
+          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) under <strong className="text-sfnavy not-italic">Joe &amp; Zarillo</strong> — 7 pillars, ~250 initiatives, and a charter that just refocused 6 weeks ago toward a data-driven approach. The wood structure is strong; this is the operating workspace the renovation needs.
+        </p>
       </header>
+
+      <hr className="border-slate-200" />
+
+      {/* THE RENOVATION — what's actually being changed */}
+      <section className="rounded-lg border border-amber-200 bg-amber-50/60 p-5">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-2">00 · Context · The renovation</div>
+        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">What's being rebuilt — and what stays</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-emerald-700 font-bold mb-1.5">Stays · the wood structure</div>
+            <ul className="space-y-1 text-sfdeep leading-relaxed">
+              <li>· The 7 pillars and their leads</li>
+              <li>· GUS as the work-item layer (internal Jira-equivalent)</li>
+              <li>· Salesforce-on-Salesforce as the foundational stack</li>
+              <li>· Existing time-tracking system in DET (needs solidification)</li>
+              <li>· The 5-person team's institutional knowledge</li>
+            </ul>
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · new sconces, new lights</div>
+            <ul className="space-y-1 text-sfdeep leading-relaxed">
+              <li>· Process backbone: Process Excellence-style 1-pagers per process</li>
+              <li>· Data governance re-architecture (Data Cloud schema for portfolio + capacity + planning)</li>
+              <li>· Time tracking adoption push across all 7 pillars</li>
+              <li>· Robust tooling — built in-house with AI / agentic coding (no Tableau / engineering dependency)</li>
+              <li>· New role: leader for agentic strategy and tooling</li>
+            </ul>
+          </div>
+        </div>
+        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+          Team reality: 5 people (Director → Analyst). 2 currently on or going on maternity leave. New Director joining. The agentic-strategy hire fills the gap — and is exactly the work this prototype showcases.
+        </p>
+      </section>
 
       <hr className="border-slate-200" />
 

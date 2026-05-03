@@ -189,8 +189,26 @@ export default function TeamCockpit() {
         <div className="flex items-start gap-3">
           <Users className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h2 className="text-lg font-serif font-bold">Team Cockpit — 4 Portfolio Managers</h2>
-            <p className="text-sm text-white/80 mt-1">AI surfaces coaching opportunities, drafts weekly 1:1 prep, automates routine notifications. Includes leave-coverage detection.</p>
+            <h2 className="text-lg font-serif font-bold">Team Cockpit — DET Portfolio team</h2>
+            <p className="text-sm text-white/80 mt-1">5-person team (Director → Analyst). 4 Pillar Portfolio Manager direct reports shown. AI surfaces coaching opportunities, drafts weekly 1:1 prep, automates routine notifications.</p>
+            <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]">
+              <div className="bg-white/5 border border-white/15 rounded px-2 py-1.5">
+                <div className="text-white/60 uppercase tracking-wider text-[10px]">Headcount</div>
+                <div className="text-white font-semibold mt-0.5">5 (Dir → Analyst)</div>
+              </div>
+              <div className="bg-amber-500/15 border border-amber-300/40 rounded px-2 py-1.5">
+                <div className="text-amber-200 uppercase tracking-wider text-[10px]">Maternity gap</div>
+                <div className="text-white font-semibold mt-0.5">2 of 5 · coverage planned</div>
+              </div>
+              <div className="bg-emerald-500/15 border border-emerald-300/40 rounded px-2 py-1.5">
+                <div className="text-emerald-200 uppercase tracking-wider text-[10px]">Joining</div>
+                <div className="text-white font-semibold mt-0.5">New Director · Q3</div>
+              </div>
+              <div className="bg-sflight/15 border border-sflight/40 rounded px-2 py-1.5">
+                <div className="text-sflight uppercase tracking-wider text-[10px]">Open hire</div>
+                <div className="text-white font-semibold mt-0.5">Agentic strategy lead</div>
+              </div>
+            </div>
           </div>
           <div className="text-right flex-shrink-0">
             <div className="text-xs text-white/60">Urgent items</div>
