@@ -16,6 +16,54 @@ export const PILLARS = [
   { id: 'etr',  name: 'Emerging Tech & R&D',      lead: 'Hiro Tanaka',      capacityFte: 18, allocatedFte: 16 }
 ];
 
+// FY27 SPM 5-pillar strategy — the Strategic Portfolio Management team's own
+// operating framework (overlays the 7 DET org pillars above). This role
+// (Strategic Portfolio Operations Manager · IC) lives at the intersection of
+// pillars 2 (Data & Systems Optimization) and 3 (Tooling Enablement) — flagged
+// with `isFocus: true` so the UI can highlight them.
+export const FY27_SPM_PILLARS = [
+  {
+    id: 'planning',
+    code: 'P01',
+    name: 'Portfolio Planning',
+    blurb: 'Annual + quarterly planning cycles, intake taxonomy, OKR linkage. Single source for what we said we\'d do.',
+    owner: 'SPM Lead + PPMs',
+    isFocus: false
+  },
+  {
+    id: 'data',
+    code: 'P02',
+    name: 'Data & Systems Optimization',
+    blurb: 'Portfolio data foundation. Data quality, governance controls, validation/reconciliation, schema in Airtable + downstream warehouse.',
+    owner: 'This role · IC frontline',
+    isFocus: true
+  },
+  {
+    id: 'tooling',
+    code: 'P03',
+    name: 'Tooling Enablement',
+    blurb: 'The integrated ecosystem — Airtable · Linear · Tableau · Slack. Tier-1 support, automations, integrations, enablement, training.',
+    owner: 'This role · IC frontline',
+    isFocus: true
+  },
+  {
+    id: 'process',
+    code: 'P04',
+    name: 'Process Excellence & Governance',
+    blurb: 'Standardized portfolio operating procedures, stage-gate definitions, governance workflows. The "how we work" backbone.',
+    owner: 'SPM Lead + PMO partners',
+    isFocus: false
+  },
+  {
+    id: 'capacity',
+    code: 'P05',
+    name: 'Capacity Planning',
+    blurb: 'FTE supply vs demand by pillar. Time tracking compliance, headcount / allocation / resource planning data.',
+    owner: 'SPM Lead + Finance',
+    isFocus: false
+  }
+];
+
 // Reflects Judith's "renovation phase" framing — DET org charter was refocused
 // 6 weeks ago toward a data-driven approach. These 4 data pillars are the
 // foundation we're rebuilding underneath the portfolio.

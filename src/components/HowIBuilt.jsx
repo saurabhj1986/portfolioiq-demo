@@ -86,40 +86,84 @@ export default function HowIBuilt() {
           Design philosophy, system architecture, integration points, and the path from this demo to a production system — including the risks to manage along the way.
         </p>
         <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) under <strong className="text-sfnavy not-italic">Joe &amp; Zarillo</strong> — 7 pillars, ~250 initiatives, and a charter that just refocused 6 weeks ago toward a data-driven approach. The wood structure is strong; this is the operating workspace the renovation needs.
+          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) · SPM team · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead, IC) — owns the frontline of <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> across the Airtable / Linear / Tableau / Slack stack serving 7 PPMs and ~250 initiatives.
         </p>
       </header>
 
       <hr className="border-slate-200" />
 
+      {/* FY27 SPM 5 PILLARS — role context */}
+      <section className="rounded-lg border border-sfblue/30 bg-sky-50/60 p-5">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">00 · Role frame · FY27 SPM strategy</div>
+        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">5 strategic pillars · this role lives at P02 + P03</h2>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-sm">
+          <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P01</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Portfolio Planning</div>
+            <p className="text-[11px] text-sfmuted mt-1 leading-snug">Annual + quarterly cycles, intake taxonomy, OKR linkage.</p>
+          </div>
+          <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P02</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">MY HOME</span>
+            </div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Data &amp; Systems Optimization</div>
+            <p className="text-[11px] text-sfdeep mt-1 leading-snug">Portfolio data foundation, governance, validation/reconciliation, Airtable schema, downstream warehouse.</p>
+          </div>
+          <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P03</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">MY HOME</span>
+            </div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Tooling Enablement</div>
+            <p className="text-[11px] text-sfdeep mt-1 leading-snug">Tier-1 support, integrations, automations, training. Owns Airtable · Linear · Tableau · Slack stack.</p>
+          </div>
+          <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P04</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Process Excellence &amp; Governance</div>
+            <p className="text-[11px] text-sfmuted mt-1 leading-snug">Operating procedures, stage-gate, governance workflows.</p>
+          </div>
+          <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P05</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Capacity Planning</div>
+            <p className="text-[11px] text-sfmuted mt-1 leading-snug">FTE supply/demand, time-tracking compliance, allocation data.</p>
+          </div>
+        </div>
+        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+          IC focus on P02 + P03 — but the workspace stays aware of all five so the IC contributes data and tooling support into Planning, Process, and Capacity workflows owned by other SPM team members.
+        </p>
+      </section>
+
+      <hr className="border-slate-200" />
+
       {/* THE RENOVATION — what's actually being changed */}
       <section className="rounded-lg border border-amber-200 bg-amber-50/60 p-5">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-2">00 · Context · The renovation</div>
+        <div className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-2">01 · Context · The renovation</div>
         <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">What's being rebuilt — and what stays</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <div className="text-[11px] uppercase tracking-wider text-emerald-700 font-bold mb-1.5">Stays · the wood structure</div>
             <ul className="space-y-1 text-sfdeep leading-relaxed">
-              <li>· The 7 pillars and their leads</li>
-              <li>· GUS as the work-item layer (internal Jira-equivalent)</li>
+              <li>· The 7 DET pillars and their PPMs (the customers of this role)</li>
+              <li>· Airtable as the portfolio data home; Linear as the work-item layer</li>
               <li>· Salesforce-on-Salesforce as the foundational stack</li>
               <li>· Existing time-tracking system in DET (needs solidification)</li>
-              <li>· The 5-person team's institutional knowledge</li>
+              <li>· The SPM team's institutional knowledge and PPM relationships</li>
             </ul>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · new sconces, new lights</div>
+            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · what this IC owns</div>
             <ul className="space-y-1 text-sfdeep leading-relaxed">
-              <li>· Process backbone: Process Excellence-style 1-pagers per process</li>
-              <li>· Data governance re-architecture (Data Cloud schema for portfolio + capacity + planning)</li>
-              <li>· Time tracking adoption push across all 7 pillars</li>
-              <li>· Robust tooling — built in-house with AI / agentic coding (no Tableau / engineering dependency)</li>
-              <li>· New role: leader for agentic strategy and tooling</li>
+              <li>· Data Quality &amp; Governance Program — validation rules, audits, reconciliation cadence</li>
+              <li>· Tooling support desk: SLAs, intake routing, runbooks, enablement docs</li>
+              <li>· Dashboard catalog: trusted exec + PPM views with documented metric lineage</li>
+              <li>· Integrations + Zapier/Workato automations between Airtable, Linear, Tableau, Slack</li>
+              <li>· Time tracking compliance push + financial reconciliation cadence with Finance partner</li>
             </ul>
           </div>
         </div>
         <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
-          Team reality: 5 people (Director → Analyst). 2 currently on or going on maternity leave. New Director joining. The agentic-strategy hire fills the gap — and is exactly the work this prototype showcases.
+          Team reality: charter refocused 6 weeks ago. SPM team is scaling and adding this IC role to professionalize the data + tooling layer underneath the 5 FY27 pillars. Saurabh enters as the frontline owner — building muscle on Airtable / Linear / Tableau / Slack while inheriting the institutional context.
         </p>
       </section>
 

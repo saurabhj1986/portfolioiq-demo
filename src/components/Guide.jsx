@@ -5,7 +5,7 @@ import {
   Users, Workflow, Clock, TrendingUp, AlertCircle, Lock, User, Building2,
   Wrench, Layers, CalendarClock
 } from 'lucide-react';
-import { DATA_PILLARS, SIXTY_DAY_PLAN, PILLARS } from '../data/portfolioData';
+import { DATA_PILLARS, SIXTY_DAY_PLAN, PILLARS, FY27_SPM_PILLARS } from '../data/portfolioData';
 
 // Real DET portfolio scale — referenced in narrative copy.
 const INITIATIVES_TOTAL = 250;
@@ -65,12 +65,12 @@ const BEFORE_AFTER = [
 ];
 
 const SYSTEM_LANDSCAPE = [
-  { sys: 'Anaplan',           used: 'Capital plans, budgets',           freq: 'Daily' },
-  { sys: 'ServiceNow / GUS',  used: 'Tickets, change requests',          freq: 'Daily' },
-  { sys: 'Slack',             used: 'Status, escalations, intake',       freq: 'Hourly' },
-  { sys: 'Quip',              used: 'PRDs, architecture reviews',        freq: 'Several/wk' },
-  { sys: 'Workday',           used: 'FTE capacity, leave',               freq: 'Weekly' },
-  { sys: 'Spreadsheets',      used: 'Anything not in the above',         freq: 'Constantly' }
+  { sys: 'Airtable',          used: 'Portfolio data home · ~250 inits',  freq: 'Constantly' },
+  { sys: 'Linear',            used: 'Work item tracking · PPM intake',   freq: 'Daily' },
+  { sys: 'Tableau',           used: 'Exec + PPM dashboards',             freq: 'Daily' },
+  { sys: 'Slack',             used: 'Tooling support, intake, alerts',   freq: 'Hourly' },
+  { sys: 'Zapier / Workato',  used: 'Cross-system automations',          freq: 'Always-on' },
+  { sys: 'Spreadsheets',      used: 'Ad-hoc reconciliation, audits',     freq: 'Several/wk' }
 ];
 
 // =================== TAB GUIDE CONTENT ===================
@@ -420,7 +420,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <Kicker ord="Guide" label="How to use this app" />
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 5-minute orientation.</h1>
         <p className="text-base text-white/80 mt-3 leading-relaxed max-w-3xl">
-          PortfolioIQ is a Sr Manager's operating workspace for strategic portfolio management — designed for the <strong className="text-sflight">Digital Enterprise Technology (DET)</strong> org and its ~{INITIATIVES_TOTAL} initiatives across 7 pillars. This page tells you what each tab does, how to do common tasks, and how to get the most out of the experience.
+          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead, IC)</strong> inside <strong className="text-sflight">Digital Enterprise Technology (DET)</strong>'s SPM team. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so the IC can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
         </p>
       </header>
 
@@ -459,7 +459,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
               <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Problem</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
-              A Sr Mgr running a $30M tech portfolio touches <strong>6+ systems daily</strong>. Every status answer requires triangulating across Anaplan, ServiceNow / GUS, Slack, Quip, Workday, and spreadsheets.
+              ~250 initiatives, 7 PPMs, and 4 critical tools (<strong>Airtable · Linear · Tableau · Slack</strong>) — but data definitions drift, dashboards disagree, intake is inconsistent. PPMs don't trust the numbers; leadership can't decide.
             </p>
           </div>
           <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
@@ -468,7 +468,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
               <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
-              Portfolio leaders need <strong>one operating workspace</strong> where every KPI, decision draft, coaching insight, and exec comm is live and grounded — so the Sr Manager spends time on judgment, not data triangulation.
+              The SPM team needs <strong>a frontline IC who owns the data foundation + tooling ecosystem end-to-end</strong> — validating, reconciling, supporting users, building dashboards, and standardizing operations so PPMs and DET leaders make decisions on trusted ground.
             </p>
           </div>
           <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
@@ -477,7 +477,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
               <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
-              <strong>~18 hrs/week saved</strong> across the team. Off-track decision lag drops <strong>4 days → 6 hours</strong>. Stage-gate compliance up <strong>+17 pts</strong> in 6 months. Sr Manager runs operations; Director runs strategy.
+              Portfolio data trust score <strong>72→94%</strong>. Tooling support median resolution <strong>3d → 4h</strong>. Dashboard refresh failures <strong>14% → 0%</strong>. Time-tracking adoption <strong>61% → 92%</strong> across the 7 pillars.
             </p>
           </div>
         </div>
@@ -528,7 +528,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <div className="mt-4 rounded-xl bg-white/5 border border-white/15 overflow-hidden">
           <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
             <Database className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">The systems a Sr Mgr collates info from today</h3>
+            <h3 className="text-sm font-serif font-bold text-white">The tooling ecosystem this role owns</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-0 divide-x divide-white/10">
             {SYSTEM_LANDSCAPE.map((s, i) => (
@@ -540,7 +540,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             ))}
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> PortfolioIQ collapses these into <strong>one Source of Truth</strong> via MuleSoft + Data Cloud. Every other tab reads from the same place.
+            <strong className="text-sflight">→</strong> Frontline ownership: data quality across Airtable, Linear hygiene, Tableau dashboard accuracy, Slack support queue, Zapier/Workato automations — plus the integrations that hold them together.
           </div>
         </div>
       </section>
@@ -564,11 +564,39 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
           </p>
         </div>
 
-        {/* 7 PILLARS GRID */}
+        {/* FY27 SPM 5-PILLAR STRATEGY — the SPM team's own strategic frame */}
+        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+            <Target className="w-4 h-4 text-sflight" />
+            <h3 className="text-sm font-serif font-bold text-white">FY27 SPM strategy · 5 pillars</h3>
+            <span className="text-[10px] text-sfmuted ml-1">· this role lives at P02 + P03 (highlighted)</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-0 divide-x divide-white/10">
+            {FY27_SPM_PILLARS.map(p => (
+              <div key={p.id} className={`p-3 ${p.isFocus ? 'bg-sflight/10' : ''}`}>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className={`text-[10px] font-mono uppercase tracking-wider font-bold ${p.isFocus ? 'text-sflight' : 'text-sfmuted'}`}>{p.code}</span>
+                  {p.isFocus && <span className="pill pill-blue text-[9px]">MY HOME</span>}
+                </div>
+                <div className={`text-sm font-serif font-bold leading-snug ${p.isFocus ? 'text-white' : 'text-white/90'}`}>{p.name}</div>
+                <p className="text-[11px] text-white/70 leading-snug mt-1.5">{p.blurb}</p>
+                <div className="mt-2 pt-2 border-t border-white/10">
+                  <div className="text-[10px] uppercase tracking-wide font-bold text-sflight">Owner</div>
+                  <div className="text-[11px] text-white/80 mt-0.5">{p.owner}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
+            <strong className="text-sflight">→</strong> Strategic Portfolio Operations Manager (Lead, IC) sits at the intersection of <strong>P02 Data &amp; Systems Optimization</strong> and <strong>P03 Tooling Enablement</strong>. Every tab in this workspace maps to one of the 5 responsibility areas this role owns end-to-end.
+          </div>
+        </div>
+
+        {/* 7 PILLARS GRID — the org pillars being served */}
         <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
           <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
             <Layers className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">The 7 DET pillars</h3>
+            <h3 className="text-sm font-serif font-bold text-white">The 7 DET pillars · who this role serves</h3>
             <span className="text-[10px] text-sfmuted ml-1">· demo loads 16 illustrative initiatives; real portfolio is ~{INITIATIVES_TOTAL}</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-y divide-white/10">

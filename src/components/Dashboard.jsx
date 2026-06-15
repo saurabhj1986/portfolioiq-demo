@@ -180,20 +180,20 @@ function getPersonaAttention(persona) {
     };
   }
 
-  // Default: Sr Manager
+  // Default: Strategic Portfolio Operations Manager (IC) — JR345361
   return {
-    title: 'DET portfolio at a glance.',
-    sub: '~250 initiatives across 7 pillars under Joe & Zarillo. What needs your attention this week. Switch personas in the top right to see how the view reshapes.',
+    title: 'SPM operations at a glance.',
+    sub: 'Frontline owner of the portfolio data foundation + tooling ecosystem across DET. ~250 initiatives, 7 pillars, FY27 SPM strategy in motion. What needs your action today. Switch personas in the top right to see how the view reshapes.',
     tiles: [
-      { kicker: 'Decisions needed',     value: '5',     sub: '2 off-track · 3 at-risk · this week',     accent: 'red' },
-      { kicker: 'Cross-pillar blockers',value: '5',     sub: '3 high-risk · 2 medium · escalate today', accent: 'orange' },
-      { kicker: 'Value at Risk',        value: '$50M',  sub: 'of $600M plan · top: CPQ ($18M)',         accent: 'red' },
-      { kicker: 'Renovation phase',     value: 'Day 21',sub: 'of 60 · backbone in flight · time-tracking next', accent: 'amber' }
+      { kicker: 'Data quality flags',   value: '14',    sub: '6 reconciliation · 5 validation · 3 dup · Airtable+Linear',  accent: 'red' },
+      { kicker: 'Tooling support queue',value: '9',     sub: '2 SLA-breach · 4 PPM intake · 3 dashboard req',              accent: 'orange' },
+      { kicker: 'Dashboards to refresh',value: '5',     sub: '2 exec · 3 PPM views · Tableau extracts stale',              accent: 'amber' },
+      { kicker: 'FY27 SPM focus',       value: 'P2+P3', sub: 'Data & Systems Optimization · Tooling Enablement',           accent: 'green' }
     ],
     stats: [
-      { value: 7, label: 'DET pillars' },
+      { value: 7, label: 'PPMs served' },
       { value: '~250', label: 'Initiatives' },
-      { value: 5, label: 'Decisions due' }
+      { value: 5, label: 'FY27 pillars' }
     ]
   };
 }
@@ -239,29 +239,29 @@ const HERO_CHIPS = [
     id: 'role',
     icon: '💼',
     label: 'The role',
-    caption: 'DET org · 7 pillars · ~250 initiatives · 5-person team',
-    detail: 'Sr Mgr, Strategic Portfolio Mgmt within Digital Enterprise Technology (DET) — the org under Joe & Zarillo covering Salesforce-on-Salesforce, IT, emerging tech, R&D, ops. ~250 initiatives across 7 pillars. The team: 5 people (Director → Analyst), 2 currently on/going on maternity leave, new Director joining.'
+    caption: 'IC · Strategic Portfolio Ops Mgr (Lead) · DET SPM team',
+    detail: 'Strategic Portfolio Operations Manager (Lead, IC) inside DET\'s Strategic Portfolio Management (SPM) team. Frontline owner of the SPM tooling ecosystem and portfolio data foundation. Serves 7 Pillar Portfolio Managers across ~250 initiatives. Lives at the intersection of FY27 SPM pillars P02 (Data & Systems Optimization) and P03 (Tooling Enablement).'
   },
   {
     id: 'tax',
     icon: '🔧',
     label: 'The hidden tax',
-    caption: 'Renovation in flight — charter refocused 6 wks ago',
-    detail: 'Week-to-week goes to triangulating across Anaplan, GUS, Slack, Quip, Workday, spreadsheets — not coaching, governance, or judgment. Charter just refocused 6 weeks ago toward a data-driven approach. The wood structure is strong; the operating model is what\'s being rebuilt.'
+    caption: 'Tooling sprawl + fragmented data → trust gap',
+    detail: 'PPMs work across Airtable, Linear, Tableau, Slack — but data definitions drift, dashboards disagree, intake flows aren\'t standardized. Charter refocused 6 weeks ago toward a unified data-driven model. The wood structure is strong; this role rebuilds the operating model underneath it.'
   },
   {
     id: 'workspace',
     icon: '📦',
     label: 'One workspace',
-    caption: 'KPIs, decision drafts, coaching insights, exec comms',
-    detail: 'Every portfolio KPI, decision draft, AI coaching insight, and weekly exec comm in one place — so context-switching across tools collapses to context-switching across tabs.'
+    caption: 'Data Quality · Tooling Desk · Dashboards · Ops · Finance',
+    detail: 'Five responsibility areas, one workspace: (1) Data Quality & Systems Optimization · (2) Tooling Enablement & Frontline Support · (3) Dashboards & Reporting · (4) Portfolio Operations · (5) Financial Acumen & Budget Mgmt. Each tab maps to one area so the IC can run the day without context-switching.'
   },
   {
     id: 'boundary',
     icon: '⚖️',
     label: 'The boundary',
-    caption: 'Sr Managers run operations; Directors run strategy',
-    detail: 'Every engine output is a draft for sponsor review — never a final call. Sr Managers prepare the conversation; the Director makes the decision.'
+    caption: 'IC owns trust + tools; PPMs own decisions',
+    detail: 'This role doesn\'t prioritize the portfolio — PPMs and DET leadership do. This role makes the data those decisions rest on trustworthy, the tools that surface it usable, and the operations that maintain it consistent. Systems-thinking + attention-to-detail; not people-management.'
   }
 ];
 
