@@ -9,7 +9,7 @@ const DECISIONS = [
   { d: 'AI boundary',            chose: 'AI surfaces evidence; humans decide',                                                     why: 'Capital allocation needs an audit trail. The agent gives confidence scores and transparent reasoning; the human makes the call. AI as force multiplier, not substitute.' },
   { d: 'Reasoning transparency', chose: 'classify → resolve → reason → confidence on every agent answer',                          why: 'Opaque AI is unauditable. Transparent reasoning is what makes the agent trustworthy in a portfolio context.' },
   { d: 'KPI definitions',        chose: 'Tooltipped on every metric — WHAT, TARGET, SOURCE',                                       why: 'Eliminates the "every report defines metrics differently" problem. Aligns multi-VP audiences without an alignment meeting.' },
-  { d: 'Recommendation framing', chose: 'Every output is a draft for stakeholder review, never a final decision',                  why: 'Sharp boundary between IC frontline work (data quality, tooling, dashboards) and PPM / Finance / DET leadership decisions. The tool reflects that boundary in the language of every screen.' },
+  { d: 'Recommendation framing', chose: 'Every output is a draft for stakeholder review, never a final decision',                  why: 'Sharp boundary between SPM Ops frontline work (data quality, tooling, dashboards) and PPM / Finance / DET leadership decisions. The tool reflects that boundary in the language of every screen.' },
   { d: 'Mock data',              chose: 'Production-quality schema, fictional data',                                               why: 'Enables open exploration without compromising any real organisation\'s portfolio. Lifts to production with one connector per source system.' }
 ];
 
@@ -39,7 +39,7 @@ const POCS = [
   { n: 2, title: 'Stage-gate enforcement',         duration: '6 weeks',  scope: '1 volunteer pillar',   goal: 'Pilot the Stage-Gate Scorer with budget release gated on artifact compliance.',                            measure: 'Median cycle time per gate (before / after) · % artifacts approved at entry · Pillar PM NPS', success: '≥10% reduction in cycle time, no drop in PM NPS, sponsor signs off on rollout to next 2 pillars.' },
   { n: 3, title: 'Recommendation Engine dry-run',  duration: '1 quarter', scope: 'All (read-only)',      goal: 'Generate engine recommendations every 2 weeks; compare against actual sponsor decisions.',                  measure: '% agreement between engine and sponsor · time-to-decision delta',                              success: '≥60% agreement on tier; engine surfaces ≥2 issues exec hadn\'t seen.' },
   { n: 4, title: 'Copilot grounded in real data',  duration: '4 weeks',  scope: 'SPM team only',         goal: 'Replace mock response map with RAG over the production schema; restrict to retrieval-only.',                measure: 'Answer accuracy (audited sample) · hallucination rate · time saved per query',                  success: '≥90% accuracy on factual queries; <2% hallucination; user count grows week-on-week.' },
-  { n: 5, title: 'Workbench AI auto-draft',         duration: '3 months', scope: 'IC + 7 PPMs',           goal: 'Wire auto-draft to pull live KPIs; pilot on Monthly Exec Update + Pillar PM Weekly Digest.',                  measure: 'Drafting time (median) · edit volume (% words changed) · exec read rate',                       success: '≥40% drafting time reduction, ≤30% edit volume, exec read rate ≥90%.' }
+  { n: 5, title: 'Workbench AI auto-draft',         duration: '3 months', scope: 'SPM Ops + 7 PPMs',      goal: 'Wire auto-draft to pull live KPIs; pilot on Monthly Exec Update + Pillar PM Weekly Digest.',                  measure: 'Drafting time (median) · edit volume (% words changed) · exec read rate',                       success: '≥40% drafting time reduction, ≤30% edit volume, exec read rate ≥90%.' }
 ];
 
 // =================== RISKS ===================
@@ -86,7 +86,7 @@ export default function HowIBuilt() {
           Design philosophy, system architecture, integration points, and the path from this demo to a production system — including the risks to manage along the way.
         </p>
         <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) · SPM team · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead, IC) — owns the frontline of <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> across the Airtable / Linear / Tableau / Slack stack serving 7 PPMs and ~250 initiatives.
+          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) · SPM team · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead) — owns <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> end-to-end across the Airtable / Linear / Tableau / Slack stack, serving 7 PPMs and ~250 initiatives.
         </p>
       </header>
 
@@ -130,7 +130,7 @@ export default function HowIBuilt() {
           </div>
         </div>
         <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
-          IC focus on P02 + P03 — but the workspace stays aware of all five so the IC contributes data and tooling support into Planning, Process, and Capacity workflows owned by other SPM team members.
+          Role focus on P02 + P03 — but the workspace stays aware of all five so SPM Ops contributes data and tooling support into Planning, Process, and Capacity workflows owned by other SPM team members.
         </p>
       </section>
 
@@ -152,7 +152,7 @@ export default function HowIBuilt() {
             </ul>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · what this IC owns</div>
+            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · what this role owns</div>
             <ul className="space-y-1 text-sfdeep leading-relaxed">
               <li>· Data Quality &amp; Governance Program — validation rules, audits, reconciliation cadence</li>
               <li>· Tooling support desk: SLAs, intake routing, runbooks, enablement docs</li>
@@ -163,7 +163,7 @@ export default function HowIBuilt() {
           </div>
         </div>
         <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
-          Team reality: charter refocused 6 weeks ago. SPM team is scaling and adding this IC role to professionalize the data + tooling layer underneath the 5 FY27 pillars. Saurabh enters as the frontline owner — building muscle on Airtable / Linear / Tableau / Slack while inheriting the institutional context.
+          Team reality: charter refocused 6 weeks ago. SPM team is scaling and adding this Manager (Lead) role to professionalize the data + tooling layer underneath the 5 FY27 pillars. Saurabh enters as the end-to-end owner — building muscle on Airtable / Linear / Tableau / Slack while inheriting the institutional context.
         </p>
       </section>
 

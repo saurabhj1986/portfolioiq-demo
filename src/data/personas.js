@@ -15,11 +15,11 @@ export const PERSONAS = [
   {
     // id preserved as 'sr-manager' so existing id === 'sr-manager' checks
     // across the app continue to identify this as the default/full-view persona.
-    // Copy is reframed for JR345361 IC role.
+    // Copy reframed for JR345361 Manager (Lead) role.
     id: 'sr-manager',
     role: 'Strategic Portfolio Ops Mgr',
-    label: 'Strategic Portfolio Ops Mgr · Lead, IC',
-    desc: 'Default — full IC operating view. Frontline owner of FY27 SPM pillars P02 (Data & Systems Optimization) + P03 (Tooling Enablement). Serves 7 PPMs across Airtable, Linear, Tableau, Slack.',
+    label: 'Strategic Portfolio Ops Mgr · Lead',
+    desc: 'Default — full operating view. Owns FY27 SPM pillars P02 (Data & Systems Optimization) + P03 (Tooling Enablement). Serves 7 PPMs across Airtable, Linear, Tableau, Slack.',
     pillarFilter: null,
     pillarLabel: null,
     hideTabs: [],
@@ -28,7 +28,7 @@ export const PERSONAS = [
     dataHideSubs: [],
     readOnly: false,
     accent: 'text-sflight',
-    focusSummary: 'Full IC operating view · P02 + P03 home'
+    focusSummary: 'Full operating view · P02 + P03 home'
   },
   {
     id: 'director',

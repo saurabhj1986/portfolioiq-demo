@@ -180,7 +180,7 @@ function getPersonaAttention(persona) {
     };
   }
 
-  // Default: Strategic Portfolio Operations Manager (IC) — JR345361
+  // Default: Strategic Portfolio Operations Manager (Lead) — JR345361
   return {
     title: 'SPM operations at a glance.',
     sub: 'Frontline owner of the portfolio data foundation + tooling ecosystem across DET. ~250 initiatives, 7 pillars, FY27 SPM strategy in motion. What needs your action today. Switch personas in the top right to see how the view reshapes.',
@@ -239,8 +239,8 @@ const HERO_CHIPS = [
     id: 'role',
     icon: '💼',
     label: 'The role',
-    caption: 'IC · Strategic Portfolio Ops Mgr (Lead) · DET SPM team',
-    detail: 'Strategic Portfolio Operations Manager (Lead, IC) inside DET\'s Strategic Portfolio Management (SPM) team. Frontline owner of the SPM tooling ecosystem and portfolio data foundation. Serves 7 Pillar Portfolio Managers across ~250 initiatives. Lives at the intersection of FY27 SPM pillars P02 (Data & Systems Optimization) and P03 (Tooling Enablement).'
+    caption: 'Strategic Portfolio Ops Mgr (Lead) · DET SPM team',
+    detail: 'Strategic Portfolio Operations Manager (Lead) inside DET\'s Strategic Portfolio Management (SPM) team. Owns the SPM tooling ecosystem and portfolio data foundation end-to-end. Serves 7 Pillar Portfolio Managers across ~250 initiatives. Lives at the intersection of FY27 SPM pillars P02 (Data & Systems Optimization) and P03 (Tooling Enablement).'
   },
   {
     id: 'tax',
@@ -254,13 +254,13 @@ const HERO_CHIPS = [
     icon: '📦',
     label: 'One workspace',
     caption: 'Data Quality · Tooling Desk · Dashboards · Ops · Finance',
-    detail: 'Five responsibility areas, one workspace: (1) Data Quality & Systems Optimization · (2) Tooling Enablement & Frontline Support · (3) Dashboards & Reporting · (4) Portfolio Operations · (5) Financial Acumen & Budget Mgmt. Each tab maps to one area so the IC can run the day without context-switching.'
+    detail: 'Five responsibility areas, one workspace: (1) Data Quality & Systems Optimization · (2) Tooling Enablement & Frontline Support · (3) Dashboards & Reporting · (4) Portfolio Operations · (5) Financial Acumen & Budget Mgmt. Each tab maps to one area so this role can run the day without context-switching.'
   },
   {
     id: 'boundary',
     icon: '⚖️',
     label: 'The boundary',
-    caption: 'IC owns trust + tools; PPMs own decisions',
+    caption: 'This role owns trust + tools; PPMs own decisions',
     detail: 'This role doesn\'t prioritize the portfolio — PPMs and DET leadership do. This role makes the data those decisions rest on trustworthy, the tools that surface it usable, and the operations that maintain it consistent. Systems-thinking + attention-to-detail; not people-management.'
   }
 ];
@@ -387,7 +387,7 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </div>
       </section>
 
-      {/* RBAC banner — shows what content is filtered when persona ≠ default IC */}
+      {/* RBAC banner — shows what content is filtered when persona ≠ default SPM Ops Lead */}
       {persona && persona.id !== 'sr-manager' && (
         <section className="bg-sfnavy/60 border border-sflight/30 rounded-lg px-4 py-3 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs">
           <span className="text-[10px] uppercase tracking-widest text-sflight font-bold mt-0.5">RBAC</span>

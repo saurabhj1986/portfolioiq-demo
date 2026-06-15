@@ -18,7 +18,7 @@ export const PILLARS = [
 
 // FY27 SPM 5-pillar strategy — the Strategic Portfolio Management team's own
 // operating framework (overlays the 7 DET org pillars above). This role
-// (Strategic Portfolio Operations Manager · IC) lives at the intersection of
+// (Strategic Portfolio Operations Manager · Lead) lives at the intersection of
 // pillars 2 (Data & Systems Optimization) and 3 (Tooling Enablement) — flagged
 // with `isFocus: true` so the UI can highlight them.
 export const FY27_SPM_PILLARS = [
@@ -35,7 +35,7 @@ export const FY27_SPM_PILLARS = [
     code: 'P02',
     name: 'Data & Systems Optimization',
     blurb: 'Portfolio data foundation. Data quality, governance controls, validation/reconciliation, schema in Airtable + downstream warehouse.',
-    owner: 'This role · IC frontline',
+    owner: 'This role · Manager (Lead)',
     isFocus: true
   },
   {
@@ -43,7 +43,7 @@ export const FY27_SPM_PILLARS = [
     code: 'P03',
     name: 'Tooling Enablement',
     blurb: 'The integrated ecosystem — Airtable · Linear · Tableau · Slack. Tier-1 support, automations, integrations, enablement, training.',
-    owner: 'This role · IC frontline',
+    owner: 'This role · Manager (Lead)',
     isFocus: true
   },
   {

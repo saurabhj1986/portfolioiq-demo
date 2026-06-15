@@ -13,13 +13,13 @@ const INITIATIVES_TOTAL = 250;
 // =================== PERSONA-SPECIFIC FRAMING ===================
 const PERSONA_FRAMING = {
   'sr-manager': {
-    bannerLabel: 'Default · full IC operating view · P02 + P03 home',
+    bannerLabel: 'Default · full operating view · P02 + P03 home',
     valueIntro: 'You\'ll save ~18 hrs/week that goes back to data quality work, dashboard accuracy, and PPM enablement — the things you\'re actually measured on.',
-    quickStartHint: 'Start with the 2-min tour to see the full IC operating loop end-to-end.'
+    quickStartHint: 'Start with the 2-min tour to see the full operating loop end-to-end.'
   },
   'director': {
     bannerLabel: 'Strategic lens · operational details hidden',
-    valueIntro: 'Your SPM IC frees up ~18 hrs/week of frontline tooling/data work — that capacity comes back to strategy work and DET leadership conversations.',
+    valueIntro: 'Your SPM Ops Lead frees up ~18 hrs/week of frontline tooling/data work — that capacity comes back to strategy work and DET leadership conversations.',
     quickStartHint: 'Start with the Dashboard\'s "Decisions needed this week" — the 20-second leadership scan.'
   },
   'finance-partner': {
@@ -124,7 +124,7 @@ const TAB_GUIDES = [
   },
   {
     id: 'operate', label: 'Operate', icon: Briefcase, ord: '05',
-    purpose: 'The IC\'s daily workspace: standardized playbooks, PPM customer desk, and comms drafting for the SPM team.',
+    purpose: 'The daily workspace for the SPM Ops Lead: standardized playbooks, PPM customer desk, and comms drafting.',
     sections: [
       { name: 'Playbooks', what: '7 foundational playbooks (Stage-Gate Decision · Initiative Intake · Capacity Planning · Risk Register · Quarterly Rebalance · Portfolio Review · Sunset/Kill). Adoption tracked per pillar.' },
       { name: 'Team Cockpit', what: '4 Pillar PM direct reports. Auto-detected coaching opportunities, weekly briefs, workflow automations.' },
@@ -261,7 +261,7 @@ const TIPS = [
   { tip: 'Hover any KPI for full definition', detail: 'Every KPI tile has an `i` icon top-right. Hover for what + target + source.' },
   { tip: 'Hover any pipeline circle for stage definition', detail: 'G0 Concept · G1 Plan · G2 Build · G3 Validate · G4 Launch · G5 Sustain.' },
   { tip: 'Click any chip on the Dashboard hero', detail: '4 chips (Role / Hidden tax / One workspace / Boundary) expand for full detail.' },
-  { tip: 'Recommendations are drafts, never decisions', detail: 'Every output is framed for PPM / Finance / DET leadership review. The IC prepares; the decision-maker decides.' },
+  { tip: 'Recommendations are drafts, never decisions', detail: 'Every output is framed for PPM / Finance / DET leadership review. SPM Ops prepares; the decision-maker decides.' },
   { tip: 'Every state change is in the Audit Trail', detail: 'Source of Truth → Audit Trail. Append-only, SOX-aligned, 7-year retention.' },
   { tip: 'Click the "Back to All Steps" in Tour Bar', detail: 'Returns you to the Welcome panel with all steps visible — useful if you lose context.' }
 ];
@@ -274,10 +274,10 @@ const FAQS = [
     a: 'The final stage. The initiative is live, monitored, and value is being tracked. The build team has disbanded; a lean ops team owns going forward. Quarterly value reviews confirm ROI.' },
   { q: 'Why agents instead of just dashboards?',
     a: 'Dashboards tell you what happened. Agents do something about it — nudge stale artifacts, draft sponsor briefs, detect capacity conflicts, escalate off-track initiatives. Routine work automated; humans focus on judgment.' },
-  { q: 'Can I switch back to the IC default view anytime?',
-    a: 'Yes — the persona dropdown in the top-right. First entry is "Strategic Portfolio Ops Mgr · Lead, IC" (default, full operating view).' },
+  { q: 'Can I switch back to the default view anytime?',
+    a: 'Yes — the persona dropdown in the top-right. First entry is "Strategic Portfolio Ops Mgr · Lead" (default, full operating view).' },
   { q: 'How do I reset the demo?',
-    a: 'Refresh the page. State resets to defaults: Strategic Portfolio Ops Mgr (IC) persona, Dashboard tab, no active tour. The data is mock so nothing actually persists.' },
+    a: 'Refresh the page. State resets to defaults: Strategic Portfolio Ops Mgr (Lead) persona, Dashboard tab, no active tour. The data is mock so nothing actually persists.' },
   { q: 'Is this connected to real systems?',
     a: 'No — all data is mock. The schema is production-quality so the path to real is one connector per source system (Anaplan, ServiceNow / GUS, Quip, Slack, Workday, Okta).' }
 ];
@@ -425,11 +425,11 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <Kicker ord="Guide" label="How to use this app" />
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 5-minute orientation.</h1>
         <p className="text-base text-white/80 mt-3 leading-relaxed max-w-3xl">
-          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead, IC)</strong> inside <strong className="text-sflight">Digital Enterprise Technology (DET)</strong>'s SPM team. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so the IC can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
+          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead)</strong> inside <strong className="text-sflight">Digital Enterprise Technology (DET)</strong>'s SPM team. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so this role can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
         </p>
       </header>
 
-      {/* PERSONA BANNER — shows when viewing as anything other than the default IC */}
+      {/* PERSONA BANNER — shows when viewing as anything other than the default SPM Ops Lead */}
       {persona && persona.id !== 'sr-manager' && (
         <div className="rounded-lg bg-sflight/10 border border-sflight/30 px-4 py-3 flex items-start gap-3">
           <User className="w-4 h-4 text-sflight flex-shrink-0 mt-0.5" />
@@ -473,7 +473,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
               <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
-              The SPM team needs <strong>a frontline IC who owns the data foundation + tooling ecosystem end-to-end</strong> — validating, reconciling, supporting users, building dashboards, and standardizing operations so PPMs and DET leaders make decisions on trusted ground.
+              The SPM team needs <strong>a Manager (Lead) who owns the data foundation + tooling ecosystem end-to-end</strong> — validating, reconciling, supporting users, building dashboards, and standardizing operations so PPMs and DET leaders make decisions on trusted ground.
             </p>
           </div>
           <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
@@ -593,7 +593,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             ))}
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Strategic Portfolio Operations Manager (Lead, IC) sits at the intersection of <strong>P02 Data &amp; Systems Optimization</strong> and <strong>P03 Tooling Enablement</strong>. Every tab in this workspace maps to one of the 5 responsibility areas this role owns end-to-end.
+            <strong className="text-sflight">→</strong> Strategic Portfolio Operations Manager (Lead) sits at the intersection of <strong>P02 Data &amp; Systems Optimization</strong> and <strong>P03 Tooling Enablement</strong>. Every tab in this workspace maps to one of the 5 responsibility areas this role owns end-to-end.
           </div>
         </div>
 
@@ -615,7 +615,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             ))}
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — the primary customer of this IC role. Switch persona (top-right) to see the workspace scoped to one pillar.
+            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — the primary customer of this Manager (Lead) role. Switch persona (top-right) to see the workspace scoped to one pillar.
           </div>
         </div>
 

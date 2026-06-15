@@ -184,7 +184,7 @@ export default function TeamCockpit() {
 
   return (
     <div className="space-y-4">
-      {/* Header — IC Customer Desk framing */}
+      {/* Header — PPM Customer Desk framing */}
       <div className="card bg-gradient-to-r from-sfnavy to-sfdeep text-white">
         <div className="flex items-start gap-3">
           <Users className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
@@ -247,7 +247,7 @@ export default function TeamCockpit() {
             <Zap className="w-4 h-4 text-sflight" />
             <h3 className="text-base font-semibold text-sfnavy">Workflow Automations</h3>
           </div>
-          <p className="text-xs text-sfmuted mb-3">Zapier / Workato jobs that catch the things humans drop — Airtable validation, Linear stale-ticket nudges, Tableau extract refresh failures, Slack SLA escalations. The IC doesn't run these — they review the exceptions.</p>
+          <p className="text-xs text-sfmuted mb-3">Zapier / Workato jobs that catch the things humans drop — Airtable validation, Linear stale-ticket nudges, Tableau extract refresh failures, Slack SLA escalations. SPM Ops doesn't run these — they review the exceptions.</p>
           <div className="space-y-3">
             {AUTOMATIONS.map(a => (
               <div key={a.id} className="bg-sfbg border border-slate-200 rounded-lg p-3">
@@ -268,10 +268,10 @@ export default function TeamCockpit() {
         </div>
       </div>
 
-      {/* JD mapping footer — JR345361 IC responsibilities */}
+      {/* JD mapping footer — JR345361 responsibilities */}
       <div className="card bg-sfbg border-2 border-sfblue/20">
         <h4 className="text-sm font-semibold text-sfnavy mb-2 flex items-center gap-2">
-          <ArrowUpRight className="w-4 h-4 text-sfblue" /> How this maps to JR345361 (Strategic Portfolio Ops Mgr · Lead, IC)
+          <ArrowUpRight className="w-4 h-4 text-sfblue" /> How this maps to JR345361 (Strategic Portfolio Ops Mgr · Lead)
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-sfnavy">
           <div className="bg-white rounded p-2 border border-slate-200">
