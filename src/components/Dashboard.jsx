@@ -180,9 +180,9 @@ function getPersonaAttention(persona) {
     };
   }
 
-  // Default: Strategic Portfolio Operations Manager (Lead) — JR345361
-  // Tile language mirrors the candidate prep guide verbatim:
-  // "Rows reconciled · Dashboards built · Support tickets resolved · Adoption rates improved"
+  // Default: Strategic Portfolio Operations Manager (Lead)
+  // Tile metrics are the four headline numbers this role tracks weekly:
+  // Rows reconciled · Support tickets resolved · Dashboards built · Adoption rates improved.
   return {
     title: 'SPM operations at a glance.',
     sub: 'Frontline owner of the portfolio data foundation + tooling ecosystem across DET. ~250 initiatives, 7 pillars, FY27 SPM strategy in motion. What needs your action today. Switch personas in the top right to see how the view reshapes.',

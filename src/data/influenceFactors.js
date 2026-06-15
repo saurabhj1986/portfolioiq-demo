@@ -200,8 +200,8 @@ export const INFLUENCE_FACTORS = {
   }
 };
 
-// Factor metadata for the UI — trimmed to 8 JD-explicit dimensions.
-// Sustainability + Equality were dropped (Salesforce core values, but not in JR337298 JD — scope discipline).
+// Factor metadata for the UI — 8 dimensions that influence initiative health
+// beyond financial signals. Each factor has a tooltip + provenance note.
 export const FACTOR_META = [
   { key: 'dataQuality',    label: 'Data Quality',          icon: '📊', tip: 'Completeness, freshness, accuracy of the data this initiative relies on or produces. A high-RICE initiative built on bad data still ships bad outcomes.', jd: 'Increase data quality (#6); Source of Truth (#7)' },
   { key: 'dataGovernance', label: 'Data Governance',       icon: '🛡️', tip: 'Named steward, data classification, compliance flags. Without governance, every initiative becomes someone else\'s cleanup project.', jd: 'Master taxonomy and metadata standards (#5)' },

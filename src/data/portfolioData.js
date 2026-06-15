@@ -139,7 +139,7 @@ export const SIXTY_DAY_PLAN = [
     horizon: 'Days 45–60',
     headline: 'Robust tooling — built in-house with AI',
     items: [
-      'PortfolioIQ as the operating workspace (this prototype, but real)',
+      'PortfolioIQ as the operating workspace for data + tooling ownership',
       '12 niche agents on Agentforce for the routine governance loops',
       'Tableau-fed leadership dashboards reading from one schema',
       'Hire: leader for agentic strategy and tooling — JD drafted'

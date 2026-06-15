@@ -284,11 +284,11 @@ export const DATA_GLOSSARY = [
     related: ['Pillar', 'Sr Mgr Strategic Portfolio Mgmt'],
     dontConfuse: 'Pillar PM ≠ Initiative PM. Pillar PM owns the portfolio; per-initiative PM owns delivery.' },
 
-  { term: 'Sr Mgr Strategic Portfolio Mgmt', category: 'role',
-    def: 'Owns portfolio governance, taxonomy, frameworks, and exec reporting across all DET pillars. People-leader (4 direct reports). This role.',
-    aliases: ['Sr Mgr SPM', 'Portfolio Lead'], examples: ['JR337298'],
-    related: ['Pillar Portfolio Manager', 'Sr Director'],
-    dontConfuse: 'Sr Mgr SPM ≠ Sr Mgr Engineering. SPM is process + governance; Eng is delivery.' },
+  { term: 'Strategic Portfolio Operations Manager', category: 'role',
+    def: 'Frontline owner of the SPM tooling ecosystem (Airtable, Linear, Tableau, Slack) and portfolio data foundation. Manager (Lead) seniority within SPM. Lives at the intersection of FY27 SPM pillars P02 (Data & Systems Optimization) and P03 (Tooling Enablement). This role.',
+    aliases: ['SPM Ops Lead', 'Portfolio Ops Mgr'], examples: [],
+    related: ['Pillar Portfolio Manager', 'Sr Director SPM', 'Business Process Lead'],
+    dontConfuse: 'SPM Ops Mgr ≠ Pillar Portfolio Manager. SPM Ops runs the data + tooling underneath the portfolio; PPMs run their pillar\'s portfolio decisions on top of that foundation.' },
 
   { term: 'Executive Sponsor', category: 'role',
     def: 'VP+ accountable for the strategic outcome of an initiative. Approves G1 + G4 gates. Funded.',

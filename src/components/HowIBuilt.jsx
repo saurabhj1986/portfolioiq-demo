@@ -81,12 +81,12 @@ export default function HowIBuilt() {
       {/* HERO — clean, no gradient, no icon */}
       <header>
         <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold">About</div>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-sfnavy leading-[1.05] tracking-tight mt-2">How I built this.</h1>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-sfnavy leading-[1.05] tracking-tight mt-2">About this workspace.</h1>
         <p className="text-base text-sfmuted mt-4 leading-relaxed max-w-2xl">
-          Design philosophy, system architecture, integration points, and the path from this demo to a production system — including the risks to manage along the way.
+          Design philosophy, system architecture, integration points, and the path to production — including the risks to manage along the way.
         </p>
         <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Built for context:</strong> DET → Delivery Assurance &amp; Operations → SPM · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead), L7 IC — owns <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> end-to-end across the Airtable / Linear / Tableau / Slack stack, serving 7 PPMs and ~250 initiatives.
+          <strong className="text-sfnavy not-italic">Designed for:</strong> the Strategic Portfolio Operations Manager (Lead) running data + tooling for DET's SPM team. Workspace centers on FY27 SPM pillars P02 (Data &amp; Systems Optimization) and P03 (Tooling Enablement) across the Airtable / Linear / Tableau / Slack stack serving 7 Pillar Portfolio Managers and ~250 initiatives.
         </p>
       </header>
 
@@ -95,7 +95,7 @@ export default function HowIBuilt() {
       {/* FY27 SPM 5 PILLARS — role context */}
       <section className="rounded-lg border border-sfblue/30 bg-sky-50/60 p-5">
         <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">00 · Role frame · FY27 SPM strategy</div>
-        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">5 strategic pillars · this role lives at P02 + P03</h2>
+        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">5 strategic pillars · the role's home is P02 + P03</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-sm">
           <div className="rounded-md border border-slate-200 bg-white p-3">
             <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P01</div>
@@ -105,7 +105,7 @@ export default function HowIBuilt() {
           <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P02</span>
-              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">MY HOME</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">ROLE HOME</span>
             </div>
             <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Data &amp; Systems Optimization</div>
             <p className="text-[11px] text-sfdeep mt-1 leading-snug">Portfolio data foundation, governance, validation/reconciliation, Airtable schema, downstream warehouse.</p>
@@ -113,7 +113,7 @@ export default function HowIBuilt() {
           <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P03</span>
-              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">MY HOME</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">ROLE HOME</span>
             </div>
             <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Tooling Enablement</div>
             <p className="text-[11px] text-sfdeep mt-1 leading-snug">Tier-1 support, integrations, automations, training. Owns Airtable · Linear · Tableau · Slack stack.</p>
@@ -163,7 +163,7 @@ export default function HowIBuilt() {
           </div>
         </div>
         <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
-          Team reality: charter refocused 6 weeks ago. SPM team is scaling and adding this Manager (Lead) role to professionalize the data + tooling layer underneath the 5 FY27 pillars. Saurabh enters as the end-to-end owner — building muscle on Airtable / Linear / Tableau / Slack while inheriting the institutional context.
+          Charter refocused 6 weeks ago. The SPM team is scaling and adding a Manager (Lead) role to professionalize the data + tooling layer underneath the 5 FY27 pillars. The role-holder owns it end-to-end across Airtable, Linear, Tableau, and Slack.
         </p>
       </section>
 

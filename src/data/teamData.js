@@ -1,6 +1,6 @@
-// Team Cockpit data: 4 Portfolio Manager direct reports.
-// Reflects the JR337298 reality: Sr Manager grade, 4 direct reports (per recruiter screening notes).
-// Hiring driver: maternity leave coverage starting June 2026 — backfill + growth mix.
+// Team Cockpit data: 4 Pillar Portfolio Manager records (PPM Customer Desk view).
+// Used to show the per-PPM tooling support queue, data quality flags, and dashboard requests
+// that SPM Ops triages weekly.
 
 export const DIRECT_REPORTS = [
   {

@@ -574,14 +574,14 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
           <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
             <Target className="w-4 h-4 text-sflight" />
             <h3 className="text-sm font-serif font-bold text-white">FY27 SPM strategy · 5 pillars</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· this role lives at P02 + P03 (highlighted)</span>
+            <span className="text-[10px] text-sfmuted ml-1">· the role's home is P02 + P03 (highlighted)</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-0 divide-x divide-white/10">
             {FY27_SPM_PILLARS.map(p => (
               <div key={p.id} className={`p-3 ${p.isFocus ? 'bg-sflight/10' : ''}`}>
                 <div className="flex items-center gap-1.5 mb-1">
                   <span className={`text-[10px] font-mono uppercase tracking-wider font-bold ${p.isFocus ? 'text-sflight' : 'text-sfmuted'}`}>{p.code}</span>
-                  {p.isFocus && <span className="pill pill-blue text-[9px]">MY HOME</span>}
+                  {p.isFocus && <span className="pill pill-blue text-[9px]">ROLE HOME</span>}
                 </div>
                 <div className={`text-sm font-serif font-bold leading-snug ${p.isFocus ? 'text-white' : 'text-white/90'}`}>{p.name}</div>
                 <p className="text-[11px] text-white/70 leading-snug mt-1.5">{p.blurb}</p>
@@ -669,94 +669,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             ))}
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> The team to deliver this is <strong>5 people (Director → Analyst)</strong> with 2 currently on (or going on) maternity leave and a new Director joining. The agentic strategy hire fills the gap — and is exactly the work this prototype showcases.
-          </div>
-        </div>
-      </section>
-
-      {/* 01c · INTERVIEW THEMES — explicit mapping from prep guide's 5 themes + 4 competencies to demo evidence */}
-      <section>
-        <Kicker ord="01c" label="Interview themes · how the demo proves each" />
-        <h2 className="text-xl font-serif font-bold text-white mb-2">5 key themes · 4 competencies · one workspace</h2>
-        <p className="text-sm text-white/80 mb-4 max-w-3xl leading-relaxed">
-          The candidate prep guide for JR345361 calls out 5 role themes and assigns one competency per interviewer. The grid below shows where in this workspace each one shows up — so the demo doubles as a leave-behind that mirrors the interview rubric.
-        </p>
-
-        {/* 5 themes grid */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Target className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">5 role themes</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· per Salesforce prep guide</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-0 divide-x divide-white/10">
-            {[
-              { k: '01', name: 'Data Quality & Governance',     what: 'Source of Truth tab · Schema · Metric Catalog · Audit Trail · Glossary · Copilot' },
-              { k: '02', name: 'Tooling Ownership & Adoption',  what: 'Operate → PPM Customer Desk · Agents tab (Zapier/Workato/Airtable/Linear/Slack)' },
-              { k: '03', name: 'Dashboard & Reporting',         what: 'Dashboard tab · 6-KPI strip · Tableau-fed exec + PPM views · KPI Studio' },
-              { k: '04', name: 'Cross-Functional Collaboration',what: 'Persona switcher · PPM, Finance Partner, Director, Sponsor lenses on same workspace' },
-              { k: '05', name: 'Operational Rigor + Strategy',  what: 'About → Renovation panel · 60-day plan · FY27 SPM 5-pillar frame' }
-            ].map(t => (
-              <div key={t.k} className="p-3">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-sflight font-bold">{t.k}</div>
-                <div className="text-sm font-serif font-bold text-white mt-0.5 leading-snug">{t.name}</div>
-                <p className="text-[11px] text-white/75 leading-snug mt-2">{t.what}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4-interviewer competency mapping */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Users className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">4 interviewers · 4 competencies · where each lives in this workspace</h3>
-          </div>
-          <div className="divide-y divide-white/10">
-            {[
-              {
-                who: 'Judette Platz',
-                role: 'HM · Sr Director, SPM · San Francisco',
-                comp: 'Manage Ambiguity · Motivate & Champion',
-                shows: 'About → Renovation panel ("wood structure is strong, sconces changing"). 60-day plan grounded in her May 1 conversation. FY27 SPM 5-pillar frame she\'s actively shaping.'
-              },
-              {
-                who: 'Mandy Perret',
-                role: 'Director, Portfolio Mgmt · Dallas (joined May 2026)',
-                comp: 'Achieve Results · Get it Done',
-                shows: 'Dashboard tiles use her exact language — Rows reconciled (1,842) · Support tickets resolved (127, 94% within SLA) · Dashboards built (6) · Adoption +18pts. Operational rigor visible end-to-end.'
-              },
-              {
-                who: 'Alexandria Petteruti',
-                role: 'Sr Manager, SPM · Remote California',
-                comp: 'Drive Innovation · Salesforce Smart',
-                shows: 'Agents tab (12 niche agents on Agentforce / MCP fabric) · Zapier/Workato automations · "build in-house with AI" thread from Judette · PPM Customer Desk pattern with auto-drafted Slack replies.'
-              },
-              {
-                who: 'Lauren Hudson',
-                role: 'Business Process Lead, SPM · Atlanta',
-                comp: 'Communicate Effectively · Courageous Communicator',
-                shows: 'Workbench (8 message templates: exec update, off-track escalation, CFO memo) · Glossary (33 canonical terms for cross-audience clarity) · Audit Trail (constructive escalation evidence).'
-              }
-            ].map((i, idx) => (
-              <div key={idx} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm">
-                <div className="md:col-span-3">
-                  <div className="font-serif font-bold text-white">{i.who}</div>
-                  <div className="text-[11px] text-sfmuted mt-0.5 leading-snug">{i.role}</div>
-                </div>
-                <div className="md:col-span-3">
-                  <div className="text-[10px] uppercase tracking-wider text-sflight font-bold mb-1">Competency</div>
-                  <div className="text-[12px] text-white/90 leading-snug">{i.comp}</div>
-                </div>
-                <div className="md:col-span-6">
-                  <div className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold mb-1">Where it lives in this workspace</div>
-                  <p className="text-[12px] text-white/85 leading-snug">{i.shows}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Behavioral STAR format (4 × 45 min, virtual). The workspace is a portfolio artifact — not a thing to walk through tab-by-tab in the interview.
+            <strong className="text-sflight">→</strong> The team to deliver this is <strong>5 people (Director → Analyst)</strong> with 2 currently on (or going on) maternity leave and a new Director joining. A Manager (Lead) role at the intersection of data + tooling is being added to close the gap and run this workspace.
           </div>
         </div>
       </section>

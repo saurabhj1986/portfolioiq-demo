@@ -15,7 +15,7 @@ export const PERSONAS = [
   {
     // id preserved as 'sr-manager' so existing id === 'sr-manager' checks
     // across the app continue to identify this as the default/full-view persona.
-    // Copy reframed for JR345361 Manager (Lead) role.
+    // Copy frames the role as Strategic Portfolio Operations Manager (Lead).
     id: 'sr-manager',
     role: 'Strategic Portfolio Ops Mgr',
     label: 'Strategic Portfolio Ops Mgr · Lead',

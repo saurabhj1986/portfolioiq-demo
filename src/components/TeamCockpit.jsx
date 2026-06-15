@@ -190,7 +190,7 @@ export default function TeamCockpit() {
           <Users className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <h2 className="text-lg font-serif font-bold">PPM Customer Desk — 7 Pillar Portfolio Managers</h2>
-            <p className="text-sm text-white/80 mt-1">I serve 7 PPMs as Tier-1 tooling + data partner across Airtable, Linear, Tableau, Slack. AI surfaces open support tickets, dashboard requests, data quality flags per PPM — and drafts the Slack replies so I close the loop fast.</p>
+            <p className="text-sm text-white/80 mt-1">SPM Ops serves 7 PPMs as Tier-1 tooling + data partner across Airtable, Linear, Tableau, Slack. AI surfaces open support tickets, dashboard requests, data quality flags per PPM — and drafts the Slack replies so the loop closes fast.</p>
             <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]">
               <div className="bg-red-500/15 border border-red-300/40 rounded px-2 py-1.5">
                 <div className="text-red-200 uppercase tracking-wider text-[10px]">Open tickets</div>
@@ -268,26 +268,6 @@ export default function TeamCockpit() {
         </div>
       </div>
 
-      {/* JD mapping footer — JR345361 responsibilities */}
-      <div className="card bg-sfbg border-2 border-sfblue/20">
-        <h4 className="text-sm font-semibold text-sfnavy mb-2 flex items-center gap-2">
-          <ArrowUpRight className="w-4 h-4 text-sfblue" /> How this maps to JR345361 (Strategic Portfolio Ops Mgr · Lead)
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-sfnavy">
-          <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Primary point of contact for portfolio tooling support requests across the DET organization"</strong> — Each PPM card is a customer record: open tickets, Airtable/Linear/Tableau/Slack issue stream, last support touch. Zero context-switching to triage.
-          </div>
-          <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Support data quality activities through validation, reconciliation, QA reviews"</strong> — Per-PPM data trust score (94%) with the validation rules + reconciliation cadence that produced it.
-          </div>
-          <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Assist with gathering reporting requirements from business stakeholders"</strong> — Dashboard request queue surfaces per-PPM asks; AI drafts the requirements doc + Tableau spec from a Slack thread.
-          </div>
-          <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Strong systems-thinking with the ability to understand dependencies across tools, processes, and data ecosystems"</strong> — The signals shown here cross-reference Airtable schema changes, Linear status drift, Tableau extract failures, Slack escalations as one workflow stream.
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
