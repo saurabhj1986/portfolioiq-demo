@@ -86,7 +86,7 @@ export default function HowIBuilt() {
           Design philosophy, system architecture, integration points, and the path from this demo to a production system — including the risks to manage along the way.
         </p>
         <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Built for context:</strong> Digital Enterprise Technology (DET) · SPM team · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead) — owns <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> end-to-end across the Airtable / Linear / Tableau / Slack stack, serving 7 PPMs and ~250 initiatives.
+          <strong className="text-sfnavy not-italic">Built for context:</strong> DET → Delivery Assurance &amp; Operations → SPM · <strong className="text-sfnavy not-italic">FY27 strategy anchored on 5 pillars</strong>. This role — Strategic Portfolio Operations Manager (Lead), L7 IC — owns <strong className="text-sfnavy not-italic">P02 Data &amp; Systems Optimization</strong> and <strong className="text-sfnavy not-italic">P03 Tooling Enablement</strong> end-to-end across the Airtable / Linear / Tableau / Slack stack, serving 7 PPMs and ~250 initiatives.
         </p>
       </header>
 

@@ -181,19 +181,21 @@ function getPersonaAttention(persona) {
   }
 
   // Default: Strategic Portfolio Operations Manager (Lead) — JR345361
+  // Tile language mirrors the candidate prep guide verbatim:
+  // "Rows reconciled · Dashboards built · Support tickets resolved · Adoption rates improved"
   return {
     title: 'SPM operations at a glance.',
     sub: 'Frontline owner of the portfolio data foundation + tooling ecosystem across DET. ~250 initiatives, 7 pillars, FY27 SPM strategy in motion. What needs your action today. Switch personas in the top right to see how the view reshapes.',
     tiles: [
-      { kicker: 'Data quality flags',   value: '14',    sub: '6 reconciliation · 5 validation · 3 dup · Airtable+Linear',  accent: 'red' },
-      { kicker: 'Tooling support queue',value: '9',     sub: '2 SLA-breach · 4 PPM intake · 3 dashboard req',              accent: 'orange' },
-      { kicker: 'Dashboards to refresh',value: '5',     sub: '2 exec · 3 PPM views · Tableau extracts stale',              accent: 'amber' },
-      { kicker: 'FY27 SPM focus',       value: 'P2+P3', sub: 'Data & Systems Optimization · Tooling Enablement',           accent: 'green' }
+      { kicker: 'Rows reconciled · last 7d',     value: '1,842', sub: 'Airtable + Linear · 14 active discrepancies open',          accent: 'red' },
+      { kicker: 'Support tickets resolved · QTD',value: '127',   sub: '94% within 8h SLA · median TTR 4h · 9 open',                 accent: 'orange' },
+      { kicker: 'Dashboards built · last 30d',   value: '6',     sub: '2 exec · 4 PPM views · all on Tableau · 5 stale to refresh', accent: 'amber' },
+      { kicker: 'Adoption rates improved',       value: '+18pts',sub: 'Time tracking 73→91% · Linear hygiene 64→82% · QoQ',         accent: 'green' }
     ],
     stats: [
-      { value: 7, label: 'PPMs served' },
-      { value: '~250', label: 'Initiatives' },
-      { value: 5, label: 'FY27 pillars' }
+      { value: 7,     label: 'PPMs served'  },
+      { value: '~250',label: 'Initiatives'  },
+      { value: '94%', label: 'Data trust'   }
     ]
   };
 }
