@@ -13,10 +13,13 @@
 
 export const PERSONAS = [
   {
+    // id preserved as 'sr-manager' so existing id === 'sr-manager' checks
+    // across the app continue to identify this as the default/full-view persona.
+    // Copy is reframed for JR345361 IC role.
     id: 'sr-manager',
-    role: 'Sr Manager',
-    label: 'Sr Manager · Strategic Portfolio Mgmt',
-    desc: 'Default — full operating view. All initiatives, all calculators, all team coaching.',
+    role: 'Strategic Portfolio Ops Mgr',
+    label: 'Strategic Portfolio Ops Mgr · Lead, IC',
+    desc: 'Default — full IC operating view. Frontline owner of FY27 SPM pillars P02 (Data & Systems Optimization) + P03 (Tooling Enablement). Serves 7 PPMs across Airtable, Linear, Tableau, Slack.',
     pillarFilter: null,
     pillarLabel: null,
     hideTabs: [],
@@ -25,7 +28,7 @@ export const PERSONAS = [
     dataHideSubs: [],
     readOnly: false,
     accent: 'text-sflight',
-    focusSummary: 'Full operating view'
+    focusSummary: 'Full IC operating view · P02 + P03 home'
   },
   {
     id: 'director',
@@ -121,6 +124,24 @@ export const PERSONAS = [
     readOnly: true,
     accent: 'text-sred',
     focusSummary: 'Read-only · Decisions Needed + KPIs only · 4 Dashboard sections hidden · 3 tabs hidden'
+  },
+  {
+    id: 'finance-partner',
+    role: 'Finance Partner',
+    label: 'Finance Partner · DET',
+    desc: 'Read-only view for the embedded Finance partner. Focuses on financial reconciliation, budget variance, capital utilization, and Value at Risk — Operate is hidden (no people management), tactical Decisions sub-tabs hidden, Source of Truth audit + schema remain visible for reconciliation.',
+    pillarFilter: null,
+    pillarLabel: null,
+    hideTabs: ['operate'],
+    // Finance sees: Hero · Decisions needed · 6 KPIs (capital + VaR-led) · cross-org · stage-gate (for budget release readiness) · tracker. Hides pillar-grid (not a Finance concern).
+    dashboardHideSections: ['pillar-grid'],
+    // Decisions: keep Investment Framework + Capital Optimizer + Compare + KPI Studio (Finance-relevant); hide tactical engines
+    decisionsHideSubs: ['rice', 'risk', 'gate', 'factors', 'health'],
+    // Source of Truth: keep schema + metric catalog + audit trail (the Finance-trust tools); hide glossary + copilot (PPM tools)
+    dataHideSubs: ['glossary', 'copilot'],
+    readOnly: true,
+    accent: 'text-sgreen',
+    focusSummary: 'Read-only Finance lens · Capital + VaR + Audit · Operate hidden · 5 tactical Decisions sub-tabs hidden · 2 PPM-only Source of Truth sub-tabs hidden'
   }
 ];
 

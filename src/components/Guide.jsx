@@ -13,14 +13,19 @@ const INITIATIVES_TOTAL = 250;
 // =================== PERSONA-SPECIFIC FRAMING ===================
 const PERSONA_FRAMING = {
   'sr-manager': {
-    bannerLabel: 'Default · full operating view',
-    valueIntro: 'You\'ll save ~18 hrs/week that goes back to governance, coaching, and judgment work.',
-    quickStartHint: 'Start with the 2-min tour to see the full operating loop end-to-end.'
+    bannerLabel: 'Default · full IC operating view · P02 + P03 home',
+    valueIntro: 'You\'ll save ~18 hrs/week that goes back to data quality work, dashboard accuracy, and PPM enablement — the things you\'re actually measured on.',
+    quickStartHint: 'Start with the 2-min tour to see the full IC operating loop end-to-end.'
   },
   'director': {
     bannerLabel: 'Strategic lens · operational details hidden',
-    valueIntro: 'Your Sr Mgr team frees up ~18 hrs/week — that capacity comes back to strategy work and sponsor relationships.',
+    valueIntro: 'Your SPM IC frees up ~18 hrs/week of frontline tooling/data work — that capacity comes back to strategy work and DET leadership conversations.',
     quickStartHint: 'Start with the Dashboard\'s "Decisions needed this week" — the 20-second leadership scan.'
+  },
+  'finance-partner': {
+    bannerLabel: 'Read-only Finance lens · Capital + VaR + Audit',
+    valueIntro: 'Financial reconciliation, budget variance, capital utilization, and Value at Risk — without operational noise. Schema + Metric Catalog + Audit Trail surface the reconciliation evidence you need.',
+    quickStartHint: 'Start with the Dashboard KPI strip (Capital + VaR), then Decisions → Investment Framework, then Source of Truth → Audit.'
   },
   'pillar-pm-dap': {
     bannerLabel: 'Scoped to Data & AI Platform',
@@ -119,7 +124,7 @@ const TAB_GUIDES = [
   },
   {
     id: 'operate', label: 'Operate', icon: Briefcase, ord: '05',
-    purpose: 'The Sr Manager\'s daily workspace: standardized playbooks, team coaching, and comms drafting.',
+    purpose: 'The IC\'s daily workspace: standardized playbooks, PPM customer desk, and comms drafting for the SPM team.',
     sections: [
       { name: 'Playbooks', what: '7 foundational playbooks (Stage-Gate Decision · Initiative Intake · Capacity Planning · Risk Register · Quarterly Rebalance · Portfolio Review · Sunset/Kill). Adoption tracked per pillar.' },
       { name: 'Team Cockpit', what: '4 Pillar PM direct reports. Auto-detected coaching opportunities, weekly briefs, workflow automations.' },
@@ -256,7 +261,7 @@ const TIPS = [
   { tip: 'Hover any KPI for full definition', detail: 'Every KPI tile has an `i` icon top-right. Hover for what + target + source.' },
   { tip: 'Hover any pipeline circle for stage definition', detail: 'G0 Concept · G1 Plan · G2 Build · G3 Validate · G4 Launch · G5 Sustain.' },
   { tip: 'Click any chip on the Dashboard hero', detail: '4 chips (Role / Hidden tax / One workspace / Boundary) expand for full detail.' },
-  { tip: 'Recommendations are drafts, never decisions', detail: 'Every output is framed for sponsor review. Sr Mgr prepares; Director decides.' },
+  { tip: 'Recommendations are drafts, never decisions', detail: 'Every output is framed for PPM / Finance / DET leadership review. The IC prepares; the decision-maker decides.' },
   { tip: 'Every state change is in the Audit Trail', detail: 'Source of Truth → Audit Trail. Append-only, SOX-aligned, 7-year retention.' },
   { tip: 'Click the "Back to All Steps" in Tour Bar', detail: 'Returns you to the Welcome panel with all steps visible — useful if you lose context.' }
 ];
@@ -264,15 +269,15 @@ const TIPS = [
 // =================== FAQs ===================
 const FAQS = [
   { q: 'Why is some content gated by persona?',
-    a: 'RBAC simulation. In production, persona derives from your identity provider login (Okta). Here you can switch manually to see how the experience adapts. Director doesn\'t see Operate (people management is the Sr Mgr\'s job). Pillar PM scopes to their pillar. Sponsor is read-only.' },
+    a: 'RBAC simulation. In production, persona derives from your identity provider login (Okta). Here you can switch manually to see how the experience adapts. Director doesn\'t see Operate. Pillar PM scopes to their pillar. Sponsor and Finance Partner are read-only with role-specific lenses.' },
   { q: 'What does "Sustain" mean (G5)?',
     a: 'The final stage. The initiative is live, monitored, and value is being tracked. The build team has disbanded; a lean ops team owns going forward. Quarterly value reviews confirm ROI.' },
   { q: 'Why agents instead of just dashboards?',
     a: 'Dashboards tell you what happened. Agents do something about it — nudge stale artifacts, draft sponsor briefs, detect capacity conflicts, escalate off-track initiatives. Routine work automated; humans focus on judgment.' },
-  { q: 'Can I switch back to Sr Manager view anytime?',
-    a: 'Yes — the persona dropdown in the top-right. First entry is "Sr Manager · Strategic Portfolio Mgmt" (default, full view).' },
+  { q: 'Can I switch back to the IC default view anytime?',
+    a: 'Yes — the persona dropdown in the top-right. First entry is "Strategic Portfolio Ops Mgr · Lead, IC" (default, full operating view).' },
   { q: 'How do I reset the demo?',
-    a: 'Refresh the page. State resets to defaults: Sr Manager persona, Dashboard tab, no active tour. The data is mock so nothing actually persists.' },
+    a: 'Refresh the page. State resets to defaults: Strategic Portfolio Ops Mgr (IC) persona, Dashboard tab, no active tour. The data is mock so nothing actually persists.' },
   { q: 'Is this connected to real systems?',
     a: 'No — all data is mock. The schema is production-quality so the path to real is one connector per source system (Anaplan, ServiceNow / GUS, Quip, Slack, Workday, Okta).' }
 ];
@@ -424,7 +429,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         </p>
       </header>
 
-      {/* PERSONA BANNER — shows when viewing as anything other than Sr Manager */}
+      {/* PERSONA BANNER — shows when viewing as anything other than the default IC */}
       {persona && persona.id !== 'sr-manager' && (
         <div className="rounded-lg bg-sflight/10 border border-sflight/30 px-4 py-3 flex items-start gap-3">
           <User className="w-4 h-4 text-sflight flex-shrink-0 mt-0.5" />
@@ -610,7 +615,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             ))}
           </div>
           <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — a primary stakeholder of this Sr Mgr role. Switch persona (top-right) to see the workspace scoped to one pillar.
+            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — the primary customer of this IC role. Switch persona (top-right) to see the workspace scoped to one pillar.
           </div>
         </div>
 

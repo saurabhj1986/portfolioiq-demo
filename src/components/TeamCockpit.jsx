@@ -184,29 +184,29 @@ export default function TeamCockpit() {
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+      {/* Header — IC Customer Desk framing */}
       <div className="card bg-gradient-to-r from-sfnavy to-sfdeep text-white">
         <div className="flex items-start gap-3">
           <Users className="w-6 h-6 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h2 className="text-lg font-serif font-bold">Team Cockpit — DET Portfolio team</h2>
-            <p className="text-sm text-white/80 mt-1">5-person team (Director → Analyst). 4 Pillar Portfolio Manager direct reports shown. AI surfaces coaching opportunities, drafts weekly 1:1 prep, automates routine notifications.</p>
+            <h2 className="text-lg font-serif font-bold">PPM Customer Desk — 7 Pillar Portfolio Managers</h2>
+            <p className="text-sm text-white/80 mt-1">I serve 7 PPMs as Tier-1 tooling + data partner across Airtable, Linear, Tableau, Slack. AI surfaces open support tickets, dashboard requests, data quality flags per PPM — and drafts the Slack replies so I close the loop fast.</p>
             <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]">
-              <div className="bg-white/5 border border-white/15 rounded px-2 py-1.5">
-                <div className="text-white/60 uppercase tracking-wider text-[10px]">Headcount</div>
-                <div className="text-white font-semibold mt-0.5">5 (Dir → Analyst)</div>
+              <div className="bg-red-500/15 border border-red-300/40 rounded px-2 py-1.5">
+                <div className="text-red-200 uppercase tracking-wider text-[10px]">Open tickets</div>
+                <div className="text-white font-semibold mt-0.5">9 · 2 SLA-breach</div>
               </div>
               <div className="bg-amber-500/15 border border-amber-300/40 rounded px-2 py-1.5">
-                <div className="text-amber-200 uppercase tracking-wider text-[10px]">Maternity gap</div>
-                <div className="text-white font-semibold mt-0.5">2 of 5 · coverage planned</div>
-              </div>
-              <div className="bg-emerald-500/15 border border-emerald-300/40 rounded px-2 py-1.5">
-                <div className="text-emerald-200 uppercase tracking-wider text-[10px]">Joining</div>
-                <div className="text-white font-semibold mt-0.5">New Director · Q3</div>
+                <div className="text-amber-200 uppercase tracking-wider text-[10px]">Median TTR</div>
+                <div className="text-white font-semibold mt-0.5">4h · target ≤ 8h</div>
               </div>
               <div className="bg-sflight/15 border border-sflight/40 rounded px-2 py-1.5">
-                <div className="text-sflight uppercase tracking-wider text-[10px]">Open hire</div>
-                <div className="text-white font-semibold mt-0.5">Agentic strategy lead</div>
+                <div className="text-sflight uppercase tracking-wider text-[10px]">Dashboards owned</div>
+                <div className="text-white font-semibold mt-0.5">17 Tableau views</div>
+              </div>
+              <div className="bg-emerald-500/15 border border-emerald-300/40 rounded px-2 py-1.5">
+                <div className="text-emerald-200 uppercase tracking-wider text-[10px]">Data trust score</div>
+                <div className="text-white font-semibold mt-0.5">94% · ↑22pts QoQ</div>
               </div>
             </div>
           </div>
@@ -232,10 +232,10 @@ export default function TeamCockpit() {
         <div className="lg:col-span-2 card">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-sflight" />
-            <h3 className="text-base font-semibold text-sfnavy">AI Coaching Feed</h3>
-            <span className="text-[10px] text-sfmuted ml-auto">Updated continuously from initiative + 1:1 + sentiment signals</span>
+            <h3 className="text-base font-semibold text-sfnavy">AI Support Signals</h3>
+            <span className="text-[10px] text-sfmuted ml-auto">Updated continuously from Airtable · Linear · Tableau · Slack streams</span>
           </div>
-          <p className="text-xs text-sfmuted mb-3">Auto-detected coaching opportunities across the team — ranked by severity. Each comes with a suggested action and, where useful, an auto-drafted message you can edit and send.</p>
+          <p className="text-xs text-sfmuted mb-3">Auto-detected data quality issues, broken integrations, dashboard requests, and tooling escalations across the 7 PPMs — ranked by severity. Each comes with a suggested action and, where useful, an auto-drafted Slack reply you can edit and send.</p>
           <div className="space-y-2">
             {COACHING_FEED.map(c => <CoachingFeedItem key={c.id} item={c} />)}
           </div>
@@ -247,7 +247,7 @@ export default function TeamCockpit() {
             <Zap className="w-4 h-4 text-sflight" />
             <h3 className="text-base font-semibold text-sfnavy">Workflow Automations</h3>
           </div>
-          <p className="text-xs text-sfmuted mb-3">Background jobs that catch the things humans drop. The Sr Manager doesn't manage these — they manage the exceptions.</p>
+          <p className="text-xs text-sfmuted mb-3">Zapier / Workato jobs that catch the things humans drop — Airtable validation, Linear stale-ticket nudges, Tableau extract refresh failures, Slack SLA escalations. The IC doesn't run these — they review the exceptions.</p>
           <div className="space-y-3">
             {AUTOMATIONS.map(a => (
               <div key={a.id} className="bg-sfbg border border-slate-200 rounded-lg p-3">
@@ -268,23 +268,23 @@ export default function TeamCockpit() {
         </div>
       </div>
 
-      {/* JD mapping footer */}
+      {/* JD mapping footer — JR345361 IC responsibilities */}
       <div className="card bg-sfbg border-2 border-sfblue/20">
         <h4 className="text-sm font-semibold text-sfnavy mb-2 flex items-center gap-2">
-          <ArrowUpRight className="w-4 h-4 text-sfblue" /> How this maps to JR337298
+          <ArrowUpRight className="w-4 h-4 text-sfblue" /> How this maps to JR345361 (Strategic Portfolio Ops Mgr · Lead, IC)
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-sfnavy">
           <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Build a collaborative teaming environment that champions creativity, innovation, and learning"</strong> — AI Coaching Feed surfaces growth opportunities (Aisha → Sr Director track), not just risks.
+            <strong>"Primary point of contact for portfolio tooling support requests across the DET organization"</strong> — Each PPM card is a customer record: open tickets, Airtable/Linear/Tableau/Slack issue stream, last support touch. Zero context-switching to triage.
           </div>
           <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>People-leader role, 4 direct reports</strong> — Designed exactly for this team size. Workflow automations save ~30 min/week of 1:1 prep, which is real time at this scale.
+            <strong>"Support data quality activities through validation, reconciliation, QA reviews"</strong> — Per-PPM data trust score (94%) with the validation rules + reconciliation cadence that produced it.
           </div>
           <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>Hiring urgency: maternity leave coverage starting June</strong> — Detected automatically (C-02 in feed), with Aisha proposed as backfill based on capacity headroom + tenure.
+            <strong>"Assist with gathering reporting requirements from business stakeholders"</strong> — Dashboard request queue surfaces per-PPM asks; AI drafts the requirements doc + Tableau spec from a Slack thread.
           </div>
           <div className="bg-white rounded p-2 border border-slate-200">
-            <strong>"Strong facilitation skills, ensuring teams continuously adapt"</strong> — Pattern detection (Renata's scope creep; Marcus's burnout signal) turns 1:1s into coaching, not status updates.
+            <strong>"Strong systems-thinking with the ability to understand dependencies across tools, processes, and data ecosystems"</strong> — The signals shown here cross-reference Airtable schema changes, Linear status drift, Tableau extract failures, Slack escalations as one workflow stream.
           </div>
         </div>
       </div>

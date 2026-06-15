@@ -387,7 +387,7 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
         </div>
       </section>
 
-      {/* RBAC banner — shows what content is filtered when persona ≠ Sr Manager */}
+      {/* RBAC banner — shows what content is filtered when persona ≠ default IC */}
       {persona && persona.id !== 'sr-manager' && (
         <section className="bg-sfnavy/60 border border-sflight/30 rounded-lg px-4 py-3 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs">
           <span className="text-[10px] uppercase tracking-widest text-sflight font-bold mt-0.5">RBAC</span>
