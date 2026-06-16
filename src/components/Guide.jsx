@@ -425,7 +425,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <Kicker ord="Guide" label="How to use this app" />
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 5-minute orientation.</h1>
         <p className="text-base text-white/80 mt-3 leading-relaxed max-w-3xl">
-          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead)</strong> — L7 IC inside <strong className="text-sflight">Digital Enterprise Technology (DET) → Delivery Assurance &amp; Operations → SPM</strong>. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so this role can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
+          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead)</strong> inside <strong className="text-sflight">Digital Enterprise Technology (DET) → Delivery Assurance &amp; Operations → SPM</strong>. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so this role can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
         </p>
       </header>
 
