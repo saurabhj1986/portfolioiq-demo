@@ -1,57 +1,171 @@
 import React from 'react';
 
-// =================== DESIGN DECISIONS ===================
-const DECISIONS = [
-  { d: 'Framing',                chose: 'Treat portfolio governance as a data-architecture problem with an adoption layer on top', why: 'The standards / frameworks / playbooks asks read as a schema problem first, a process problem second. The demo leads with the data model for that reason.' },
-  { d: 'Schema scope',           chose: '4 normalized tables + 1 audit log',                                                       why: 'Covers ~80% of the portfolio questions execs actually ask. Resist over-modelling — benefits_realization and stage_history can be added in v2 once teams adopt v1.' },
-  { d: 'Stage-gates',            chose: 'G0 Concept → G5 Sustain (6 gates)',                                                       why: 'Aligns with how most engineering orgs already think about lifecycle. Same gate definition across every Pillar — discipline, not opinion.' },
-  { d: 'Taxonomy unit',          chose: 'Initiative (not project, not epic)',                                                      why: 'A project is execution-scoped. An initiative ties to a strategic OKR and an executive sponsor. The SPM team is funded to govern the initiative layer.' },
-  { d: 'AI boundary',            chose: 'AI surfaces evidence; humans decide',                                                     why: 'Capital allocation needs an audit trail. The agent gives confidence scores and transparent reasoning; the human makes the call. AI as force multiplier, not substitute.' },
-  { d: 'Reasoning transparency', chose: 'classify → resolve → reason → confidence on every agent answer',                          why: 'Opaque AI is unauditable. Transparent reasoning is what makes the agent trustworthy in a portfolio context.' },
-  { d: 'KPI definitions',        chose: 'Tooltipped on every metric — WHAT, TARGET, SOURCE',                                       why: 'Eliminates the "every report defines metrics differently" problem. Aligns multi-VP audiences without an alignment meeting.' },
-  { d: 'Recommendation framing', chose: 'Every output is a draft for stakeholder review, never a final decision',                  why: 'Sharp boundary between SPM Ops frontline work (data quality, tooling, dashboards) and PPM / Finance / DET leadership decisions. The tool reflects that boundary in the language of every screen.' },
-  { d: 'Mock data',              chose: 'Production-quality schema, fictional data',                                               why: 'Enables open exploration without compromising any real organisation\'s portfolio. Lifts to production with one connector per source system.' }
+// =================== HOW IT CAME TOGETHER ===================
+const OBSERVATIONS = [
+  'Seven Pillar Portfolio Managers maintaining their own data spreadsheets on top of Airtable — same fields, different definitions.',
+  'Tooling support requests go to whoever the PPM happens to know — no single front door, no SLA.',
+  'Tableau dashboards built by different people with different metric definitions — same KPI, conflicting numbers.',
+  'Time-tracking adoption inconsistent across the 7 pillars (61–88%) — capacity data leaks.',
+  'PPMs and DET leaders waste cycles arguing about whose numbers are right instead of acting on them.'
 ];
 
-// =================== ARCHITECTURE LAYERS ===================
-const LAYERS = [
-  { name: 'Experience',     items: 'Dashboard · Journey · Decisions · Operate · Source of Truth · Copilot',                                  note: 'React 18 · Vite · Tailwind. No backend in v1 — pure UI on mock data.' },
-  { name: 'Logic',          items: 'RICE · Capital Optimizer · Risk Heatmap · Stage-Gate Scorer · Value/TCO · Influence Factors · Process Health · Scenario Compare · KPI Studio', note: 'Pure JS calculation engines. Deterministic, testable, single-responsibility.' },
-  { name: 'Data',           items: 'initiative_inventory · stage_gate_artifacts · dependencies · capacity_snapshots · portfolio_audit_trail', note: 'Snowflake-flavoured DDL. Append-only audit. Foreign keys enforce integrity.' },
-  { name: 'Source systems', items: 'Anaplan · ServiceNow · Workday · Snowflake · Quip · Slack · Calendar · Identity provider',                note: 'Each source feeds one or more data-layer tables via a thin connector.' }
+const PRINCIPLES = [
+  { p: 'Trust > Speed',            why: 'A slow accurate workspace beats a fast one PPMs second-guess. Every metric carries source + owner + definition so disagreements end before they start.' },
+  { p: 'One front door',           why: 'Every tooling request, dashboard ask, and data flag enters one queue. PPMs stop wondering who to ping; SPM Ops stops triaging four inboxes.' },
+  { p: 'Metric lineage visible',   why: 'No number without a traceable path back to source system, owner, and refresh cadence. Removes the "where did that come from?" friction.' },
+  { p: 'Persona-aware, not gated', why: 'Same workspace reshapes itself for PPM / Finance / Director / Sponsor. RBAC stays simple; experience adapts.' },
+  { p: 'Drafts not decisions',     why: 'Every recommendation is a draft for stakeholder review — never a final call. SPM Ops enables decisions; PPMs and leadership make them.' }
 ];
 
-// =================== INTEGRATION POINTS ===================
-const INTEGRATIONS = [
-  { source: 'Anaplan',                feeds: 'capacity_snapshots · initiative_inventory.budget_*',  type: 'API pull',       refresh: 'Daily',     notes: 'Capital plans, budget actuals, FTE capacity' },
-  { source: 'ServiceNow',             feeds: 'stage_gate_artifacts (risk register, capacity plan)', type: 'Webhooks',       refresh: 'Real-time', notes: 'Incident → risk; CR → artifact' },
-  { source: 'Workday HRIS',           feeds: 'capacity_snapshots.fte_capacity · pillar.lead',       type: 'API pull',       refresh: 'Weekly',    notes: 'Headcount, org structure, leave calendar' },
-  { source: 'Snowflake / Data Cloud', feeds: 'aggregated KPIs (Process Health, Compliance trend)',  type: 'SQL views',      refresh: 'Hourly',    notes: 'Materialized views via a semantic layer' },
-  { source: 'Quip / Confluence',      feeds: 'stage_gate_artifacts (PRD, Architecture Review)',     type: 'URL + metadata', refresh: 'On-update', notes: 'Webhook on doc change; extract status + approver' },
-  { source: 'Slack',                  feeds: 'Workbench distribution · Team Cockpit signals',       type: 'Slack API',      refresh: 'Real-time', notes: 'Send drafted messages; detect stalled threads' },
-  { source: 'Calendar',               feeds: 'Team Cockpit.last1on1 · stale-1:1 signal',           type: 'Calendar API',   refresh: 'Hourly',    notes: 'Detect overdue 1:1s, portfolio reviews' },
-  { source: 'Identity provider',      feeds: 'auth + role-based access',                            type: 'SAML / OIDC',    refresh: 'At login',  notes: 'Sponsor-only views, audit-trail attribution' }
+const SCOPE_IN = [
+  'Data quality console · validation rules · reconciliation cadence',
+  'Tooling support queue · SLAs · runbooks · enablement docs',
+  'Dashboard catalog with documented metric lineage',
+  'Persona switcher (PPM / Finance / Director / Sponsor lenses)',
+  'Agent fabric for routine governance + comms drafting'
 ];
 
-// =================== POCs ===================
-const POCS = [
-  { n: 1, title: 'Read-only Source of Truth',     duration: '4 weeks',  scope: 'All pillars',          goal: 'Connect data layer to existing source systems; stand up Dashboard with real KPIs alongside the mock view.', measure: 'KPI freshness vs source · query latency p90 · daily-active-user count', success: 'KPIs refresh within target cadence; user count grows 3 weeks consecutively.' },
-  { n: 2, title: 'Stage-gate enforcement',         duration: '6 weeks',  scope: '1 volunteer pillar',   goal: 'Pilot the Stage-Gate Scorer with budget release gated on artifact compliance.',                            measure: 'Median cycle time per gate (before / after) · % artifacts approved at entry · Pillar PM NPS', success: '≥10% reduction in cycle time, no drop in PM NPS, sponsor signs off on rollout to next 2 pillars.' },
-  { n: 3, title: 'Recommendation Engine dry-run',  duration: '1 quarter', scope: 'All (read-only)',      goal: 'Generate engine recommendations every 2 weeks; compare against actual sponsor decisions.',                  measure: '% agreement between engine and sponsor · time-to-decision delta',                              success: '≥60% agreement on tier; engine surfaces ≥2 issues exec hadn\'t seen.' },
-  { n: 4, title: 'Copilot grounded in real data',  duration: '4 weeks',  scope: 'SPM team only',         goal: 'Replace mock response map with RAG over the production schema; restrict to retrieval-only.',                measure: 'Answer accuracy (audited sample) · hallucination rate · time saved per query',                  success: '≥90% accuracy on factual queries; <2% hallucination; user count grows week-on-week.' },
-  { n: 5, title: 'Workbench AI auto-draft',         duration: '3 months', scope: 'SPM Ops + 7 PPMs',      goal: 'Wire auto-draft to pull live KPIs; pilot on Monthly Exec Update + Pillar PM Weekly Digest.',                  measure: 'Drafting time (median) · edit volume (% words changed) · exec read rate',                       success: '≥40% drafting time reduction, ≤30% edit volume, exec read rate ≥90%.' }
+const SCOPE_OUT = [
+  'Strategic prioritization decisions — PPMs and SPM Lead own these',
+  'RICE scoring + capital allocation authority — Director + Sponsor own these',
+  'Executive roadmap construction — Sr Director + Joe & Zarillo own this',
+  'M&A diligence on portfolio pieces — out of scope for the role and the team'
 ];
 
-// =================== RISKS ===================
-const RISKS = [
-  { risk: 'Source data quality is worse than assumed',                lvl: 'High',   imp: 'High',   mitigation: 'Start with read-only POC; build data-quality monitors as KPIs; surface gaps before they become reporting bugs.' },
-  { risk: 'Pillar PMs reject new process as overhead',                 lvl: 'Medium', imp: 'High',   mitigation: 'Co-create with one volunteer pillar first; instrument time savings; let early adopters become champions.' },
-  { risk: 'AI hallucinations in Copilot answers',                      lvl: 'Medium', imp: 'High',   mitigation: 'Confidence scoring + transparent reasoning + retrieval-only. Hard cap: confidence ≥0.6 to display; below that, route to human.' },
-  { risk: 'Adoption stalls without an executive sponsor',              lvl: 'Medium', imp: 'High',   mitigation: 'Pre-align with sponsor before v1 launch; tie launch to a recurring exec review meeting so the tool has a clear job to be done.' },
-  { risk: 'Schema migration breaks downstream reports',                lvl: 'Low',    imp: 'High',   mitigation: 'Treat schema as a versioned API; semantic versioning + 90-day deprecation; backfill new columns before retiring old.' },
-  { risk: 'Compliance / SOX audit reveals access or audit-trail gaps', lvl: 'Low',    imp: 'High',   mitigation: 'SOC2-aligned append-only audit trail from day 1; role-based access tied to identity provider; quarterly access review.' },
-  { risk: 'Vendor lock-in on AI provider',                             lvl: 'Medium', imp: 'Medium', mitigation: 'Abstract LLM calls behind a model-agnostic interface; swap-in mock for testing; benchmark 2 alternative providers per quarter.' },
-  { risk: 'Data warehouse cost overrun',                               lvl: 'Medium', imp: 'Medium', mitigation: 'Cache hot queries; auto-suspend cold tables; pre-compute Process Health aggregates; monthly cost review.' }
+// =================== PATH TO PRODUCTION ===================
+const PROD_PHASES = [
+  {
+    n: 0, title: 'Land + Listen', duration: 'Weeks 0–4',
+    scope: 'No tools deployed. Observation + documentation only.',
+    moves: [
+      'Shadow each of 7 PPMs for 1 hour',
+      'Map the as-is: which data lives where, refresh cadence, owners',
+      'Document the support-request "shadow IT" patterns (Slack DMs, ad-hoc Airtable views)'
+    ],
+    exit: 'Signed-off as-is map + scope agreement with Senior Director'
+  },
+  {
+    n: 1, title: 'Foundation', duration: 'Weeks 4–12',
+    scope: 'Standardize the substrate without changing user experience yet.',
+    moves: [
+      'Airtable schema v2: standardize fields + definitions across all 7 pillars',
+      'Data validation rules deployed via Zapier → Airtable',
+      'Slack support intake — one front door for tooling requests with SLA',
+      'Linear hygiene rules + automated nudges for stale tickets'
+    ],
+    exit: 'Baseline data trust score published + improvement plan accepted'
+  },
+  {
+    n: 2, title: 'Pilot with 1 PPM', duration: 'Months 3–6',
+    scope: 'Prove the workspace pattern with the most willing customer.',
+    moves: [
+      'Pick the PPM most frustrated by tooling sprawl — they become the champion',
+      'Co-build their first 3 trusted Tableau dashboards inside this workspace pattern',
+      'Document playbooks + SLAs as they emerge from real use',
+      'Weekly retro: what to keep, what to cut, what to add'
+    ],
+    exit: 'Pilot PPM data trust ≥80%, tooling TTR median ≤8h, pilot signs PR/FAQ for rollout'
+  },
+  {
+    n: 3, title: 'Scale to all 7 PPMs', duration: 'Months 6–12',
+    scope: 'Onboard the remaining 6 PPMs in cohorts; build the dashboard catalog.',
+    moves: [
+      '6 weekly cohorts (1 PPM/week) with hands-on enablement',
+      'Tableau dashboard catalog — 17 trusted views with metric lineage',
+      'Pilot PPM becomes peer mentor for cohort 2',
+      'Time-tracking adoption push — partner with the Capacity Planning pillar lead'
+    ],
+    exit: '7/7 PPM adoption, portfolio-wide trust ≥90%, time tracking ≥90% across pillars'
+  },
+  {
+    n: 4, title: 'Cross-DET expansion', duration: 'Year 2+',
+    scope: 'Open the workspace beyond SPM — shared infrastructure for portfolio-adjacent teams.',
+    moves: [
+      'Open to PPM-adjacent roles: Process Excellence, Capacity Planning, Finance partner',
+      'Lift Source-of-Truth schema to feed cross-org executive dashboards',
+      'Discuss with Delivery Assurance sibling sub-orgs — same need shape, different inputs',
+      'Quarterly SPM steering review confirms continued strategic fit'
+    ],
+    exit: 'Workspace becomes shared DET infrastructure; ownership transitions to a small platform team'
+  }
+];
+
+// =================== PATH TO A PRODUCT ===================
+const ADOPTION_FUNNEL = [
+  { stage: 'Day 0',   who: 'Core team',    detail: 'SPM Ops + Senior Director + Director — the daily users' },
+  { stage: 'Week 4',  who: '+1 PPM pilot', detail: 'Most-frustrated pillar adopts as their daily view' },
+  { stage: 'Month 6', who: '+7 PPMs',      detail: 'All Pillar Portfolio Managers + Finance partner' },
+  { stage: 'Year 1',  who: '+ Leadership', detail: 'Director and Sponsor views go live as read-only lenses' },
+  { stage: 'Year 2+', who: '+ Cross-DET',  detail: 'Sister sub-orgs in Delivery Assurance & Operations adopt' }
+];
+
+const VALUE_MODEL = [
+  { metric: 'Capacity reclaimed', target: '~18 hrs/wk per PPM', how: 'Triangulation time across Airtable / Linear / Tableau / Slack collapses to one workspace' },
+  { metric: 'Decision velocity',  target: '4d → 6h median',     how: 'Trusted dashboards + audit trail mean PPMs and leadership skip the "whose numbers" debate' },
+  { metric: 'Trust score',        target: '72% → 94%',           how: '% of metrics where PPM + Finance + Director agree on the number first time' },
+  { metric: 'Support TTR',        target: 'Median ≤ 4h · SLA 8h', how: 'One Slack intake + runbooks + tier-1 ownership' },
+  { metric: 'PPM NPS',            target: '+30 vs baseline',     how: 'Quarterly survey: "How easy is it to get the data + tools you need to run your pillar?"' }
+];
+
+const BUILD_VS_BUY = [
+  { area: 'Foundation tools',   verdict: 'Buy',         detail: 'Airtable, Linear, Tableau, Slack, Zapier/Workato — best-in-class commercial; no reason to rebuild.' },
+  { area: 'SPM-specific layer', verdict: 'Build',       detail: 'Persona switcher, audit trail, dashboard catalog with metric lineage, agent fabric — the role\'s IP lives here.' },
+  { area: 'Data warehouse',     verdict: 'Reuse',       detail: 'Salesforce Data Cloud / Snowflake already in DET. No new infra; ride the existing rails.' },
+  { area: 'Identity + access',  verdict: 'Reuse',       detail: 'Okta / Entra existing. Persona switcher reads from IdP claims, no new auth system.' },
+  { area: 'AI / agents',        verdict: 'Buy + wrap',  detail: 'Agentforce as the runtime; SPM-specific prompts + guardrails as the wrapper. Don\'t train custom models.' }
+];
+
+const GOVERNANCE = [
+  { who: 'Product Owner',      role: 'SPM Ops Manager (Lead) — this role', what: 'Roadmap, scope, prioritization, pilot selection, weekly cadence' },
+  { who: 'Strategic Sponsor',  role: 'Senior Director, SPM',                what: 'Quarterly direction, FY27 pillar alignment, executive air cover' },
+  { who: 'Steering Committee', role: '7 PPMs + Finance partner',            what: 'Quarterly review of catalog, request prioritization, adoption metrics' },
+  { who: 'Tier-1 Support',     role: 'SPM Ops Manager + on-call rotation',  what: 'Daily ticket queue across Airtable / Linear / Tableau / Slack issues' },
+  { who: 'Tier-2 Engineering', role: 'Salesforce IT (cross-cutting)',       what: 'Airtable schema migrations, Tableau extract failures, IdP integration' },
+  { who: 'Data Steward',       role: 'SPM Ops + Capacity Planning lead',    what: 'Metric lineage maintenance, glossary updates, validation rule changes' }
+];
+
+// =================== STRATEGIC RISKS ===================
+const STRATEGIC_RISKS = [
+  {
+    risk: 'PPMs resist the new front door',
+    type: 'Adoption',
+    mitigation: 'Pilot with the most-frustrated PPM first. Their results recruit the others. Don\'t announce a mandate — let it earn adoption.'
+  },
+  {
+    risk: 'Sponsor changes priority mid-rollout',
+    type: 'Strategic',
+    mitigation: 'Phase each release to deliver standalone value. Stop at Phase 1: org still has data validation. Stop at Phase 2: pilot PPM keeps their working view. Phases are independent wins.'
+  },
+  {
+    risk: 'Senior Director arrives with a different vision',
+    type: 'Strategic',
+    mitigation: 'The workspace embodies the FY27 SPM 5-pillar strategy that leadership already endorsed. The architecture survives a leadership refresh; the layout is the negotiable surface.'
+  },
+  {
+    risk: 'Adoption stalls in Months 6–12',
+    type: 'Adoption',
+    mitigation: 'Weekly cohorts, not one big launch. 1:1 enablement with each PPM. Co-build the first 3 dashboards with them, not for them.'
+  },
+  {
+    risk: 'Cross-DET expansion perceived as "SPM-only"',
+    type: 'Political',
+    mitigation: 'From Phase 1, frame as "data foundation underneath portfolio governance" — not "SPM\'s tool." Sister sub-orgs recognize they need the same shape.'
+  },
+  {
+    risk: 'Agent reliability — bad drafts erode trust',
+    type: 'Product',
+    mitigation: 'Every agent output is a draft for review. Confidence scores visible. Hard cap: confidence ≥0.6 to surface; below that, route to a human. Audit the misses weekly.'
+  },
+  {
+    risk: 'Time-tracking adoption stalls below 90%',
+    type: 'Adoption',
+    mitigation: 'Pair it with what PPMs already want — capacity visibility + fair allocation. Frame it as "you get a clearer picture of your own work," not as a compliance ask.'
+  },
+  {
+    risk: 'Vendor lock-in on Airtable / Linear',
+    type: 'Product',
+    mitigation: 'Schema is portable. Every dataset has a documented export path. Could lift to Postgres + Jira inside a quarter if either vendor exit becomes necessary.'
+  }
 ];
 
 // =================== UI ===================
@@ -65,12 +179,24 @@ function H2({ kicker, children, sub }) {
   );
 }
 
-function RiskBadge({ children }) {
+function RiskTypeBadge({ children }) {
   const c = children.toLowerCase();
-  const tone = c === 'high' ? 'text-sred bg-red-50 border-red-200'
-            : c === 'medium' ? 'text-syellow bg-orange-50 border-orange-200'
-            : 'text-sgreen bg-emerald-50 border-emerald-200';
-  return <span className={`inline-block text-[11px] font-medium border rounded px-2 py-0.5 ${tone}`}>{children}</span>;
+  const tone = c === 'strategic' ? 'text-sfblue bg-sky-50 border-sky-200'
+            : c === 'adoption'   ? 'text-syellow bg-orange-50 border-orange-200'
+            : c === 'political'  ? 'text-sred bg-red-50 border-red-200'
+            : c === 'product'    ? 'text-sgreen bg-emerald-50 border-emerald-200'
+            : 'text-sfmuted bg-slate-50 border-slate-200';
+  return <span className={`inline-block text-[10px] font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${tone}`}>{children}</span>;
+}
+
+function VerdictBadge({ children }) {
+  const c = children.toLowerCase();
+  const tone = c === 'build'       ? 'text-sfblue bg-sky-50 border-sky-200'
+            : c === 'buy'          ? 'text-sgreen bg-emerald-50 border-emerald-200'
+            : c === 'reuse'        ? 'text-syellow bg-orange-50 border-orange-200'
+            : c === 'buy + wrap'   ? 'text-sfdeep bg-slate-100 border-slate-300'
+            : 'text-sfmuted bg-slate-50 border-slate-200';
+  return <span className={`inline-block text-[10px] font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${tone}`}>{children}</span>;
 }
 
 // =================== MAIN ===================
@@ -78,23 +204,23 @@ export default function HowIBuilt() {
   return (
     <div className="space-y-10 max-w-[1100px]">
 
-      {/* HERO — clean, no gradient, no icon */}
+      {/* HERO */}
       <header>
         <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold">About</div>
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-sfnavy leading-[1.05] tracking-tight mt-2">About this workspace.</h1>
         <p className="text-base text-sfmuted mt-4 leading-relaxed max-w-2xl">
-          Design philosophy, system architecture, integration points, and the path to production — including the risks to manage along the way.
+          The strategic story: how this workspace came together, how it scales to production across 12 months, and how it becomes a product the SPM team adopts, maintains, and trusts.
         </p>
         <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Designed for:</strong> the Strategic Portfolio Operations Manager (Lead) running data + tooling for DET's SPM team. Workspace centers on FY27 SPM pillars P02 (Data &amp; Systems Optimization) and P03 (Tooling Enablement) across the Airtable / Linear / Tableau / Slack stack serving 7 Pillar Portfolio Managers and ~250 initiatives.
+          <strong className="text-sfnavy not-italic">Designed for:</strong> the Strategic Portfolio Operations Manager (Lead) running data + tooling for DET's SPM team. Centered on FY27 SPM pillars P02 (Data &amp; Systems Optimization) and P03 (Tooling Enablement) across the Airtable / Linear / Tableau / Slack stack serving 7 Pillar Portfolio Managers and ~250 initiatives.
         </p>
       </header>
 
       <hr className="border-slate-200" />
 
-      {/* FY27 SPM 5 PILLARS — role context */}
+      {/* 00 · FY27 SPM 5 PILLARS */}
       <section className="rounded-lg border border-sfblue/30 bg-sky-50/60 p-5">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">00 · Role frame · FY27 SPM strategy</div>
+        <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">00 · Strategy fit · FY27 SPM</div>
         <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">5 strategic pillars · the role's home is P02 + P03</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-sm">
           <div className="rounded-md border border-slate-200 bg-white p-3">
@@ -136,7 +262,7 @@ export default function HowIBuilt() {
 
       <hr className="border-slate-200" />
 
-      {/* THE RENOVATION — what's actually being changed */}
+      {/* 01 · THE RENOVATION */}
       <section className="rounded-lg border border-amber-200 bg-amber-50/60 p-5">
         <div className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-2">01 · Context · The renovation</div>
         <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">What's being rebuilt — and what stays</h2>
@@ -169,176 +295,185 @@ export default function HowIBuilt() {
 
       <hr className="border-slate-200" />
 
-      {/* DESIGN DECISIONS */}
+      {/* 02 · HOW IT CAME TOGETHER */}
       <section>
-        <H2 kicker="01 · Approach" sub="Nine trade-offs that shape the product. Each is defensible — not a default.">
-          Design decisions
+        <H2 kicker="02 · The thinking" sub="Three lenses on how this workspace came together: what was observed in the current state, the principles that shaped the response, and the choices about what to leave out.">
+          How this workspace came together
         </H2>
-        <div className="border border-slate-200 rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-sfbg">
-              <tr className="text-left text-[11px] uppercase tracking-wider text-sfmuted">
-                <th className="py-3 px-4 font-semibold w-44">Decision</th>
-                <th className="py-3 px-4 font-semibold">What I chose</th>
-                <th className="py-3 px-4 font-semibold">Why</th>
-              </tr>
-            </thead>
-            <tbody>
-              {DECISIONS.map((d, i) => (
-                <tr key={i} className={`align-top ${i < DECISIONS.length - 1 ? 'border-b border-slate-100' : ''}`}>
-                  <td className="py-3 px-4 font-semibold text-sfnavy">{d.d}</td>
-                  <td className="py-3 px-4 text-sfnavy">{d.chose}</td>
-                  <td className="py-3 px-4 text-sfmuted leading-relaxed">{d.why}</td>
-                </tr>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          <div className="border border-red-200 bg-red-50/40 rounded-lg p-4">
+            <div className="text-[10px] uppercase tracking-wider text-sred font-bold mb-2">Observed</div>
+            <ul className="space-y-2 text-sm text-sfdeep leading-relaxed">
+              {OBSERVATIONS.map((o, i) => (
+                <li key={i} className="flex gap-2"><span className="text-sred flex-shrink-0">·</span><span>{o}</span></li>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+            </ul>
+          </div>
 
-      <hr className="border-slate-200" />
-
-      {/* SYSTEM ARCHITECTURE */}
-      <section>
-        <H2 kicker="02 · Structure" sub="Four layers, each with a single responsibility. Designed to lift to production with the data layer connected to real source systems.">
-          System architecture
-        </H2>
-        <div className="border border-slate-200 rounded-lg divide-y divide-slate-200 overflow-hidden">
-          {LAYERS.map((layer, i) => (
-            <div key={layer.name} className="py-4 px-5 bg-white">
-              <div className="flex items-baseline gap-3">
-                <span className="text-[11px] uppercase tracking-wider text-sfmuted font-mono w-6">{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-base font-serif font-bold text-sfnavy">{layer.name}</span>
-              </div>
-              <p className="text-xs text-sfdeep mt-1 ml-9 font-mono leading-relaxed">{layer.items}</p>
-              <p className="text-[11px] text-sfmuted mt-1 ml-9 italic leading-relaxed">{layer.note}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <hr className="border-slate-200" />
-
-      {/* INTEGRATION POINTS */}
-      <section>
-        <H2 kicker="03 · Connections" sub="Production connectors needed to lift this from demo to live system. One connector per source — small surface area, big leverage.">
-          Integration points
-        </H2>
-        <div className="border border-slate-200 rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-sfbg">
-              <tr className="text-left text-[11px] uppercase tracking-wider text-sfmuted">
-                <th className="py-3 px-4 font-semibold">Source system</th>
-                <th className="py-3 px-4 font-semibold">Feeds</th>
-                <th className="py-3 px-4 font-semibold">Connection</th>
-                <th className="py-3 px-4 font-semibold">Refresh</th>
-              </tr>
-            </thead>
-            <tbody>
-              {INTEGRATIONS.map((c, i) => (
-                <tr key={i} className={`align-top ${i < INTEGRATIONS.length - 1 ? 'border-b border-slate-100' : ''}`}>
-                  <td className="py-3 px-4">
-                    <div className="font-semibold text-sfnavy">{c.source}</div>
-                    <div className="text-[11px] text-sfmuted mt-0.5 leading-relaxed">{c.notes}</div>
-                  </td>
-                  <td className="py-3 px-4 font-mono text-[12px] text-sfdeep">{c.feeds}</td>
-                  <td className="py-3 px-4 text-sfmuted text-xs">{c.type}</td>
-                  <td className="py-3 px-4 text-sfmuted text-xs">{c.refresh}</td>
-                </tr>
+          <div className="border border-sfblue/30 bg-sky-50/40 rounded-lg p-4">
+            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold mb-2">Principles applied</div>
+            <ul className="space-y-3 text-sm text-sfdeep leading-relaxed">
+              {PRINCIPLES.map((p, i) => (
+                <li key={i}>
+                  <div className="font-serif font-bold text-sfnavy">{p.p}</div>
+                  <div className="text-xs text-sfmuted mt-0.5 leading-relaxed">{p.why}</div>
+                </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+          </div>
+
+          <div className="border border-emerald-200 bg-emerald-50/40 rounded-lg p-4">
+            <div className="text-[10px] uppercase tracking-wider text-sgreen font-bold mb-2">Scope discipline</div>
+            <div className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold mb-1">In</div>
+            <ul className="space-y-1 text-xs text-sfdeep leading-relaxed mb-3">
+              {SCOPE_IN.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-emerald-600 flex-shrink-0">+</span><span>{s}</span></li>)}
+            </ul>
+            <div className="text-[10px] uppercase tracking-wider text-sred font-bold mb-1">Deliberately out</div>
+            <ul className="space-y-1 text-xs text-sfdeep leading-relaxed">
+              {SCOPE_OUT.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-sred flex-shrink-0">−</span><span>{s}</span></li>)}
+            </ul>
+          </div>
+
         </div>
       </section>
 
       <hr className="border-slate-200" />
 
-      {/* POCs */}
+      {/* 03 · PATH TO PRODUCTION */}
       <section>
-        <H2 kicker="04 · Path to production" sub="Five progressive proof-of-concepts. Each isolates one risk and produces a measurable answer before broader rollout.">
-          POCs
+        <H2 kicker="03 · Path to production" sub="Five phases over 12 months that turn the prototype into a live workspace running on real DET data. Each phase delivers standalone value — stopping at any phase still leaves the org better off.">
+          Path to production
         </H2>
         <div className="space-y-3">
-          {POCS.map(p => (
+          {PROD_PHASES.map(p => (
             <article key={p.n} className="border border-slate-200 rounded-lg p-5 bg-white">
               <header className="flex items-baseline gap-3 flex-wrap mb-3">
-                <span className="text-[11px] uppercase tracking-wider text-sfblue font-mono">POC {String(p.n).padStart(2, '0')}</span>
+                <span className="text-[11px] uppercase tracking-wider text-sfblue font-mono">Phase {String(p.n).padStart(2, '0')}</span>
                 <h3 className="text-base font-serif font-bold text-sfnavy">{p.title}</h3>
-                <span className="text-[11px] text-sfmuted ml-auto">{p.duration} · {p.scope}</span>
+                <span className="text-[11px] text-sfmuted">· {p.duration}</span>
+                <span className="text-[11px] text-sfmuted ml-auto italic max-w-md text-right">{p.scope}</span>
               </header>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider text-sfmuted font-semibold mb-1">Goal</div>
-                  <p className="text-sfnavy leading-relaxed">{p.goal}</p>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-sm">
+                <div className="md:col-span-7">
+                  <div className="text-[10px] uppercase tracking-wider text-sfmuted font-semibold mb-1.5">Moves</div>
+                  <ul className="space-y-1.5">
+                    {p.moves.map((m, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sfdeep leading-relaxed">
+                        <span className="text-sfblue font-mono text-xs flex-shrink-0 mt-0.5">{String(i + 1).padStart(2, '0')}</span>
+                        <span>{m}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider text-sfmuted font-semibold mb-1">Measure</div>
-                  <p className="text-sfnavy leading-relaxed">{p.measure}</p>
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider text-sfmuted font-semibold mb-1">Success</div>
-                  <p className="text-sfnavy leading-relaxed">{p.success}</p>
+                <div className="md:col-span-5 border-l border-slate-200 pl-4">
+                  <div className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold mb-1.5">Exit criteria</div>
+                  <p className="text-sfdeep leading-relaxed">{p.exit}</p>
                 </div>
               </div>
             </article>
           ))}
         </div>
+        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+          Each phase is an independent win. Sponsor pivots, leadership changes, or budget cuts don't kill the program — they just stop it at the last completed phase, with that phase's value already realized.
+        </p>
       </section>
 
       <hr className="border-slate-200" />
 
-      {/* RISKS */}
+      {/* 04 · PATH TO A PRODUCT */}
       <section>
-        <H2 kicker="05 · What could go wrong" sub="The mitigations are encoded in the architecture — not afterthoughts.">
-          Risks &amp; mitigations
+        <H2 kicker="04 · Path to a product" sub="How the workspace stops being a prototype and starts being a product the SPM team adopts, maintains, and recommends. Four moves: an adoption funnel, a measurable value model, build-vs-buy discipline, and a clear ownership structure.">
+          Path to a product
         </H2>
-        <div className="border border-slate-200 rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-sfbg">
-              <tr className="text-left text-[11px] uppercase tracking-wider text-sfmuted">
-                <th className="py-3 px-4 font-semibold">Risk</th>
-                <th className="py-3 px-4 font-semibold w-24">Likelihood</th>
-                <th className="py-3 px-4 font-semibold w-24">Impact</th>
-                <th className="py-3 px-4 font-semibold">Mitigation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {RISKS.map((r, i) => (
-                <tr key={i} className={`align-top ${i < RISKS.length - 1 ? 'border-b border-slate-100' : ''}`}>
-                  <td className="py-3 px-4 font-semibold text-sfnavy">{r.risk}</td>
-                  <td className="py-3 px-4"><RiskBadge>{r.lvl}</RiskBadge></td>
-                  <td className="py-3 px-4"><RiskBadge>{r.imp}</RiskBadge></td>
-                  <td className="py-3 px-4 text-sfmuted leading-relaxed">{r.mitigation}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        {/* Adoption funnel */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
+          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
+            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04a · Adoption funnel</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Who uses it, and when</div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+            {ADOPTION_FUNNEL.map((a, i) => (
+              <div key={i} className="p-3">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">{a.stage}</div>
+                <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">{a.who}</div>
+                <p className="text-[11px] text-sfmuted mt-1.5 leading-snug">{a.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Value model */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
+          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
+            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04b · Value model</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">5 measurable outcomes the team will see</div>
+          </div>
+          <div className="divide-y divide-slate-200">
+            {VALUE_MODEL.map((v, i) => (
+              <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm">
+                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{v.metric}</div>
+                <div className="md:col-span-3 text-sfblue font-semibold font-mono text-[12px]">{v.target}</div>
+                <div className="md:col-span-6 text-xs text-sfmuted leading-relaxed">{v.how}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Build vs Buy */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
+          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
+            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04c · Build · Buy · Reuse</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">The IP is the operating model, not the infrastructure</div>
+          </div>
+          <div className="divide-y divide-slate-200">
+            {BUILD_VS_BUY.map((b, i) => (
+              <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm items-baseline">
+                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{b.area}</div>
+                <div className="md:col-span-2"><VerdictBadge>{b.verdict}</VerdictBadge></div>
+                <div className="md:col-span-7 text-xs text-sfmuted leading-relaxed">{b.detail}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Governance */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
+          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
+            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04d · Ownership &amp; governance</div>
+            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">A product needs an owner — here's the operating model</div>
+          </div>
+          <div className="divide-y divide-slate-200">
+            {GOVERNANCE.map((g, i) => (
+              <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm">
+                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{g.who}</div>
+                <div className="md:col-span-3 text-xs text-sfdeep leading-relaxed">{g.role}</div>
+                <div className="md:col-span-6 text-xs text-sfmuted leading-relaxed">{g.what}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       <hr className="border-slate-200" />
 
-      {/* TECH STACK */}
+      {/* 05 · STRATEGIC RISKS */}
       <section>
-        <H2 kicker="06 · Implementation">Tech stack</H2>
-        <dl className="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-4 text-sm">
-          <div>
-            <dt className="text-[11px] uppercase tracking-wider text-sfmuted font-semibold">Frontend</dt>
-            <dd className="text-sfnavy mt-1">React 18 · Vite · Tailwind 3 · Lucide</dd>
-          </div>
-          <div>
-            <dt className="text-[11px] uppercase tracking-wider text-sfmuted font-semibold">State</dt>
-            <dd className="text-sfnavy mt-1">React useState (no global store yet)</dd>
-          </div>
-          <div>
-            <dt className="text-[11px] uppercase tracking-wider text-sfmuted font-semibold">Data</dt>
-            <dd className="text-sfnavy mt-1">Mock JSON · target: Snowflake</dd>
-          </div>
-          <div>
-            <dt className="text-[11px] uppercase tracking-wider text-sfmuted font-semibold">Deploy</dt>
-            <dd className="text-sfnavy mt-1">Vercel · auto-deploy on git push</dd>
-          </div>
-        </dl>
+        <H2 kicker="05 · What could go wrong" sub="Strategic, adoption, political, and product risks — and how each is managed. Technical risks belong in a different document; these are the ones a Manager (Lead) actually thinks about.">
+          Strategic risks &amp; how to manage them
+        </H2>
+        <div className="space-y-2.5">
+          {STRATEGIC_RISKS.map((r, i) => (
+            <article key={i} className="border border-slate-200 rounded-lg p-4 bg-white">
+              <header className="flex items-baseline gap-3 flex-wrap mb-2">
+                <RiskTypeBadge>{r.type}</RiskTypeBadge>
+                <h3 className="text-sm font-serif font-bold text-sfnavy">{r.risk}</h3>
+              </header>
+              <p className="text-xs text-sfdeep leading-relaxed"><strong className="text-sfnavy">Mitigation —</strong> {r.mitigation}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
     </div>
