@@ -172,30 +172,30 @@ const STRATEGIC_RISKS = [
 function H2({ kicker, children, sub }) {
   return (
     <header className="mb-5">
-      {kicker && <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">{kicker}</div>}
-      <h2 className="text-xl font-serif font-bold text-sfnavy leading-tight">{children}</h2>
-      {sub && <p className="text-sm text-sfmuted mt-1.5 leading-relaxed max-w-2xl">{sub}</p>}
+      {kicker && <div className="text-[10px] uppercase tracking-[0.2em] text-sflight font-bold mb-2">{kicker}</div>}
+      <h2 className="text-xl font-serif font-bold text-white leading-tight">{children}</h2>
+      {sub && <p className="text-sm text-white/70 mt-1.5 leading-relaxed max-w-2xl">{sub}</p>}
     </header>
   );
 }
 
 function RiskTypeBadge({ children }) {
   const c = children.toLowerCase();
-  const tone = c === 'strategic' ? 'text-sfblue bg-sky-50 border-sky-200'
-            : c === 'adoption'   ? 'text-syellow bg-orange-50 border-orange-200'
-            : c === 'political'  ? 'text-sred bg-red-50 border-red-200'
-            : c === 'product'    ? 'text-sgreen bg-emerald-50 border-emerald-200'
-            : 'text-sfmuted bg-slate-50 border-slate-200';
+  const tone = c === 'strategic' ? 'text-sflight bg-sflight/15 border-sflight/40'
+            : c === 'adoption'   ? 'text-amber-300 bg-amber-500/15 border-amber-300/40'
+            : c === 'political'  ? 'text-red-300 bg-red-500/15 border-red-300/40'
+            : c === 'product'    ? 'text-emerald-300 bg-emerald-500/15 border-emerald-300/40'
+            : 'text-white/70 bg-white/5 border-white/15';
   return <span className={`inline-block text-[10px] font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${tone}`}>{children}</span>;
 }
 
 function VerdictBadge({ children }) {
   const c = children.toLowerCase();
-  const tone = c === 'build'       ? 'text-sfblue bg-sky-50 border-sky-200'
-            : c === 'buy'          ? 'text-sgreen bg-emerald-50 border-emerald-200'
-            : c === 'reuse'        ? 'text-syellow bg-orange-50 border-orange-200'
-            : c === 'buy + wrap'   ? 'text-sfdeep bg-slate-100 border-slate-300'
-            : 'text-sfmuted bg-slate-50 border-slate-200';
+  const tone = c === 'build'       ? 'text-sflight bg-sflight/15 border-sflight/40'
+            : c === 'buy'          ? 'text-emerald-300 bg-emerald-500/15 border-emerald-300/40'
+            : c === 'reuse'        ? 'text-amber-300 bg-amber-500/15 border-amber-300/40'
+            : c === 'buy + wrap'   ? 'text-white bg-white/10 border-white/25'
+            : 'text-white/70 bg-white/5 border-white/15';
   return <span className={`inline-block text-[10px] font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${tone}`}>{children}</span>;
 }
 
@@ -206,70 +206,70 @@ export default function HowIBuilt() {
 
       {/* HERO */}
       <header>
-        <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold">About</div>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-sfnavy leading-[1.05] tracking-tight mt-2">About this workspace.</h1>
-        <p className="text-base text-sfmuted mt-4 leading-relaxed max-w-2xl">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-sflight font-bold">About</div>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-white leading-[1.05] tracking-tight mt-2">About this workspace.</h1>
+        <p className="text-base text-white/80 mt-4 leading-relaxed max-w-2xl">
           The strategic story: how this workspace came together, how it scales to production across 12 months, and how it becomes a product the SPM team adopts, maintains, and trusts.
         </p>
-        <p className="text-sm text-sfmuted mt-3 leading-relaxed max-w-2xl italic">
-          <strong className="text-sfnavy not-italic">Designed for:</strong> the Strategic Portfolio Operations Manager (Lead) running data + tooling for DET's SPM team. Centered on FY27 SPM pillars P02 (Data &amp; Systems Optimization) and P03 (Tooling Enablement) across the Airtable / Linear / Tableau / Slack stack serving 7 Pillar Portfolio Managers and ~250 initiatives.
+        <p className="text-sm text-white/65 mt-3 leading-relaxed max-w-2xl italic">
+          <strong className="text-white not-italic">Designed for:</strong> the Strategic Portfolio Operations Manager (Lead) running data + tooling for DET's SPM team. Centered on FY27 SPM pillars P02 (Data &amp; Systems Optimization) and P03 (Tooling Enablement) across the Airtable / Linear / Tableau / Slack stack serving 7 Pillar Portfolio Managers and ~250 initiatives.
         </p>
       </header>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 00 · FY27 SPM 5 PILLARS */}
-      <section className="rounded-lg border border-sfblue/30 bg-sky-50/60 p-5">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-sfblue font-bold mb-2">00 · Strategy fit · FY27 SPM</div>
-        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">5 strategic pillars · the role's home is P02 + P03</h2>
+      <section className="rounded-xl border border-sflight/30 bg-sflight/10 p-5">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-sflight font-bold mb-2">00 · Strategy fit · FY27 SPM</div>
+        <h2 className="text-lg font-serif font-bold text-white mb-3">5 strategic pillars · the role's home is P02 + P03</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-sm">
-          <div className="rounded-md border border-slate-200 bg-white p-3">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P01</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Portfolio Planning</div>
-            <p className="text-[11px] text-sfmuted mt-1 leading-snug">Annual + quarterly cycles, intake taxonomy, OKR linkage.</p>
+          <div className="rounded-md border border-white/15 bg-white/5 p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-white/55 font-bold">P01</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Portfolio Planning</div>
+            <p className="text-[11px] text-white/65 mt-1 leading-snug">Annual + quarterly cycles, intake taxonomy, OKR linkage.</p>
           </div>
-          <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
+          <div className="rounded-md border-2 border-sflight bg-sflight/15 p-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P02</span>
-              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">ROLE HOME</span>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-sflight font-bold">P02</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sflight bg-white/10 border border-sflight/40 rounded px-1.5 py-0.5">ROLE HOME</span>
             </div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Data &amp; Systems Optimization</div>
-            <p className="text-[11px] text-sfdeep mt-1 leading-snug">Portfolio data foundation, governance, validation/reconciliation, Airtable schema, downstream warehouse.</p>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Data &amp; Systems Optimization</div>
+            <p className="text-[11px] text-white/85 mt-1 leading-snug">Portfolio data foundation, governance, validation/reconciliation, Airtable schema, downstream warehouse.</p>
           </div>
-          <div className="rounded-md border-2 border-sfblue bg-sfblue/10 p-3">
+          <div className="rounded-md border-2 border-sflight bg-sflight/15 p-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">P03</span>
-              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sfblue bg-white border border-sfblue/40 rounded px-1.5 py-0.5">ROLE HOME</span>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-sflight font-bold">P03</span>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-sflight bg-white/10 border border-sflight/40 rounded px-1.5 py-0.5">ROLE HOME</span>
             </div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Tooling Enablement</div>
-            <p className="text-[11px] text-sfdeep mt-1 leading-snug">Tier-1 support, integrations, automations, training. Owns Airtable · Linear · Tableau · Slack stack.</p>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Tooling Enablement</div>
+            <p className="text-[11px] text-white/85 mt-1 leading-snug">Tier-1 support, integrations, automations, training. Owns Airtable · Linear · Tableau · Slack stack.</p>
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-3">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P04</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Process Excellence &amp; Governance</div>
-            <p className="text-[11px] text-sfmuted mt-1 leading-snug">Operating procedures, stage-gate, governance workflows.</p>
+          <div className="rounded-md border border-white/15 bg-white/5 p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-white/55 font-bold">P04</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Process Excellence &amp; Governance</div>
+            <p className="text-[11px] text-white/65 mt-1 leading-snug">Operating procedures, stage-gate, governance workflows.</p>
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-3">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-sfmuted font-bold">P05</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Capacity Planning</div>
-            <p className="text-[11px] text-sfmuted mt-1 leading-snug">FTE supply/demand, time-tracking compliance, allocation data.</p>
+          <div className="rounded-md border border-white/15 bg-white/5 p-3">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-white/55 font-bold">P05</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Capacity Planning</div>
+            <p className="text-[11px] text-white/65 mt-1 leading-snug">FTE supply/demand, time-tracking compliance, allocation data.</p>
           </div>
         </div>
-        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+        <p className="text-xs text-white/65 mt-4 leading-relaxed italic">
           Role focus on P02 + P03 — but the workspace stays aware of all five so SPM Ops contributes data and tooling support into Planning, Process, and Capacity workflows owned by other SPM team members.
         </p>
       </section>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 01 · THE RENOVATION */}
-      <section className="rounded-lg border border-amber-200 bg-amber-50/60 p-5">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-2">01 · Context · The renovation</div>
-        <h2 className="text-lg font-serif font-bold text-sfnavy mb-3">What's being rebuilt — and what stays</h2>
+      <section className="rounded-xl border border-amber-300/30 bg-amber-500/10 p-5">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-amber-300 font-bold mb-2">01 · Context · The renovation</div>
+        <h2 className="text-lg font-serif font-bold text-white mb-3">What's being rebuilt — and what stays</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-emerald-700 font-bold mb-1.5">Stays · the wood structure</div>
-            <ul className="space-y-1 text-sfdeep leading-relaxed">
+            <div className="text-[11px] uppercase tracking-wider text-emerald-300 font-bold mb-1.5">Stays · the wood structure</div>
+            <ul className="space-y-1 text-white/85 leading-relaxed">
               <li>· The 7 DET pillars and their PPMs (the customers of this role)</li>
               <li>· Airtable as the portfolio data home; Linear as the work-item layer</li>
               <li>· Salesforce-on-Salesforce as the foundational stack</li>
@@ -278,8 +278,8 @@ export default function HowIBuilt() {
             </ul>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-amber-700 font-bold mb-1.5">Changes · what this role owns</div>
-            <ul className="space-y-1 text-sfdeep leading-relaxed">
+            <div className="text-[11px] uppercase tracking-wider text-amber-300 font-bold mb-1.5">Changes · what this role owns</div>
+            <ul className="space-y-1 text-white/85 leading-relaxed">
               <li>· Data Quality &amp; Governance Program — validation rules, audits, reconciliation cadence</li>
               <li>· Tooling support desk: SLAs, intake routing, runbooks, enablement docs</li>
               <li>· Dashboard catalog: trusted exec + PPM views with documented metric lineage</li>
@@ -288,12 +288,12 @@ export default function HowIBuilt() {
             </ul>
           </div>
         </div>
-        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+        <p className="text-xs text-white/65 mt-4 leading-relaxed italic">
           Charter refocused 6 weeks ago. The SPM team is scaling and adding a Manager (Lead) role to professionalize the data + tooling layer underneath the 5 FY27 pillars. The role-holder owns it end-to-end across Airtable, Linear, Tableau, and Slack.
         </p>
       </section>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 02 · HOW IT CAME TOGETHER */}
       <section>
@@ -302,43 +302,43 @@ export default function HowIBuilt() {
         </H2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-          <div className="border border-red-200 bg-red-50/40 rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-wider text-sred font-bold mb-2">Observed</div>
-            <ul className="space-y-2 text-sm text-sfdeep leading-relaxed">
+          <div className="border border-red-300/30 bg-red-500/10 rounded-xl p-4">
+            <div className="text-[10px] uppercase tracking-wider text-red-300 font-bold mb-2">Observed</div>
+            <ul className="space-y-2 text-sm text-white/85 leading-relaxed">
               {OBSERVATIONS.map((o, i) => (
-                <li key={i} className="flex gap-2"><span className="text-sred flex-shrink-0">·</span><span>{o}</span></li>
+                <li key={i} className="flex gap-2"><span className="text-red-300 flex-shrink-0">·</span><span>{o}</span></li>
               ))}
             </ul>
           </div>
 
-          <div className="border border-sfblue/30 bg-sky-50/40 rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold mb-2">Principles applied</div>
-            <ul className="space-y-3 text-sm text-sfdeep leading-relaxed">
+          <div className="border border-sflight/30 bg-sflight/10 rounded-xl p-4">
+            <div className="text-[10px] uppercase tracking-wider text-sflight font-bold mb-2">Principles applied</div>
+            <ul className="space-y-3 text-sm text-white/85 leading-relaxed">
               {PRINCIPLES.map((p, i) => (
                 <li key={i}>
-                  <div className="font-serif font-bold text-sfnavy">{p.p}</div>
-                  <div className="text-xs text-sfmuted mt-0.5 leading-relaxed">{p.why}</div>
+                  <div className="font-serif font-bold text-white">{p.p}</div>
+                  <div className="text-xs text-white/65 mt-0.5 leading-relaxed">{p.why}</div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="border border-emerald-200 bg-emerald-50/40 rounded-lg p-4">
-            <div className="text-[10px] uppercase tracking-wider text-sgreen font-bold mb-2">Scope discipline</div>
-            <div className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold mb-1">In</div>
-            <ul className="space-y-1 text-xs text-sfdeep leading-relaxed mb-3">
-              {SCOPE_IN.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-emerald-600 flex-shrink-0">+</span><span>{s}</span></li>)}
+          <div className="border border-emerald-300/30 bg-emerald-500/10 rounded-xl p-4">
+            <div className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold mb-2">Scope discipline</div>
+            <div className="text-[10px] uppercase tracking-wider text-emerald-300 font-bold mb-1">In</div>
+            <ul className="space-y-1 text-xs text-white/85 leading-relaxed mb-3">
+              {SCOPE_IN.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-emerald-300 flex-shrink-0">+</span><span>{s}</span></li>)}
             </ul>
-            <div className="text-[10px] uppercase tracking-wider text-sred font-bold mb-1">Deliberately out</div>
-            <ul className="space-y-1 text-xs text-sfdeep leading-relaxed">
-              {SCOPE_OUT.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-sred flex-shrink-0">−</span><span>{s}</span></li>)}
+            <div className="text-[10px] uppercase tracking-wider text-red-300 font-bold mb-1">Deliberately out</div>
+            <ul className="space-y-1 text-xs text-white/85 leading-relaxed">
+              {SCOPE_OUT.map((s, i) => <li key={i} className="flex gap-1.5"><span className="text-red-300 flex-shrink-0">−</span><span>{s}</span></li>)}
             </ul>
           </div>
 
         </div>
       </section>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 03 · PATH TO PRODUCTION */}
       <section>
@@ -347,39 +347,39 @@ export default function HowIBuilt() {
         </H2>
         <div className="space-y-3">
           {PROD_PHASES.map(p => (
-            <article key={p.n} className="border border-slate-200 rounded-lg p-5 bg-white">
+            <article key={p.n} className="border border-white/15 rounded-xl p-5 bg-white/5">
               <header className="flex items-baseline gap-3 flex-wrap mb-3">
-                <span className="text-[11px] uppercase tracking-wider text-sfblue font-mono">Phase {String(p.n).padStart(2, '0')}</span>
-                <h3 className="text-base font-serif font-bold text-sfnavy">{p.title}</h3>
-                <span className="text-[11px] text-sfmuted">· {p.duration}</span>
-                <span className="text-[11px] text-sfmuted ml-auto italic max-w-md text-right">{p.scope}</span>
+                <span className="text-[11px] uppercase tracking-wider text-sflight font-mono font-bold">Phase {String(p.n).padStart(2, '0')}</span>
+                <h3 className="text-base font-serif font-bold text-white">{p.title}</h3>
+                <span className="text-[11px] text-white/55">· {p.duration}</span>
+                <span className="text-[11px] text-white/55 ml-auto italic max-w-md text-right">{p.scope}</span>
               </header>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-sm">
                 <div className="md:col-span-7">
-                  <div className="text-[10px] uppercase tracking-wider text-sfmuted font-semibold mb-1.5">Moves</div>
+                  <div className="text-[10px] uppercase tracking-wider text-white/55 font-semibold mb-1.5">Moves</div>
                   <ul className="space-y-1.5">
                     {p.moves.map((m, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sfdeep leading-relaxed">
-                        <span className="text-sfblue font-mono text-xs flex-shrink-0 mt-0.5">{String(i + 1).padStart(2, '0')}</span>
+                      <li key={i} className="flex items-start gap-2 text-white/85 leading-relaxed">
+                        <span className="text-sflight font-mono text-xs flex-shrink-0 mt-0.5 font-bold">{String(i + 1).padStart(2, '0')}</span>
                         <span>{m}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="md:col-span-5 border-l border-slate-200 pl-4">
-                  <div className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold mb-1.5">Exit criteria</div>
-                  <p className="text-sfdeep leading-relaxed">{p.exit}</p>
+                <div className="md:col-span-5 border-l border-white/10 pl-4">
+                  <div className="text-[10px] uppercase tracking-wider text-emerald-300 font-semibold mb-1.5">Exit criteria</div>
+                  <p className="text-white/85 leading-relaxed">{p.exit}</p>
                 </div>
               </div>
             </article>
           ))}
         </div>
-        <p className="text-xs text-sfmuted mt-4 leading-relaxed italic">
+        <p className="text-xs text-white/65 mt-4 leading-relaxed italic">
           Each phase is an independent win. Sponsor pivots, leadership changes, or budget cuts don't kill the program — they just stop it at the last completed phase, with that phase's value already realized.
         </p>
       </section>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 04 · PATH TO A PRODUCT */}
       <section>
@@ -388,75 +388,75 @@ export default function HowIBuilt() {
         </H2>
 
         {/* Adoption funnel */}
-        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
-          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
-            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04a · Adoption funnel</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">Who uses it, and when</div>
+        <div className="border border-white/15 rounded-xl overflow-hidden mb-5 bg-white/5">
+          <div className="bg-white/5 px-4 py-2.5 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-wider text-sflight font-bold">04a · Adoption funnel</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">Who uses it, and when</div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-white/10">
             {ADOPTION_FUNNEL.map((a, i) => (
               <div key={i} className="p-3">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-sfblue font-bold">{a.stage}</div>
-                <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">{a.who}</div>
-                <p className="text-[11px] text-sfmuted mt-1.5 leading-snug">{a.detail}</p>
+                <div className="text-[10px] font-mono uppercase tracking-wider text-sflight font-bold">{a.stage}</div>
+                <div className="text-sm font-serif font-bold text-white mt-0.5">{a.who}</div>
+                <p className="text-[11px] text-white/65 mt-1.5 leading-snug">{a.detail}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Value model */}
-        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
-          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
-            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04b · Value model</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">5 measurable outcomes the team will see</div>
+        <div className="border border-white/15 rounded-xl overflow-hidden mb-5 bg-white/5">
+          <div className="bg-white/5 px-4 py-2.5 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-wider text-sflight font-bold">04b · Value model</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">5 measurable outcomes the team will see</div>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-white/10">
             {VALUE_MODEL.map((v, i) => (
               <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm">
-                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{v.metric}</div>
-                <div className="md:col-span-3 text-sfblue font-semibold font-mono text-[12px]">{v.target}</div>
-                <div className="md:col-span-6 text-xs text-sfmuted leading-relaxed">{v.how}</div>
+                <div className="md:col-span-3 font-serif font-bold text-white">{v.metric}</div>
+                <div className="md:col-span-3 text-sflight font-semibold font-mono text-[12px]">{v.target}</div>
+                <div className="md:col-span-6 text-xs text-white/70 leading-relaxed">{v.how}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Build vs Buy */}
-        <div className="border border-slate-200 rounded-lg overflow-hidden mb-5 bg-white">
-          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
-            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04c · Build · Buy · Reuse</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">The IP is the operating model, not the infrastructure</div>
+        <div className="border border-white/15 rounded-xl overflow-hidden mb-5 bg-white/5">
+          <div className="bg-white/5 px-4 py-2.5 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-wider text-sflight font-bold">04c · Build · Buy · Reuse</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">The IP is the operating model, not the infrastructure</div>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-white/10">
             {BUILD_VS_BUY.map((b, i) => (
               <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm items-baseline">
-                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{b.area}</div>
+                <div className="md:col-span-3 font-serif font-bold text-white">{b.area}</div>
                 <div className="md:col-span-2"><VerdictBadge>{b.verdict}</VerdictBadge></div>
-                <div className="md:col-span-7 text-xs text-sfmuted leading-relaxed">{b.detail}</div>
+                <div className="md:col-span-7 text-xs text-white/70 leading-relaxed">{b.detail}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Governance */}
-        <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
-          <div className="bg-sfbg px-4 py-2.5 border-b border-slate-200">
-            <div className="text-[10px] uppercase tracking-wider text-sfblue font-bold">04d · Ownership &amp; governance</div>
-            <div className="text-sm font-serif font-bold text-sfnavy mt-0.5">A product needs an owner — here's the operating model</div>
+        <div className="border border-white/15 rounded-xl overflow-hidden bg-white/5">
+          <div className="bg-white/5 px-4 py-2.5 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-wider text-sflight font-bold">04d · Ownership &amp; governance</div>
+            <div className="text-sm font-serif font-bold text-white mt-0.5">A product needs an owner — here's the operating model</div>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-white/10">
             {GOVERNANCE.map((g, i) => (
               <div key={i} className="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 text-sm">
-                <div className="md:col-span-3 font-serif font-bold text-sfnavy">{g.who}</div>
-                <div className="md:col-span-3 text-xs text-sfdeep leading-relaxed">{g.role}</div>
-                <div className="md:col-span-6 text-xs text-sfmuted leading-relaxed">{g.what}</div>
+                <div className="md:col-span-3 font-serif font-bold text-white">{g.who}</div>
+                <div className="md:col-span-3 text-xs text-white/85 leading-relaxed">{g.role}</div>
+                <div className="md:col-span-6 text-xs text-white/70 leading-relaxed">{g.what}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <hr className="border-slate-200" />
+      <hr className="border-white/10" />
 
       {/* 05 · STRATEGIC RISKS */}
       <section>
@@ -465,12 +465,12 @@ export default function HowIBuilt() {
         </H2>
         <div className="space-y-2.5">
           {STRATEGIC_RISKS.map((r, i) => (
-            <article key={i} className="border border-slate-200 rounded-lg p-4 bg-white">
+            <article key={i} className="border border-white/15 rounded-xl p-4 bg-white/5">
               <header className="flex items-baseline gap-3 flex-wrap mb-2">
                 <RiskTypeBadge>{r.type}</RiskTypeBadge>
-                <h3 className="text-sm font-serif font-bold text-sfnavy">{r.risk}</h3>
+                <h3 className="text-sm font-serif font-bold text-white">{r.risk}</h3>
               </header>
-              <p className="text-xs text-sfdeep leading-relaxed"><strong className="text-sfnavy">Mitigation —</strong> {r.mitigation}</p>
+              <p className="text-xs text-white/85 leading-relaxed"><strong className="text-white">Mitigation —</strong> {r.mitigation}</p>
             </article>
           ))}
         </div>
