@@ -25,35 +25,43 @@ const TABLES = [
   {
     icon: FolderTree,
     name: 'initiative_inventory',
-    why: 'The master taxonomy of the portfolio — every initiative, exactly once. This is the canonical Source of Truth. Pillar, stage, OKR mapping, sponsor, budget, FTE, last_reviewed all live here. Every other table joins back to this one.',
+    why: 'The master taxonomy of the portfolio — every initiative, exactly once. This is the canonical Source of Truth. Pillar, stage, OKR mapping, sponsor, budget, FTE, last_reviewed, and AI token usage all live here. Every other table joins back to this one.',
     ddl: `CREATE TABLE det_portfolio.initiative_inventory (
-  initiative_id     VARCHAR(10) PRIMARY KEY,
-  initiative_name   VARCHAR(200) NOT NULL,
-  pillar            VARCHAR(50)  NOT NULL,
-  stage             VARCHAR(4)   NOT NULL,
-  status            VARCHAR(20)  NOT NULL,
-  budget_allocated  DECIMAL(12,2),
-  budget_spent      DECIMAL(12,2),
-  ftes_allocated    INTEGER,
-  start_date        DATE,
-  target_launch     DATE,
-  pillar_pm         VARCHAR(100),
-  exec_sponsor      VARCHAR(100),
-  okr_mapping       ARRAY,
-  last_reviewed     DATE,
-  created_at        TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-  updated_at        TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+  initiative_id      VARCHAR(10) PRIMARY KEY,
+  initiative_name    VARCHAR(200) NOT NULL,
+  pillar             VARCHAR(50)  NOT NULL,
+  stage              VARCHAR(4)   NOT NULL,
+  status             VARCHAR(20)  NOT NULL,
+  budget_allocated   DECIMAL(12,2),
+  budget_spent       DECIMAL(12,2),
+  ftes_allocated     INTEGER,
+  start_date         DATE,
+  target_launch      DATE,
+  pillar_pm          VARCHAR(100),
+  exec_sponsor       VARCHAR(100),
+  okr_mapping        ARRAY,
+  last_reviewed      DATE,
+  -- AI token usage (new FY27 dimension — added Jun 2026 per SPM Lead direction)
+  token_usage_monthly_m   DECIMAL(8,2),    -- millions of tokens consumed in the trailing 30d
+  token_usage_trend_pct   DECIMAL(5,2),    -- MoM % change
+  token_usage_status      VARCHAR(20),     -- normal | high | runaway
+  created_at         TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
+  updated_at         TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
 );
 
-CREATE INDEX idx_initiative_pillar    ON initiative_inventory(pillar);
-CREATE INDEX idx_initiative_stage     ON initiative_inventory(stage);
-CREATE INDEX idx_initiative_status    ON initiative_inventory(status);`,
+CREATE INDEX idx_initiative_pillar         ON initiative_inventory(pillar);
+CREATE INDEX idx_initiative_stage          ON initiative_inventory(stage);
+CREATE INDEX idx_initiative_status         ON initiative_inventory(status);
+CREATE INDEX idx_initiative_token_status   ON initiative_inventory(token_usage_status);`,
     sample: [
-      ['INI-101', 'Agentforce Internal Rollout', 'dap', 'G2', 'on_track', '$2.4M', '9 FTE', "['V25-Agentforce']"],
-      ['INI-102', 'Workday HRIS Migration',     'ept', 'G2', 'off_track','$3.1M', '12 FTE',"['V25-Margin']"],
-      ['INI-115', 'AI Governance Framework',    'ts',  'G1', 'at_risk',  '$850K', '4 FTE', "['V25-Trust']"]
+      ['INI-101', 'Agentforce Internal Rollout', 'dap', 'G2', 'on_track', '$2.4M', '9 FTE', '38.7M', '+24%'],
+      ['INI-117', 'Agentic Tooling Strategy POC','etr', 'G1', 'on_track', '$680K', '4 FTE', '22.4M', '+41%'],
+      ['INI-120', 'In-house AI Coding Workbench','etr', 'G2', 'on_track', '$540K', '4 FTE', '14.6M', '+33%'],
+      ['INI-108', 'Customer 360 Voice (Genie+)', 'cxt', 'G0', 'on_track', '$1.2M', '3 FTE', '4.2M',  '+8%'],
+      ['INI-115', 'AI Governance Framework',     'ts',  'G1', 'at_risk',  '$850K', '4 FTE', '1.8M',  '+12%'],
+      ['INI-102', 'Workday HRIS Migration',      'ept', 'G2', 'off_track','$3.1M', '12 FTE','—',     '—']
     ],
-    sampleHeaders: ['initiative_id', 'name', 'pillar', 'stage', 'status', 'budget', 'fte', 'okr_mapping']
+    sampleHeaders: ['initiative_id', 'name', 'pillar', 'stage', 'status', 'budget', 'fte', 'tokens/mo', 'trend']
   },
   {
     icon: ListChecks,

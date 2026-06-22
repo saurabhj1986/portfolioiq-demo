@@ -189,7 +189,7 @@ function getPersonaAttention(persona) {
     tiles: [
       { kicker: 'Rows reconciled · last 7d',     value: '1,842', sub: 'Airtable + Linear · 14 active discrepancies open',          accent: 'red' },
       { kicker: 'Support tickets resolved · QTD',value: '127',   sub: '94% within 8h SLA · median TTR 4h · 9 open',                 accent: 'orange' },
-      { kicker: 'Dashboards built · last 30d',   value: '6',     sub: '2 exec · 4 PPM views · all on Tableau · 5 stale to refresh', accent: 'amber' },
+      { kicker: 'Token usage · monthly',         value: '81.7M', sub: '5 AI initiatives · +24% MoM · INI-117 spiking +41%',         accent: 'amber' },
       { kicker: 'Adoption rates improved',       value: '+18pts',sub: 'Time tracking 73→91% · Linear hygiene 64→82% · QoQ',         accent: 'green' }
     ],
     stats: [
