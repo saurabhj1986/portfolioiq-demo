@@ -272,6 +272,8 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
   const personaPillar = persona?.pillarFilter || null;
   const [pillarFilter, setPillarFilter] = useState(personaPillar || 'all');
   const [statusFilter, setStatusFilter] = useState('all');
+  // 'all' | 'org' (only what we govern) | 'spm' (only what SPM Ops itself owns)
+  const [scopeFilter, setScopeFilter] = useState('all');
   const [openChip, setOpenChip] = useState(null);
 
   // Update local filter when persona changes
@@ -291,9 +293,12 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
   const filtered = useMemo(() => {
     return SCOPED_INITIATIVES.filter(i =>
       (pillarFilter === 'all' || i.pillar === pillarFilter) &&
-      (statusFilter === 'all' || i.status === statusFilter)
+      (statusFilter === 'all' || i.status === statusFilter) &&
+      (scopeFilter === 'all' || (scopeFilter === 'spm' ? i.metaInitiative === true : !i.metaInitiative))
     );
-  }, [SCOPED_INITIATIVES, pillarFilter, statusFilter]);
+  }, [SCOPED_INITIATIVES, pillarFilter, statusFilter, scopeFilter]);
+
+  const spmInternalCount = SCOPED_INITIATIVES.filter(i => i.metaInitiative === true).length;
 
   const kpiValues = useMemo(() => {
     const active = SCOPED_INITIATIVES.filter(i => i.status !== 'complete');
@@ -545,7 +550,31 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
               sub={`${filtered.length} of ${INITIATIVES.length} shown.`}
             />
           </div>
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-xs flex-wrap">
+            {/* Scope filter: what we govern vs what SPM Ops itself delivers */}
+            <div className="flex rounded-md overflow-hidden border border-slate-300 bg-white">
+              <button
+                onClick={() => setScopeFilter('all')}
+                className={`px-2.5 py-1 transition ${scopeFilter === 'all' ? 'bg-sfnavy text-white font-semibold' : 'text-sfdeep hover:bg-sfbg'}`}
+                title="Show everything"
+              >
+                All
+              </button>
+              <button
+                onClick={() => setScopeFilter('org')}
+                className={`px-2.5 py-1 border-l border-slate-300 transition ${scopeFilter === 'org' ? 'bg-sfnavy text-white font-semibold' : 'text-sfdeep hover:bg-sfbg'}`}
+                title="Only the DET org initiatives this team governs"
+              >
+                What we govern
+              </button>
+              <button
+                onClick={() => setScopeFilter('spm')}
+                className={`px-2.5 py-1 border-l border-slate-300 transition ${scopeFilter === 'spm' ? 'bg-sfnavy text-white font-semibold' : 'text-sfdeep hover:bg-sfbg'}`}
+                title="Only the SPM Ops team's own portfolio"
+              >
+                SPM internal <span className="ml-1 font-mono text-[10px] opacity-80">{spmInternalCount}</span>
+              </button>
+            </div>
             <select
               value={pillarFilter}
               onChange={e => setPillarFilter(e.target.value)}
@@ -594,7 +623,12 @@ export default function Dashboard({ navigateTo, activeTour, onStartTour, tourSte
                 return (
                   <tr key={i.id} className="border-b border-slate-100 hover:bg-white/5 transition-colors">
                     <td className="py-2 pr-3 font-mono text-xs text-sfmuted">{i.id}</td>
-                    <td className="py-2 pr-3 font-medium text-sfnavy">{i.name}</td>
+                    <td className="py-2 pr-3 font-medium text-sfnavy">
+                      {i.name}
+                      {i.metaInitiative && (
+                        <span className="ml-1.5 inline-block text-[9px] font-bold uppercase tracking-wider text-sflight bg-sflight/15 border border-sflight/40 rounded px-1.5 py-0.5 align-middle" title="SPM Ops team's own initiative (meta-portfolio)">SPM</span>
+                      )}
+                    </td>
                     <td className="py-2 pr-3 text-xs text-sfmuted">{p.name}</td>
                     <td className="py-2 pr-3 text-xs"><span className="font-mono text-sfdeep font-semibold">{stage.id}</span> <span className="text-sfmuted">{stage.name}</span></td>
                     <td className="py-2 pr-3"><span className={status.pill}>{status.label}</span></td>

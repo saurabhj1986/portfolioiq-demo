@@ -3,7 +3,7 @@
 //
 // CONTEXT: This represents the Digital Enterprise Technology (DET) portfolio under
 // Joe & Zarillo's leadership. The full org runs ~250 initiatives across 7 pillars;
-// 16 illustrative initiatives are loaded here to keep the demo legible without
+// 25 illustrative initiatives are loaded here (20 the team governs + 5 SPM-internal) to keep the demo legible without
 // losing the shape of the real portfolio.
 
 export const PILLARS = [
@@ -184,7 +184,18 @@ export const INITIATIVES = [
   { id: 'INI-117', name: 'Agentic Tooling Strategy POC',     pillar: 'etr', stage: 'G1', status: 'on_track',  budget: 680000,  spent: 110000,  fte: 4, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Agentforce', 'V25-Employee-AI'], lastReviewed: '2026-04-26', target: '2026-09-15', tokenUsage: { monthlyM: 22.4, trendPct: 41, status: 'high' } },
   { id: 'INI-118', name: 'Time Tracking Solidification (DET-wide)', pillar: 'etr', stage: 'G2', status: 'at_risk', budget: 320000, spent: 145000, fte: 3, sponsor: 'Joe & Zarillo', pm: 'Hiro Tanaka', okrs: ['V25-Margin', 'V25-Employee-AI'], lastReviewed: '2026-04-24', target: '2026-07-01' },
   { id: 'INI-119', name: 'Emerging Tech Scout Lab',          pillar: 'etr', stage: 'G0', status: 'on_track',  budget: 450000,  spent: 30000,   fte: 2, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Agentforce'], lastReviewed: '2026-04-20', target: '2026-12-31' },
-  { id: 'INI-120', name: 'In-house AI Coding Workbench',     pillar: 'etr', stage: 'G2', status: 'on_track',  budget: 540000,  spent: 240000,  fte: 4, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Margin', 'V25-Agentforce'], lastReviewed: '2026-04-25', target: '2026-08-30', tokenUsage: { monthlyM: 14.6, trendPct: 33, status: 'high' } }
+  { id: 'INI-120', name: 'In-house AI Coding Workbench',     pillar: 'etr', stage: 'G2', status: 'on_track',  budget: 540000,  spent: 240000,  fte: 4, sponsor: 'Joe & Zarillo',    pm: 'Hiro Tanaka',     okrs: ['V25-Margin', 'V25-Agentforce'], lastReviewed: '2026-04-25', target: '2026-08-30', tokenUsage: { monthlyM: 14.6, trendPct: 33, status: 'high' } },
+
+  // ====================================================================
+  // SPM-INTERNAL INITIATIVES — meta-portfolio the SPM Ops team itself owns
+  // (versus the ~250 org initiatives the team governs).
+  // Flagged with metaInitiative: true so the tracker can filter to them.
+  // ====================================================================
+  { id: 'INI-121', name: 'Airtable Portfolio Data Migration',         pillar: 'etr', stage: 'G2', status: 'on_track', budget: 920000, spent: 310000, fte: 6, sponsor: 'SPM Sr Director (co-led · Emerging Tech Product Group)', pm: 'Hiro Tanaka', okrs: ['V25-Margin', 'V25-Employee-AI'], lastReviewed: '2026-06-15', target: '2026-12-31', metaInitiative: true },
+  { id: 'INI-122', name: 'Time Tracking 2026 Relaunch · 90% Compliance', pillar: 'etr', stage: 'G2', status: 'at_risk', budget: 420000, spent: 95000,  fte: 3, sponsor: 'SPM Sr Director',                                       pm: 'Hiro Tanaka',     okrs: ['V25-Margin', 'V25-Employee-AI'], lastReviewed: '2026-06-15', target: '2026-09-30', metaInitiative: true },
+  { id: 'INI-123', name: 'Tableau Dashboard Catalog v1 · 17 trusted views', pillar: 'dap', stage: 'G2', status: 'on_track', budget: 380000, spent: 145000, fte: 3, sponsor: 'SPM Sr Director',                                  pm: 'Jordan Reilly',  okrs: ['V25-Margin'],                       lastReviewed: '2026-06-15', target: '2026-11-30', metaInitiative: true },
+  { id: 'INI-124', name: 'Data Governance & Quality Program FY27',     pillar: 'dap', stage: 'G1', status: 'on_track', budget: 660000, spent: 80000,  fte: 4, sponsor: 'SPM Sr Director',                                       pm: 'Jordan Reilly',  okrs: ['V25-Margin', 'V25-Trust'],          lastReviewed: '2026-06-15', target: '2027-03-31', metaInitiative: true },
+  { id: 'INI-125', name: 'SPM Tooling Support Desk (Tier-1)',          pillar: 'etr', stage: 'G2', status: 'on_track', budget: 290000, spent: 110000, fte: 2, sponsor: 'SPM Sr Director',                                       pm: 'Hiro Tanaka',     okrs: ['V25-Employee-AI', 'V25-Margin'],    lastReviewed: '2026-06-15', target: '2026-12-31', metaInitiative: true }
 ];
 
 export const STAGE_GATE_ARTIFACTS = [

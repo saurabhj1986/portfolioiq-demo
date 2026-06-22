@@ -602,7 +602,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
           <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
             <Layers className="w-4 h-4 text-sflight" />
             <h3 className="text-sm font-serif font-bold text-white">The 7 DET pillars · who this role serves</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· demo loads 16 illustrative initiatives; real portfolio is ~{INITIATIVES_TOTAL}</span>
+            <span className="text-[10px] text-sfmuted ml-1">· demo loads 25 illustrative initiatives (20 governed + 5 SPM-internal); real portfolio is ~{INITIATIVES_TOTAL}</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-y divide-white/10">
             {PILLARS.map(p => (
