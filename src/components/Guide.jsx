@@ -1,285 +1,67 @@
 import React, { useState } from 'react';
 import {
-  Compass, PlayCircle, ArrowRight, ChevronDown, BookOpen, Calculator,
-  Briefcase, Bot, Database, Hammer, LayoutDashboard, Target, Zap, Lightbulb,
-  Users, Workflow, Clock, TrendingUp, AlertCircle, Lock, User, Building2,
-  Wrench, Layers, CalendarClock
+  Compass, PlayCircle, ArrowRight, ChevronDown, Calculator,
+  Briefcase, Bot, Database, Hammer, LayoutDashboard, Lock, User
 } from 'lucide-react';
-import { DATA_PILLARS, SIXTY_DAY_PLAN, PILLARS, FY27_SPM_PILLARS } from '../data/portfolioData';
 
-// Real DET portfolio scale — referenced in narrative copy.
-const INITIATIVES_TOTAL = 250;
-
-// =================== PERSONA-SPECIFIC FRAMING ===================
+// =================== PERSONA QUICK-START HINT ===================
 const PERSONA_FRAMING = {
-  'sr-manager': {
-    bannerLabel: 'Default · full operating view · P02 + P03 home',
-    valueIntro: 'You\'ll save ~18 hrs/week that goes back to data quality work, dashboard accuracy, and PPM enablement — the things you\'re actually measured on.',
-    quickStartHint: 'Start with the 2-min tour to see the full operating loop end-to-end.'
-  },
-  'director': {
-    bannerLabel: 'Strategic lens · operational details hidden',
-    valueIntro: 'Your SPM Ops Lead frees up ~18 hrs/week of frontline tooling/data work — that capacity comes back to strategy work and DET leadership conversations.',
-    quickStartHint: 'Start with the Dashboard\'s "Decisions needed this week" — the 20-second leadership scan.'
-  },
-  'finance-partner': {
-    bannerLabel: 'Read-only Finance lens · Capital + VaR + Audit',
-    valueIntro: 'Financial reconciliation, budget variance, capital utilization, and Value at Risk — without operational noise. Schema + Metric Catalog + Audit Trail surface the reconciliation evidence you need.',
-    quickStartHint: 'Start with the Dashboard KPI strip (Capital + VaR), then Decisions → Investment Framework, then Source of Truth → Audit.'
-  },
-  'pillar-pm-dap': {
-    bannerLabel: 'Scoped to Data & AI Platform',
-    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
-    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
-  },
-  'pillar-pm-ts': {
-    bannerLabel: 'Scoped to Trust & Security',
-    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
-    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
-  },
-  'pillar-pm-fe': {
-    bannerLabel: 'Scoped to Field Engagement',
-    valueIntro: 'Your pillar\'s initiatives, KPIs, capacity, and risks in one filtered view. Cross-pillar context shown but not editable.',
-    quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.'
-  },
-  'sponsor': {
-    bannerLabel: 'Read-only summary',
-    valueIntro: 'A read-only snapshot of the initiatives you sponsor — health, capital, milestones — without operational depth.',
-    quickStartHint: 'Start with the Dashboard for the leadership scan; the rest of the workspace is hidden for your role.'
-  }
+  'sr-manager':       { quickStartHint: 'Start with the 2-min tour to see the full operating loop end-to-end.' },
+  'director':         { quickStartHint: 'Start with the Dashboard\'s "Decisions needed this week".' },
+  'pillar-pm-dap':    { quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.' },
+  'pillar-pm-ts':     { quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.' },
+  'pillar-pm-fe':     { quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.' },
+  'pillar-pm-etr':    { quickStartHint: 'Start with the Dashboard — your pillar\'s initiatives are filtered automatically.' },
+  'sponsor':          { quickStartHint: 'Start with the Dashboard for the leadership scan.' },
+  'finance-partner':  { quickStartHint: 'Start with the Dashboard KPI strip (Capital + VaR), then Decisions → Investment Framework.' }
 };
-
-// =================== PROBLEM / VALUE DATA ===================
-const HERO_STATS = [
-  { value: '~18',  unit: 'hrs/wk',     label: 'Time saved across team' },
-  { value: '4d → 6h', unit: '',         label: 'Off-track decision lag' },
-  { value: '71→88',  unit: '%',         label: 'Stage-gate compliance' },
-  { value: '12',   unit: 'agents',     label: 'Running on Agentforce' },
-  { value: '6→1',  unit: 'systems',    label: 'Tools collapsed into one workspace' }
-];
-
-const BEFORE_AFTER = [
-  { task: 'Compile portfolio status across pillars',     before: '3–4 hrs/wk',          after: '20 min',           win: 'Tableau-fed Dashboard, single source' },
-  { task: 'Prep for sponsor 1:1',                         before: '45 min',              after: '15 min review',     win: 'Sponsor Brief Agent drafts a Quip doc 24h ahead' },
-  { task: 'Detect & escalate an off-track initiative',    before: '4-day median lag',    after: '6 hours',           win: 'Off-Track Triage Agent fires on status change' },
-  { task: 'Draft the monthly exec update',                before: '4–6 hrs',             after: '~1 hr review',      win: 'Workbench AI auto-draft pulls live KPIs' },
-  { task: 'Refresh a Risk Register',                      before: 'Often skipped',       after: 'Auto-nudged at 90d', win: 'Risk Register Refresher Agent opens GUS work item' },
-  { task: 'Stage-gate review prep',                       before: '2 days · manual',     after: 'Real-time scorer',  win: 'Stage-Gate Scorer reads artifact lifecycle directly' },
-  { task: 'Capital-burn forecast',                        before: 'Reactive · monthly',  after: 'Weekly + projected', win: 'Capital Burn Forecaster · Einstein projection · Tableau dashboard' },
-  { task: 'Cross-pillar dependency awareness',            before: 'Tribal · word-of-mouth', after: '<1h notification', win: 'Dependency Watcher walks the graph in Data Cloud' }
-];
-
-const SYSTEM_LANDSCAPE = [
-  { sys: 'Airtable',          used: 'Portfolio data home · ~250 inits',  freq: 'Constantly' },
-  { sys: 'Linear',            used: 'Work item tracking · PPM intake',   freq: 'Daily' },
-  { sys: 'Tableau',           used: 'Exec + PPM dashboards',             freq: 'Daily' },
-  { sys: 'Slack',             used: 'Tooling support, intake, alerts',   freq: 'Hourly' },
-  { sys: 'Zapier / Workato',  used: 'Cross-system automations',          freq: 'Always-on' },
-  { sys: 'Spreadsheets',      used: 'Ad-hoc reconciliation, audits',     freq: 'Several/wk' }
-];
 
 // =================== TAB GUIDE CONTENT ===================
 const TAB_GUIDES = [
   {
     id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, ord: '01',
-    purpose: 'The 20-second leadership scan: what\'s red, what\'s blocked, what\'s the portfolio shape.',
-    sections: [
-      { name: 'Hero', what: 'Headline + 4 click-to-expand chips (role / hidden tax / one workspace / boundary). Tour CTAs in the right column.' },
-      { name: 'Decisions needed this week', what: 'Stack-ranked red initiatives. Each row expands to show **root cause · accountable owner · path to green · next step · decision-by date**.' },
-      { name: 'Cross-pillar blockers', what: 'Where one pillar\'s decision is gating another\'s delivery. Risk level + days open + impact narrative.' },
-      { name: '5 KPIs', what: 'Health · Capital · Compliance · Cycle · Strategic Alignment. Hover the `i` for the definition + target + source.' },
-      { name: 'Stage-Gate Pipeline (G0→G5)', what: 'Circular nodes show count of initiatives at each gate. Hover any circle for the stage definition.' },
-      { name: 'Pillar Performance', what: 'Click a pillar card to filter the tracker below.' },
-      { name: 'Initiative Tracker', what: '16 initiatives, sortable + filterable. Status pills, FTE, OKR mapping, last-reviewed date.' }
-    ]
+    purpose: 'The 20-second leadership scan: what\'s red, what\'s blocked, what\'s the portfolio shape.'
   },
   {
     id: 'guide', label: 'Guide (this tab)', icon: Compass, ord: '02',
-    purpose: 'You are here. Orientation guide for the rest of the workspace.',
-    sections: []
+    purpose: 'You are here. Orientation only.'
   },
   {
     id: 'journey', label: 'Journey', icon: PlayCircle, ord: '03',
-    purpose: 'Watch one initiative move G0→G5. See how each stage ripples through KPIs, capital, risk, FTE, dependencies.',
-    sections: [
-      { name: 'Press Play', what: 'Animates the initiative through all 6 stages with timing controls (0.8s–5s/stage).' },
-      { name: 'Stat tiles', what: 'Capital, FTEs, risk score, value realized — all animate as the stage advances.' },
-      { name: 'Cross-pillar effects', what: 'Shows how downstream pillars activate or block as the initiative progresses.' }
-    ]
+    purpose: 'Watch one initiative move G0→G5. See how each stage ripples through KPIs, capital, risk, FTE.'
   },
   {
     id: 'decisions', label: 'Decisions', icon: Calculator, ord: '04',
-    purpose: '9 sub-tabs of analysis tools. Calculators turn data into draft trade-offs for sponsor review.',
-    sections: [
-      { name: 'RICE Prioritization', what: 'Score every initiative on Reach × Impact × Confidence ÷ Effort.' },
-      { name: 'Capital Optimizer', what: 'Drag the budget slider; knapsack solver picks the optimal mix. Pin must-keep initiatives.' },
-      { name: 'Risk Heatmap', what: '5×5 Probability × Impact grid. Initiatives plotted; click for mitigation drill-down.' },
-      { name: 'Stage-Gate Scorer', what: '4-dimension readiness check (artifacts / sponsor / capacity / dependencies).' },
-      { name: 'Value & TCO Engine', what: 'Build + Run + Change + Opportunity vs Revenue + Savings + Risk-avoided + Strategic.' },
-      { name: 'Influence Factors', what: '8 non-financial dimensions: data quality, governance, vendor, talent, regulatory, tech debt, sentiment, market timing.' },
-      { name: 'Process Health', what: 'Cycle time per gate · rework rate · Pillar PM NPS · 4 anti-patterns detected.' },
-      { name: 'Scenario Compare', what: 'Pick 2–4 of (Status Quo / Margin Push / Agentforce Bet / Trust First). Auto-rationale generated.' },
-      { name: 'KPI Studio', what: '17 configurable KPIs · 5 weighting profiles · Recommendation Engine outputs Accelerate/Continue/Watch/Restructure/Sunset.' }
-    ]
+    purpose: 'Analysis tools. Calculators turn data into draft trade-offs for stakeholder review.'
   },
   {
     id: 'operate', label: 'Operate', icon: Briefcase, ord: '05',
-    purpose: 'The daily workspace for the SPM Ops Lead: standardized playbooks, PPM customer desk, and comms drafting.',
-    sections: [
-      { name: 'Playbooks', what: '7 foundational playbooks (Stage-Gate Decision · Initiative Intake · Capacity Planning · Risk Register · Quarterly Rebalance · Portfolio Review · Sunset/Kill). Adoption tracked per pillar.' },
-      { name: 'Team Cockpit', what: '4 Pillar PM direct reports. Auto-detected coaching opportunities, weekly briefs, workflow automations.' },
-      { name: 'Workbench', what: '8 message templates (Monthly Exec · Sponsor 1:1 · All-Hands · Off-Track Escalation · Launch Announcement · Quarterly Rebalance · PM Digest · CFO Memo). AI auto-fill from live data.' }
-    ]
+    purpose: 'The daily workspace: standardized playbooks, PPM customer desk, and comms drafting.'
   },
   {
     id: 'agents', label: 'Agents', icon: Bot, ord: '06',
-    purpose: '12 niche agents on Agentforce — automate the routine governance and comms work.',
-    sections: [
-      { name: 'MCP fabric', what: 'Salesforce-native (Agentforce, GUS, Data Cloud, Einstein, Tableau, Slack, Quip, MuleSoft) + supporting external (Jira, Email, Okta, Snowflake, Workday, Anaplan).' },
-      { name: 'Agent catalog', what: 'Filter by category (Governance / Coaching / Decision / Comms). Click any card for full detail (trigger · schedule · what-it-does · last outcome · success metric).' },
-      { name: 'Live activity feed', what: 'Sticky right-rail. Append-only stream of every agent action in last 24h.' }
-    ]
+    purpose: '12 niche agents on Agentforce — automate the routine governance and comms work.'
   },
   {
     id: 'data', label: 'Source of Truth', icon: Database, ord: '07',
-    purpose: 'The authoritative reference. Where number disagreements get resolved.',
-    sections: [
-      { name: 'Schema', what: '4 normalized tables: initiative_inventory · stage_gate_artifacts · dependencies · capacity_snapshots. Full DDL + sample data.' },
-      { name: 'Metric Catalog', what: '17 canonical metric definitions. Each has formula, owner, source system, refresh cadence, target, current value, version.' },
-      { name: 'Data Glossary', what: '33 portfolio terms. Each has definition, aliases, examples, related terms, "Don\'t confuse with."' },
-      { name: 'Audit Trail', what: 'Append-only event log. Every state change with actor, timestamp, before/after, reason. SOX-aligned.' },
-      { name: 'Copilot', what: 'AI agent grounded in this data. Transparent reasoning panel: classify → resolve → reason → confidence.' }
-    ]
+    purpose: 'The authoritative reference: schema, metric catalog, glossary, audit trail, AI copilot.'
   },
   {
     id: 'about', label: 'About', icon: Hammer, ord: '08',
-    purpose: 'How this was built — design decisions, system architecture, integration points, POCs to production, risks.',
-    sections: [
-      { name: '01 · Design decisions', what: '9 trade-offs that shape the product, each with What I chose / Why.' },
-      { name: '02 · System architecture', what: '4 layers: Experience · Logic · Data · Source systems.' },
-      { name: '03 · Integration points', what: '8 production connectors with refresh cadence and notes.' },
-      { name: '04 · POCs to production', what: '5 progressive proof-of-concepts. Each isolates one risk.' },
-      { name: '05 · Risks & mitigations', what: '8 production risks with likelihood × impact × mitigation.' }
-    ]
+    purpose: 'The strategic story: how this came together, how it scales to production, how it becomes a product.'
   }
 ];
 
-// =================== COMMON WORKFLOWS ===================
-const WORKFLOWS = [
-  {
-    n: 1,
-    title: 'I have a sponsor 1:1 tomorrow',
-    icon: '💼',
-    steps: [
-      { text: 'Operate → Workbench', tab: 'operate', sub: 'workbench' },
-      { text: 'Click "Sponsor 1:1 Brief" template' },
-      { text: 'Click Compose → AI auto-draft' },
-      { text: 'Review the 5 sections, edit, send' }
-    ]
-  },
-  {
-    n: 2,
-    title: 'My CFO asked me to find $4M',
-    icon: '💰',
-    steps: [
-      { text: 'Decisions → Capital Optimizer', tab: 'decisions', sub: 'capital' },
-      { text: 'Drag the budget slider down to your target' },
-      { text: 'Pin must-keep initiatives (Trust, AI Governance)' },
-      { text: 'See what gets cut + value lost' },
-      { text: 'Switch to Scenario Compare for full trade-off rationale' }
-    ]
-  },
-  {
-    n: 3,
-    title: 'An initiative just went off-track',
-    icon: '🚨',
-    steps: [
-      { text: 'Off-Track Triage Agent fires automatically (Agents tab)', tab: 'agents' },
-      { text: 'OR manually: Operate → Workbench → "Off-Track Escalation"', tab: 'operate', sub: 'workbench' },
-      { text: 'Use Decisions → KPI Studio to draft a recommendation', tab: 'decisions', sub: 'kpi-studio' },
-      { text: 'Send draft to sponsor for review' }
-    ]
-  },
-  {
-    n: 4,
-    title: 'I\'m onboarding a new Pillar PM',
-    icon: '👋',
-    steps: [
-      { text: 'Switch persona to "Pillar PM" (top-right) so they see what they\'ll see' },
-      { text: 'Operate → Playbooks: 7 standardized playbooks', tab: 'operate', sub: 'playbooks' },
-      { text: 'Source of Truth → Glossary: 33 canonical terms', tab: 'data', sub: 'glossary' },
-      { text: 'Source of Truth → Metric Catalog: 17 metric definitions', tab: 'data', sub: 'metrics' }
-    ]
-  },
-  {
-    n: 5,
-    title: 'Quarterly portfolio review next week',
-    icon: '📊',
-    steps: [
-      { text: 'Decisions → Scenario Compare → build 3 scenarios', tab: 'decisions', sub: 'compare' },
-      { text: 'Operate → Workbench → "Quarterly Rebalance Recommendation"', tab: 'operate', sub: 'workbench' },
-      { text: 'AI auto-draft pulls live numbers from Decision Engine' },
-      { text: 'Edit and send to leadership council' }
-    ]
-  },
-  {
-    n: 6,
-    title: 'I want to see who\'s red and what\'s blocked',
-    icon: '🔴',
-    steps: [
-      { text: 'Just open Dashboard — section 01 stack-ranks the red items', tab: 'dashboard' },
-      { text: 'Section 02 shows active cross-pillar blockers' },
-      { text: 'Each red item expands → path-to-green + accountable owner + decision-by date' }
-    ]
-  },
-  {
-    n: 7,
-    title: 'I need to draft the monthly exec update',
-    icon: '✉️',
-    steps: [
-      { text: 'Operate → Workbench → "Monthly Exec Update"', tab: 'operate', sub: 'workbench' },
-      { text: 'Click Compose → AI auto-draft' },
-      { text: 'Reviews KPIs from Dashboard, risks from Process Health, wins from Team Cockpit briefs' }
-    ]
-  },
-  {
-    n: 8,
-    title: 'I want to scope to one pillar only',
-    icon: '🎯',
-    steps: [
-      { text: 'Top-right: change persona to "Pillar PM · [your pillar]"' },
-      { text: 'Dashboard, KPIs, and tracker all filter automatically' },
-      { text: 'Some tabs hide (Operate, Workbench) — Pillar PMs don\'t own those' }
-    ]
-  }
-];
-
-// =================== TIPS ===================
-const TIPS = [
-  { tip: 'Use the persona switcher (top-right)', detail: 'See how RBAC adapts the workspace — Director loses Operate, Pillar PM scopes to their pillar, Sponsor goes read-only.' },
-  { tip: 'The floating tour bar persists across tabs', detail: 'Once you start a tour, the bar at the bottom follows you everywhere. Prev / Next / All steps / Exit.' },
-  { tip: 'Hover any KPI for full definition', detail: 'Every KPI tile has an `i` icon top-right. Hover for what + target + source.' },
-  { tip: 'Hover any pipeline circle for stage definition', detail: 'G0 Concept · G1 Plan · G2 Build · G3 Validate · G4 Launch · G5 Sustain.' },
-  { tip: 'Click any chip on the Dashboard hero', detail: '4 chips (Role / Hidden tax / One workspace / Boundary) expand for full detail.' },
-  { tip: 'Recommendations are drafts, never decisions', detail: 'Every output is framed for PPM / Finance / DET leadership review. SPM Ops prepares; the decision-maker decides.' },
-  { tip: 'Every state change is in the Audit Trail', detail: 'Source of Truth → Audit Trail. Append-only, SOX-aligned, 7-year retention.' },
-  { tip: 'Click the "Back to All Steps" in Tour Bar', detail: 'Returns you to the Welcome panel with all steps visible — useful if you lose context.' }
-];
-
-// =================== FAQs ===================
+// =================== FAQs (slim) ===================
 const FAQS = [
-  { q: 'Why is some content gated by persona?',
-    a: 'RBAC simulation. In production, persona derives from your identity provider login (Okta). Here you can switch manually to see how the experience adapts. Director doesn\'t see Operate. Pillar PM scopes to their pillar. Sponsor and Finance Partner are read-only with role-specific lenses.' },
-  { q: 'What does "Sustain" mean (G5)?',
-    a: 'The final stage. The initiative is live, monitored, and value is being tracked. The build team has disbanded; a lean ops team owns going forward. Quarterly value reviews confirm ROI.' },
-  { q: 'Why agents instead of just dashboards?',
-    a: 'Dashboards tell you what happened. Agents do something about it — nudge stale artifacts, draft sponsor briefs, detect capacity conflicts, escalate off-track initiatives. Routine work automated; humans focus on judgment.' },
-  { q: 'Can I switch back to the default view anytime?',
-    a: 'Yes — the persona dropdown in the top-right. First entry is "Strategic Portfolio Ops Mgr · Lead" (default, full operating view).' },
-  { q: 'How do I reset the demo?',
-    a: 'Refresh the page. State resets to defaults: Strategic Portfolio Ops Mgr (Lead) persona, Dashboard tab, no active tour. The data is mock so nothing actually persists.' },
+  { q: 'Why does the workspace adapt to persona?',
+    a: 'RBAC simulation. In production, persona derives from your identity provider (Okta). Switch personas in the top-right to see how the experience reshapes for Director, Pillar PM, Sponsor, or Finance Partner.' },
   { q: 'Is this connected to real systems?',
-    a: 'No — all data is mock. The schema is production-quality so the path to real is one connector per source system (Anaplan, ServiceNow / GUS, Quip, Slack, Workday, Okta).' }
+    a: 'No — all data is mock. Schema is production-quality so the path to real is one connector per source system (Airtable, Linear, Tableau, Slack).' },
+  { q: 'Can I switch back to the default view?',
+    a: 'Yes — persona dropdown in the top-right. First entry is "Strategic Portfolio Ops Mgr · Lead" (default, full view).' },
+  { q: 'How do I reset the demo?',
+    a: 'Refresh the page. State resets to defaults: default persona, Dashboard tab, no active tour.' }
 ];
 
 // =================== UI COMPONENTS ===================
@@ -313,82 +95,29 @@ function QuickStartCard({ icon: Icon, label, sub, onClick, primary }) {
   );
 }
 
-function TabGuideCard({ guide, navigateTo }) {
+function TabRow({ guide, navigateTo }) {
   const Icon = guide.icon;
-  const [open, setOpen] = useState(false);
   const isCurrentTab = guide.id === 'guide';
   return (
-    <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
-      <button onClick={() => setOpen(o => !o)} className="w-full text-left p-4 hover:bg-white/[0.07] transition">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-sflight/15 grid place-items-center flex-shrink-0">
-            <Icon className="w-5 h-5 text-sflight" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-mono text-sfmuted">{guide.ord}</span>
-              <h4 className="font-serif font-bold text-white">{guide.label}</h4>
-              {isCurrentTab && <span className="pill pill-blue text-[10px]">YOU ARE HERE</span>}
-            </div>
-            <p className="text-xs text-white/80 mt-1 leading-relaxed">{guide.purpose}</p>
-          </div>
-          {guide.sections.length > 0 && (
-            <ChevronDown className={`w-4 h-4 text-white/50 flex-shrink-0 mt-2 transition-transform ${open ? 'rotate-180' : ''}`} />
-          )}
+    <button
+      onClick={() => !isCurrentTab && navigateTo(guide.id)}
+      disabled={isCurrentTab}
+      className={`w-full text-left rounded-xl border p-3 flex items-start gap-3 transition ${isCurrentTab ? 'bg-sflight/10 border-sflight/30 cursor-default' : 'bg-white/5 border-white/15 hover:bg-white/[0.08] hover:border-white/25'}`}
+    >
+      <div className={`w-9 h-9 rounded-lg grid place-items-center flex-shrink-0 ${isCurrentTab ? 'bg-sflight/20' : 'bg-sflight/15'}`}>
+        <Icon className="w-4.5 h-4.5 text-sflight" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] font-mono text-sfmuted">{guide.ord}</span>
+          <span className="font-serif font-bold text-white text-sm">{guide.label}</span>
+          {isCurrentTab && <span className="pill pill-blue text-[10px]">YOU ARE HERE</span>}
         </div>
-      </button>
-      {open && guide.sections.length > 0 && (
-        <div className="px-4 pb-4 pt-0 space-y-2 border-t border-white/10">
-          {guide.sections.map((s, i) => (
-            <div key={i} className="text-xs">
-              <span className="text-sflight font-semibold">{s.name}.</span>
-              <span className="text-white/80 ml-1" dangerouslySetInnerHTML={{ __html: s.what.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
-            </div>
-          ))}
-          {!isCurrentTab && (
-            <button onClick={() => navigateTo(guide.id)} className="text-xs text-sflight hover:underline mt-2 inline-flex items-center gap-1">
-              Open {guide.label} <ArrowRight className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+        <p className="text-xs text-white/75 mt-1 leading-relaxed">{guide.purpose}</p>
+      </div>
+      {!isCurrentTab && <ArrowRight className="w-4 h-4 text-white/50 flex-shrink-0 mt-2.5" />}
+    </button>
   );
-}
-
-function WorkflowCard({ wf, navigateTo }) {
-  return (
-    <article className="rounded-xl bg-white/5 border border-white/15 p-4">
-      <header className="flex items-baseline gap-2 mb-3">
-        <span className="text-2xl">{wf.icon}</span>
-        <h4 className="font-serif font-bold text-white">{wf.title}</h4>
-      </header>
-      <ol className="space-y-1.5">
-        {wf.steps.map((step, i) => (
-          <li key={i} className="flex items-start gap-2 text-xs">
-            <span className="font-mono text-sflight font-bold flex-shrink-0">{i + 1}.</span>
-            <span className="flex-1 text-white/85">{step.text}</span>
-            {step.tab && (
-              <button
-                onClick={() => navigateTo(step.tab)}
-                className="text-[10px] text-sflight hover:underline flex-shrink-0 inline-flex items-center gap-0.5"
-              >
-                Go <ArrowRight className="w-3 h-3" />
-              </button>
-            )}
-          </li>
-        ))}
-      </ol>
-    </article>
-  );
-}
-
-// =================== HELPERS ===================
-// A workflow is visible to a persona if every tab it navigates to is visible to that persona.
-function workflowVisibleTo(workflow, persona) {
-  if (!persona) return true;
-  const usedTabs = workflow.steps.filter(s => s.tab).map(s => s.tab);
-  return usedTabs.every(t => !persona.hideTabs.includes(t));
 }
 
 // =================== MAIN ===================
@@ -396,9 +125,8 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
   const personaId = persona?.id || 'sr-manager';
   const framing = PERSONA_FRAMING[personaId] || PERSONA_FRAMING['sr-manager'];
 
-  // Filter content based on persona's RBAC
+  // Filter tabs by persona's RBAC
   const visibleTabGuides = TAB_GUIDES.filter(g => g.id === 'guide' || !persona?.hideTabs?.includes(g.id));
-  const visibleWorkflows = WORKFLOWS.filter(w => workflowVisibleTo(w, persona));
 
   // Quick start cards — filter by tab visibility
   const allQuickStart = [
@@ -406,278 +134,46 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
       sub: 'Five stops walking through the demo\'s narrative arc. Floating tour bar auto-navigates between tabs.',
       action: () => onStartTour('2m'), primary: true, requiresTab: null },
     { id: 'dashboard', icon: LayoutDashboard, label: 'Jump to Dashboard',
-      sub: 'The 20-second leadership scan: red items ranked, cross-pillar blockers, 5 KPIs, stage-gate pipeline.',
+      sub: 'The 20-second leadership scan: red items, cross-pillar blockers, 6 KPIs, stage-gate pipeline.',
       action: () => navigateTo('dashboard'), primary: false, requiresTab: 'dashboard' },
-    { id: 'agents', icon: Bot, label: 'See the Agents',
-      sub: '12 niche agents on Agentforce, connected to GUS, Slack, Quip, Tableau, Data Cloud, Einstein.',
-      action: () => navigateTo('agents'), primary: false, requiresTab: 'agents' },
-    { id: 'decisions', icon: Calculator, label: 'Try the Decision Engine',
-      sub: '9 calculators including the KPI Studio Recommendation Engine. Drafts for sponsor review.',
-      action: () => navigateTo('decisions'), primary: false, requiresTab: 'decisions' }
+    { id: 'about', icon: Hammer, label: 'Read the About tab',
+      sub: 'The strategic story: how this came together, the 12-month path to production, productization plan.',
+      action: () => navigateTo('about'), primary: false, requiresTab: 'about' }
   ];
   const visibleQuickStart = allQuickStart.filter(q => !q.requiresTab || !persona?.hideTabs?.includes(q.requiresTab)).slice(0, 3);
 
   return (
-    <div className="space-y-8 max-w-[1100px]">
+    <div className="space-y-8 max-w-[900px]">
 
-      {/* HERO */}
+      {/* HERO — short and direct */}
       <header>
-        <Kicker ord="Guide" label="How to use this app" />
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 5-minute orientation.</h1>
-        <p className="text-base text-white/80 mt-3 leading-relaxed max-w-3xl">
-          PortfolioIQ is the operating workspace for a <strong className="text-sflight">Strategic Portfolio Operations Manager (Lead)</strong> inside <strong className="text-sflight">Digital Enterprise Technology (DET) → Delivery Assurance &amp; Operations → SPM</strong>. It maps the 5 responsibility areas (Data Quality · Tooling Desk · Dashboards · Ops · Finance) onto one workspace so this role can run the day without context-switching across Airtable, Linear, Tableau, and Slack.
+        <Kicker ord="Guide" label="Orientation" />
+        <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 60-second orientation.</h1>
+        <p className="text-base text-white/75 mt-3 leading-relaxed">
+          Three things: pick where to start, see what each tab does, and switch personas to see the workspace reshape. The strategic story lives in the About tab.
         </p>
       </header>
 
-      {/* PERSONA BANNER — shows when viewing as anything other than the default SPM Ops Lead */}
+      {/* PERSONA BANNER — only when viewing as something other than default */}
       {persona && persona.id !== 'sr-manager' && (
         <div className="rounded-lg bg-sflight/10 border border-sflight/30 px-4 py-3 flex items-start gap-3">
           <User className="w-4 h-4 text-sflight flex-shrink-0 mt-0.5" />
           <div className="flex-1 text-sm">
             <span className="text-[10px] uppercase tracking-widest text-sflight font-bold">Viewing as · {persona.role}</span>
-            <span className="text-white/90 ml-2">{framing.bannerLabel}</span>
-            <p className="text-xs text-white/70 mt-1 leading-relaxed">
-              The Guide below is filtered to your role. Workflows you can't act on (because their tabs are hidden) are removed. Switch persona in the top-right to see how a different role experiences the same product.
-            </p>
+            <span className="text-white/85 ml-2">{persona.desc}</span>
           </div>
           {persona.hideTabs.length > 0 && (
-            <span className="text-[10px] text-white/50 font-mono whitespace-nowrap"><Lock className="w-3 h-3 inline mr-0.5" />Hidden: {persona.hideTabs.join(' · ')}</span>
+            <span className="text-[10px] text-white/50 font-mono whitespace-nowrap">
+              <Lock className="w-3 h-3 inline mr-0.5" />Hidden: {persona.hideTabs.join(' · ')}
+            </span>
           )}
         </div>
       )}
 
-      {/* 01 · PROBLEM & VALUE — landscape snapshot */}
+      {/* 01 · QUICK START */}
       <section>
-        <Kicker ord="01" label="Problem & value" />
-        <h2 className="text-xl font-serif font-bold text-white mb-2">Why this exists — and what it changes</h2>
-        {persona && persona.id !== 'sr-manager' && (
-          <p className="text-sm text-sflight italic mb-3">
-            <strong>For your role:</strong> {framing.valueIntro}
-          </p>
-        )}
-
-        {/* Problem + Context row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="w-4 h-4 text-red-300" />
-              <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Problem</span>
-            </div>
-            <p className="text-sm text-white/90 leading-relaxed">
-              ~250 initiatives, 7 PPMs, and 4 critical tools (<strong>Airtable · Linear · Tableau · Slack</strong>) — but data definitions drift, dashboards disagree, intake is inconsistent. PPMs don't trust the numbers; leadership can't decide.
-            </p>
-          </div>
-          <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-amber-300" />
-              <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
-            </div>
-            <p className="text-sm text-white/90 leading-relaxed">
-              The SPM team needs <strong>a Manager (Lead) who owns the data foundation + tooling ecosystem end-to-end</strong> — validating, reconciling, supporting users, building dashboards, and standardizing operations so PPMs and DET leaders make decisions on trusted ground.
-            </p>
-          </div>
-          <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-emerald-300" />
-              <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value</span>
-            </div>
-            <p className="text-sm text-white/90 leading-relaxed">
-              Portfolio data trust score <strong>72→94%</strong>. Tooling support median resolution <strong>3d → 4h</strong>. Dashboard refresh failures <strong>14% → 0%</strong>. Time-tracking adoption <strong>61% → 92%</strong> across the 7 pillars.
-            </p>
-          </div>
-        </div>
-
-        {/* Hero stat strip */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
-          {HERO_STATS.map((s, i) => (
-            <div key={i} className="rounded-lg bg-sflight/10 border border-sflight/30 p-3 text-center">
-              <div className="text-2xl font-serif font-bold text-sflight leading-none">
-                {s.value}<span className="text-xs ml-1 text-white/70">{s.unit}</span>
-              </div>
-              <div className="text-[10px] uppercase tracking-wide text-white/70 mt-1.5 leading-snug">{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* SNAPSHOT VIEW IN LANDSCAPE — Before vs After table */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Workflow className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">Snapshot — what's different in 8 portfolio tasks</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[900px]">
-              <thead>
-                <tr className="text-left text-[10px] uppercase tracking-wider text-sfmuted border-b border-white/10">
-                  <th className="py-3 px-4 font-bold">Task</th>
-                  <th className="py-3 px-4 font-bold text-red-300">Before · time + friction</th>
-                  <th className="py-3 px-4 font-bold text-emerald-300">After · with PortfolioIQ</th>
-                  <th className="py-3 px-4 font-bold text-sflight">How</th>
-                </tr>
-              </thead>
-              <tbody>
-                {BEFORE_AFTER.map((row, i) => (
-                  <tr key={i} className="border-b border-white/5 align-top">
-                    <td className="py-3 px-4 text-white font-medium">{row.task}</td>
-                    <td className="py-3 px-4 text-red-200/85 font-mono text-xs">{row.before}</td>
-                    <td className="py-3 px-4 text-emerald-200 font-mono text-xs">{row.after}</td>
-                    <td className="py-3 px-4 text-sfmuted text-xs">{row.win}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Systems-collated landscape */}
-        <div className="mt-4 rounded-xl bg-white/5 border border-white/15 overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Database className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">The tooling ecosystem this role owns</h3>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-0 divide-x divide-white/10">
-            {SYSTEM_LANDSCAPE.map((s, i) => (
-              <div key={i} className="p-3">
-                <div className="text-sm font-serif font-bold text-white">{s.sys}</div>
-                <div className="text-[11px] text-sfmuted mt-0.5 leading-snug">{s.used}</div>
-                <div className="text-[10px] uppercase tracking-wider text-sflight font-bold mt-2">{s.freq}</div>
-              </div>
-            ))}
-          </div>
-          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Frontline ownership: data quality across Airtable, Linear hygiene, Tableau dashboard accuracy, Slack support queue, Zapier/Workato automations — plus the integrations that hold them together.
-          </div>
-        </div>
-      </section>
-
-      {/* 01b · DET ORG CONTEXT — the renovation, 7 pillars, 4 data pillars, 60-day plan */}
-      <section>
-        <Kicker ord="01b" label="DET org context" />
-        <h2 className="text-xl font-serif font-bold text-white mb-2">The Digital Enterprise Technology renovation</h2>
-        <p className="text-sm text-white/85 leading-relaxed mb-4 max-w-3xl">
-          DET sits under <strong className="text-sflight">Joe &amp; Zarillo's leadership</strong> and contains the <strong className="text-sflight">Delivery Assurance &amp; Operations</strong> sub-org, where the <strong className="text-sflight">SPM team</strong> lives. The portfolio runs <strong className="text-sflight">~{INITIATIVES_TOTAL} initiatives across {PILLARS.length} pillars</strong> spanning Salesforce-on-Salesforce, IT, emerging tech, R&amp;D, operations. SPM's charter refocused 6 weeks ago toward a data-driven approach. <em className="text-white/70">PortfolioIQ is the operating workspace this renovation needs.</em>
-        </p>
-
-        {/* Renovation analogy */}
-        <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 mb-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Wrench className="w-4 h-4 text-amber-300" />
-            <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">The renovation analogy</span>
-          </div>
-          <p className="text-sm text-white/90 leading-relaxed">
-            <strong>The wood structure is strong</strong> — the team, the pillars, the existing tooling are all in place. <strong>The new homeowner wants different sconces, fresh paint, and the lights moved.</strong> This isn't a teardown — it's a re-architecture of how the portfolio is governed, instrumented, and communicated. Heritage preserved; the operating model is what's changing.
-          </p>
-        </div>
-
-        {/* FY27 SPM 5-PILLAR STRATEGY — the SPM team's own strategic frame */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Target className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">FY27 SPM strategy · 5 pillars</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· the role's home is P02 + P03 (highlighted)</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-0 divide-x divide-white/10">
-            {FY27_SPM_PILLARS.map(p => (
-              <div key={p.id} className={`p-3 ${p.isFocus ? 'bg-sflight/10' : ''}`}>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className={`text-[10px] font-mono uppercase tracking-wider font-bold ${p.isFocus ? 'text-sflight' : 'text-sfmuted'}`}>{p.code}</span>
-                  {p.isFocus && <span className="pill pill-blue text-[9px]">ROLE HOME</span>}
-                </div>
-                <div className={`text-sm font-serif font-bold leading-snug ${p.isFocus ? 'text-white' : 'text-white/90'}`}>{p.name}</div>
-                <p className="text-[11px] text-white/70 leading-snug mt-1.5">{p.blurb}</p>
-                <div className="mt-2 pt-2 border-t border-white/10">
-                  <div className="text-[10px] uppercase tracking-wide font-bold text-sflight">Owner</div>
-                  <div className="text-[11px] text-white/80 mt-0.5">{p.owner}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Strategic Portfolio Operations Manager (Lead) sits at the intersection of <strong>P02 Data &amp; Systems Optimization</strong> and <strong>P03 Tooling Enablement</strong>. Every tab in this workspace maps to one of the 5 responsibility areas this role owns end-to-end.
-          </div>
-        </div>
-
-        {/* 7 PILLARS GRID — the org pillars being served */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">The 7 DET pillars · who this role serves</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· demo loads 25 illustrative initiatives (20 governed + 5 SPM-internal); real portfolio is ~{INITIATIVES_TOTAL}</span>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-y divide-white/10">
-            {PILLARS.map(p => (
-              <div key={p.id} className="p-3">
-                <div className="text-[11px] font-mono text-sflight uppercase tracking-wider">{p.id}</div>
-                <div className="text-sm font-serif font-bold text-white mt-0.5">{p.name}</div>
-                <div className="text-[11px] text-sfmuted mt-1 leading-snug">Lead · {p.lead}</div>
-                <div className="text-[10px] text-white/60 mt-0.5">{p.allocatedFte}/{p.capacityFte} FTE allocated</div>
-              </div>
-            ))}
-          </div>
-          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> Each pillar has its own Pillar Portfolio Manager — the primary customer of this Manager (Lead) role. Switch persona (top-right) to see the workspace scoped to one pillar.
-          </div>
-        </div>
-
-        {/* 4 DATA PILLARS */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden mb-4">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <Database className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">The 4 data pillars underneath the portfolio</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· this is what gets re-architected first</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 divide-x divide-white/10">
-            {DATA_PILLARS.map(dp => (
-              <div key={dp.id} className="p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm font-serif font-bold text-white">{dp.name}</span>
-                  <span className={`pill text-[9px] ${dp.state === 'rebuild' ? 'pill-red' : dp.state === 'solidify' ? 'pill-yellow' : 'pill-blue'}`}>
-                    {dp.state.replace('_', ' ')}
-                  </span>
-                </div>
-                <p className="text-[11px] text-white/80 leading-snug">{dp.blurb}</p>
-                <div className="mt-2 pt-2 border-t border-white/10">
-                  <div className="text-[10px] text-sflight font-bold uppercase tracking-wide">Next milestone</div>
-                  <div className="text-[11px] text-white/70 mt-0.5">{dp.nextMilestone}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 60-DAY PLAN */}
-        <div className="rounded-xl bg-white/5 border border-white/15 overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
-            <CalendarClock className="w-4 h-4 text-sflight" />
-            <h3 className="text-sm font-serif font-bold text-white">60-day plan — what gets built first</h3>
-            <span className="text-[10px] text-sfmuted ml-1">· grounded in the conversation with Judith on May 1</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 divide-x divide-white/10">
-            {SIXTY_DAY_PLAN.map((p, i) => (
-              <div key={i} className="p-3">
-                <div className="text-[10px] font-mono text-sflight uppercase tracking-wider">{p.horizon}</div>
-                <div className="text-sm font-serif font-bold text-white mt-1 leading-snug">{p.headline}</div>
-                <ul className="mt-2 space-y-1.5">
-                  {p.items.map((it, j) => (
-                    <li key={j} className="text-[11px] text-white/80 leading-snug flex items-start gap-1.5">
-                      <span className="text-sflight flex-shrink-0">·</span>
-                      <span>{it}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="px-4 py-2 bg-sflight/5 border-t border-sflight/20 text-xs text-white/85">
-            <strong className="text-sflight">→</strong> The team to deliver this is <strong>5 people (Director → Analyst)</strong> with 2 currently on (or going on) maternity leave and a new Director joining. A Manager (Lead) role at the intersection of data + tooling is being added to close the gap and run this workspace.
-          </div>
-        </div>
-      </section>
-
-      {/* 02 · QUICK START */}
-      <section>
-        <Kicker ord="02" label="Quick start" />
-        <h2 className="text-xl font-serif font-bold text-white mb-1">{visibleQuickStart.length === 1 ? 'Best place to start' : visibleQuickStart.length === 2 ? 'Two ways to start' : 'Three ways to start'}</h2>
+        <Kicker ord="01" label="Quick start" />
+        <h2 className="text-lg font-serif font-bold text-white mb-1">Where to start</h2>
         <p className="text-sm text-sfmuted mb-3">{framing.quickStartHint}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {visibleQuickStart.map(q => (
@@ -686,58 +182,19 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         </div>
       </section>
 
-      {/* 03 · TAB-BY-TAB GUIDE */}
+      {/* 02 · TAB GUIDE */}
       <section>
-        <Kicker ord="03" label="What's in each tab" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">{visibleTabGuides.length} tabs, one purpose each</h2>
-        <p className="text-sm text-sfmuted mb-4">Click any card to expand. {persona && persona.hideTabs.length > 0 && <span className="text-sflight">Tabs hidden by your role aren't shown.</span>}</p>
+        <Kicker ord="02" label="What's in each tab" />
+        <h2 className="text-lg font-serif font-bold text-white mb-3">{visibleTabGuides.length} tabs · one purpose each</h2>
         <div className="space-y-2">
-          {visibleTabGuides.map(g => <TabGuideCard key={g.id} guide={g} navigateTo={navigateTo} />)}
+          {visibleTabGuides.map(g => <TabRow key={g.id} guide={g} navigateTo={navigateTo} />)}
         </div>
       </section>
 
-      {/* 04 · WORKFLOWS — filtered to those whose tabs are all visible to this persona */}
+      {/* 03 · FAQ — slim */}
       <section>
-        <Kicker ord="04" label="Common workflows" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">"I need to…" — task-oriented playbook</h2>
-        <p className="text-sm text-sfmuted mb-4">
-          {visibleWorkflows.length} workflow{visibleWorkflows.length === 1 ? '' : 's'} you can act on with your current role.
-          {WORKFLOWS.length > visibleWorkflows.length && <span className="text-sflight"> {WORKFLOWS.length - visibleWorkflows.length} more available to other roles — switch persona to see them.</span>}
-        </p>
-        {visibleWorkflows.length === 0 ? (
-          <div className="rounded-lg bg-white/5 border border-white/15 p-4 text-sm text-sfmuted text-center">
-            No workflows are actionable from your current role. Switch persona in the top-right to see role-specific tasks.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {visibleWorkflows.map(wf => <WorkflowCard key={wf.n} wf={wf} navigateTo={navigateTo} />)}
-          </div>
-        )}
-      </section>
-
-      {/* 05 · TIPS */}
-      <section>
-        <Kicker ord="05" label="Tips & tricks" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">Power moves</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {TIPS.map((t, i) => (
-            <div key={i} className="rounded-lg bg-white/5 border border-white/15 p-3">
-              <div className="flex items-start gap-2">
-                <Lightbulb className="w-4 h-4 text-sflight flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-semibold text-white">{t.tip}</div>
-                  <p className="text-xs text-sfmuted mt-0.5 leading-relaxed">{t.detail}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 06 · FAQ */}
-      <section>
-        <Kicker ord="06" label="FAQ" />
-        <h2 className="text-xl font-serif font-bold text-white mb-3">Common questions</h2>
+        <Kicker ord="03" label="FAQ" />
+        <h2 className="text-lg font-serif font-bold text-white mb-3">A few common questions</h2>
         <div className="space-y-2">
           {FAQS.map((f, i) => (
             <details key={i} className="rounded-lg bg-white/5 border border-white/15 p-3 text-sm cursor-pointer">
@@ -746,13 +203,6 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
             </details>
           ))}
         </div>
-      </section>
-
-      {/* CLOSING NOTE */}
-      <section className="rounded-xl bg-sflight/10 border border-sflight/30 p-4">
-        <p className="text-sm text-white/90 leading-relaxed">
-          <strong className="text-sflight">Designed to be cold-start-able.</strong> If a colleague opens this URL with no context, the 2-min tour + this Guide should take them from "what is this?" to "I can navigate this on my own" in under 10 minutes. If something is unclear, that's a documentation gap to fix — not a feature to remove.
-        </p>
       </section>
 
     </div>
