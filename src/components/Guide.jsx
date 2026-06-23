@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   Compass, PlayCircle, ArrowRight, ChevronDown, Calculator,
-  Briefcase, Bot, Database, Hammer, LayoutDashboard, Lock, User
+  Briefcase, Bot, Database, Hammer, LayoutDashboard, Lock, User,
+  AlertCircle, Clock, TrendingUp
 } from 'lucide-react';
 
 // =================== PERSONA QUICK-START HINT ===================
@@ -150,7 +151,7 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         <Kicker ord="Guide" label="Orientation" />
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight tracking-tight">A 60-second orientation.</h1>
         <p className="text-base text-white/75 mt-3 leading-relaxed">
-          Three things: pick where to start, see what each tab does, and switch personas to see the workspace reshape. The strategic story lives in the About tab.
+          Why this exists · where to start · what's in each tab. Switch personas (top-right) to see how the workspace reshapes. The full strategic story lives in the About tab.
         </p>
       </header>
 
@@ -170,9 +171,44 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         </div>
       )}
 
-      {/* 01 · QUICK START */}
+      {/* 01 · WHY THIS EXISTS — Problem / Business need / Value */}
       <section>
-        <Kicker ord="01" label="Quick start" />
+        <Kicker ord="01" label="Why this exists" />
+        <h2 className="text-lg font-serif font-bold text-white mb-3">The case for this workspace</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="w-4 h-4 text-red-300" />
+              <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Problem</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              ~250 initiatives, 7 PPMs, 4 critical tools (<strong>Airtable · Linear · Tableau · Slack</strong>) — but data definitions drift, dashboards disagree, intake is inconsistent. PPMs don't trust the numbers; leadership can't decide.
+            </p>
+          </div>
+          <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-amber-300" />
+              <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              SPM needs a frontline owner of the <strong>data foundation + tooling ecosystem</strong> — validating, reconciling, supporting users, building dashboards, standardizing operations — so PPMs and DET leaders decide on trusted ground.
+            </p>
+          </div>
+          <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-4 h-4 text-emerald-300" />
+              <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value · time saved</span>
+            </div>
+            <p className="text-sm text-white/90 leading-relaxed">
+              <strong>~18 hrs/wk reclaimed per PPM</strong>. Tooling TTR <strong>3d → 4h</strong>. Data trust <strong>72% → 94%</strong>. Dashboard refresh failures <strong>14% → 0%</strong>. Time-tracking adoption <strong>61% → 92%</strong>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 02 · QUICK START */}
+      <section>
+        <Kicker ord="02" label="Quick start" />
         <h2 className="text-lg font-serif font-bold text-white mb-1">Where to start</h2>
         <p className="text-sm text-sfmuted mb-3">{framing.quickStartHint}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -182,18 +218,18 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         </div>
       </section>
 
-      {/* 02 · TAB GUIDE */}
+      {/* 03 · TAB GUIDE */}
       <section>
-        <Kicker ord="02" label="What's in each tab" />
+        <Kicker ord="03" label="What's in each tab" />
         <h2 className="text-lg font-serif font-bold text-white mb-3">{visibleTabGuides.length} tabs · one purpose each</h2>
         <div className="space-y-2">
           {visibleTabGuides.map(g => <TabRow key={g.id} guide={g} navigateTo={navigateTo} />)}
         </div>
       </section>
 
-      {/* 03 · FAQ — slim */}
+      {/* 04 · FAQ — slim */}
       <section>
-        <Kicker ord="03" label="FAQ" />
+        <Kicker ord="04" label="FAQ" />
         <h2 className="text-lg font-serif font-bold text-white mb-3">A few common questions</h2>
         <div className="space-y-2">
           {FAQS.map((f, i) => (
