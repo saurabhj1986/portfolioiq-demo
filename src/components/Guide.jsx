@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Compass, PlayCircle, ArrowRight, ChevronDown, Calculator,
   Briefcase, Bot, Database, Hammer, LayoutDashboard, Lock, User,
-  AlertCircle, Clock, TrendingUp
+  AlertCircle, Workflow, TrendingUp
 } from 'lucide-react';
 
 // =================== PERSONA QUICK-START HINT ===================
@@ -171,15 +171,15 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
         </div>
       )}
 
-      {/* 01 · WHY THIS EXISTS — Problem / Business need / Value */}
+      {/* 01 · WHY THIS WAS CREATED — Business Problem / Action / Value Derived */}
       <section>
-        <Kicker ord="01" label="Why this exists" />
-        <h2 className="text-lg font-serif font-bold text-white mb-3">The case for this workspace</h2>
+        <Kicker ord="01" label="Why this was created" />
+        <h2 className="text-lg font-serif font-bold text-white mb-3">Business problem · Action · Value derived</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-4 h-4 text-red-300" />
-              <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Problem</span>
+              <span className="text-[10px] uppercase tracking-widest text-red-300 font-bold">Business problem</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
               ~250 initiatives, 7 PPMs, 4 critical tools (<strong>Airtable · Linear · Tableau · Slack</strong>) — but data definitions drift, dashboards disagree, intake is inconsistent. PPMs don't trust the numbers; leadership can't decide.
@@ -187,17 +187,17 @@ export default function Guide({ navigateTo, onStartTour, persona }) {
           </div>
           <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-amber-300" />
-              <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Business need</span>
+              <Workflow className="w-4 h-4 text-amber-300" />
+              <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Action</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
-              SPM needs a frontline owner of the <strong>data foundation + tooling ecosystem</strong> — validating, reconciling, supporting users, building dashboards, standardizing operations — so PPMs and DET leaders decide on trusted ground.
+              Built one operating workspace: <strong>data foundation</strong> (schema, lineage, audit) + <strong>tooling support desk</strong> (one Slack intake, SLAs) + <strong>dashboard catalog</strong> (trusted Tableau views) + <strong>agent fabric</strong> (governance + comms automation) + persona-aware lenses for PPM / Finance / Director / Sponsor.
             </p>
           </div>
           <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-4">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-emerald-300" />
-              <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value · time saved</span>
+              <span className="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Value derived</span>
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
               <strong>~18 hrs/wk reclaimed per PPM</strong>. Tooling TTR <strong>3d → 4h</strong>. Data trust <strong>72% → 94%</strong>. Dashboard refresh failures <strong>14% → 0%</strong>. Time-tracking adoption <strong>61% → 92%</strong>.
